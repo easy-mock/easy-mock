@@ -1,7 +1,7 @@
 'use strict'
 
 const cp = require('./cp')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt-nodejs')
 
 /**
  * 加密字符串
