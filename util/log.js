@@ -8,10 +8,10 @@ const bunyan = require('bunyan')
 let logger
 
 function Logger () {
-  const uploadDir = path.join(__dirname, '../logs')
+  const logDir = path.join(__dirname, '../logs')
 
-  if (!fs.existsSync(uploadDir)) {
-    mkdirp.sync(uploadDir)
+  if (!fs.existsSync(logDir)) {
+    mkdirp.sync(logDir)
   }
 
   if (logger) {
@@ -30,7 +30,7 @@ function Logger () {
         type: 'rotating-file',
         level: 'error',
         count: 3,
-        path: path.join(uploadDir, 'error.log')
+        path: path.join(logDir, 'error.log')
       }
     ]
   })
