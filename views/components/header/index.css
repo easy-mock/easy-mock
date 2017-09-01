@@ -1,0 +1,91 @@
+@import '../../styles/base/var.css';
+
+@c header {
+  height: 110px;
+  position: relative;
+
+  .ivu-affix .em-header__content {
+    padding: 10px 0;
+  }
+
+  @m fixed {
+    z-index: 20;
+  }
+
+  @d nav {
+    position: absolute;
+    bottom: -1px;
+    width: 100%;
+    font-size: 13px;
+
+    @d item {
+      float: left;
+      height: 40px;
+      line-height: 40px;
+      padding: 0 15px;
+      color: #586069;
+      cursor: pointer;
+      border: solid transparent;
+      border-width: 3px 1px 1px;
+      border-radius: 3px 3px 0 0;
+
+      i {
+        margin-right: 2px;
+      }
+
+      @when active {
+        color: #24292e;
+        background: #f5f7fa;
+        border-color: var(--color-primary) #e1e4e8 transparent;
+      }
+    }
+  }
+
+  .logo {
+    width: 50px;
+    height: 50px;
+    background: var(--color-primary);
+    border-radius: 4px;
+    box-shadow: 0 10px 50px color(var(--color-primary) a(40%));
+    color: #fff;
+    font-size: 28px;
+    text-align: center;
+    line-height: 50px;
+  }
+
+  @d content {
+    padding: 30px 0;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+    overflow-y: hidden;
+    width: 100%;
+    transition: var(--all-transition);
+    position: relative;
+  }
+
+  @d control {
+    position: relative;
+    top: 10px;
+
+    &,
+    .ivu-radio-group {
+      float: right;
+    }
+  }
+
+  @d info {
+    margin-top: 2px;
+    margin-left: 20px;
+
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 12px;
+      color: #9a9ca0;
+      font-weight: 400;
+    }
+  }
+}

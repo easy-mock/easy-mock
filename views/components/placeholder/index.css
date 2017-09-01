@@ -1,0 +1,22 @@
+@c placeholder {
+  @d content {
+    @utils-user-select none;
+    text-align: center;
+    font-size: 22px;
+    color: #d5d5d5;
+    position: absolute;
+    cursor: default;
+    width: 100%;
+    height: 100px;
+    top: 120px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+
+    i {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+  }
+}

@@ -1,0 +1,209 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+}
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fadeOutLeft {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fadeOutRight {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+}
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fadeOutUp {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+.fade-enter-active,
+.fadeIn,
+.fade-leave-active,
+.fadeOut {
+  animation-duration: .2s;
+  animation-fill-mode: both;
+}
+.fade-enter-active,
+.fadeIn {
+  animation-name: fadeIn;
+}
+.fade-leave-active,
+.fadeOut {
+  animation-name: fadeOut;
+}
+
+.fadeUp-enter-active,
+.fadeInUp,
+.fadeUp-leave-active,
+.fadeOutUp {
+  animation-duration: .5s;
+  animation-fill-mode: both;
+}
+.fadeUp-enter-active,
+.fadeInUp {
+  animation-name: fadeInUp;
+}
+.fadeUp-leave-active,
+.fadeOutUp {
+  animation-name: fadeOutUp;
+}
+
+.fadeRight-enter-active,
+.fadeInRight,
+.fadeRight-leave-active,
+.fadeOutRight {
+  animation-duration: .5s;
+  animation-fill-mode: both;
+}
+.fadeRight-enter-active,
+.fadeInRight {
+  animation-name: fadeInRight;
+}
+.fadeRight-leave-active,
+.fadeOutRight {
+  animation-name: fadeOutRight;
+}
+
+.fadeLeft-enter-active,
+.fadeInLeft,
+.fadeLeft-leave-active,
+.fadeOutLeft {
+  animation-duration: .5s;
+  animation-fill-mode: both;
+}
+.fadeLeft-enter-active,
+.fadeInLeft {
+  animation-name: fadeInLeft;
+}
+.fadeLeft-leave-active,
+.fadeOutLeft {
+  animation-name: fadeOutLeft;
+}
+
+.fadeDown-enter-active,
+.fadeInDown,
+.fadeDown-leave-active,
+.fadeOutDown {
+  animation-duration: .5s;
+  animation-fill-mode: both;
+}
+.fadeDown-enter-active,
+.fadeInDown {
+  animation-name: fadeInDown;
+}
+.fadeDown-leave-active,
+.fadeOutDown {
+  animation-name: fadeOutDown;
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes zoomOut {
+  from {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+    transform: scale3d(0.3, 0.3, 0.3);
+  }
+  to {
+    opacity: 0;
+  }
+}
+.zoom-enter-active,
+.zoomIn,
+.zoom-leave-active,
+.zoomOut {
+  animation-duration: .5s;
+  animation-fill-mode: both;
+}
+.zoom-enter-active,
+.zoomIn {
+  animation-name: zoomIn;
+}
+.zoom-leave-active,
+.zoomOut {
+  animation-name: zoomOut;
+}

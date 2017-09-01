@@ -1,0 +1,73 @@
+@import '../../styles/base/var.css';
+
+@c group {
+  @d list {
+    margin-top: var(--base-padding);
+
+    .ivu-row {
+      margin-left: -10px;
+      margin-right: -10px;
+    }
+
+    .ivu-col {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+  @d item {
+    padding: 20px 14px;
+    box-shadow: 0 1px 5px #e5e5e5;
+    border-radius: 4px;
+    transition: var(--all-transition);
+    position: relative;
+    margin-bottom: var(--base-padding);
+    cursor: pointer;
+    background: var(--color-red);
+
+    h2, .group-collect, i {
+      color: #fff;
+    }
+
+    h2 {
+      font-weight: 700;
+      font-size: 14px;
+      @utils-ellipsis;
+      @utils-user-select none;
+    }
+
+    &:hover {
+      background: color(var(--color-red) a(90%));
+    }
+
+    .ivu-btn {
+      border-color: #fff;
+    }
+
+    .ivu-btn:hover {
+      background: #fff;
+      i {
+        color: var(--color-red);
+      }
+    }
+
+    .group-control {
+      margin-top: 10px;
+      width: 100%;
+
+      .ivu-btn {
+        width: 50%;
+      }
+    }
+  }
+}
+
+@c group-modal {
+  .ivu-form-item {
+    margin-bottom: 0;
+  }
+
+  .ivu-modal-footer {
+    border-top: none;
+  }
+}

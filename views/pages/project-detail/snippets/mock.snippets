@@ -1,0 +1,185 @@
+# Base
+snippet em.base.boolean
+	@boolean
+snippet em.base.natural
+	@natural(${1:60}, ${2:100})
+snippet em.base.integer
+	@integer(${1:60}, ${2:100})
+snippet em.base.float
+	@float(${1:60}, ${2:100})
+snippet em.base.character
+	@character(${1:'abcde'})
+snippet em.base.string
+	@string(${1:7}, ${2:20})
+snippet em.base.range
+	@range(${1:3}, ${2:7})
+# Date
+snippet em.date.date
+	@date
+snippet em.date.time
+	@time
+snippet em.date.datetime
+	@datetime
+snippet em.date.now
+	@now
+# Image
+snippet em.image.image
+	@image(${1:'200x100'}, ${2:'#50B347'}, ${3:'#FFF'}, ${4:'EasyMock'})
+snippet em.image.dataImage
+	@dataImage(${1:'200x100'}, ${2:'EasyMock'})
+# Color
+snippet em.color.color
+	@color
+snippet em.color.hex
+	@hex
+snippet em.color.rgb
+	@rgb
+snippet em.color.rgba
+	@rgba
+snippet em.color.hsl
+	@hsl
+# Text
+snippet em.text.paragraph
+	@paragraph(${1:1}, ${2:3})
+snippet em.text.sentence
+	@sentence(${1:3}, ${2:5})
+snippet em.text.word
+	@word(${1:3}, ${2:5})
+snippet em.text.title
+	@title(${1:3}, ${2:5})
+snippet em.text.cparagraph
+	@cparagraph(${1:1}, ${2:3})
+snippet em.text.csentence
+	@csentence(${1:3}, ${2:5})
+snippet em.text.cword
+	@cword(${1:'零一二三四五六七八九十'}, ${2:5}, ${3:7})
+snippet em.text.ctitle
+	@ctitle(${1:3}, ${2:5})
+# Name
+snippet em.name.first
+	@first
+snippet em.name.last
+	@last
+snippet em.name.name
+	@name
+snippet em.name.cfirst
+	@cfirst
+snippet em.name.clast
+	@clast
+snippet em.name.cname
+	@cname
+# Web
+snippet em.web.url
+	@url
+snippet em.web.domain
+	@domain
+snippet em.web.protocol
+	@protocol
+snippet em.web.tld
+	@tld
+snippet em.web.email
+	@email
+snippet em.web.ip
+	@ip
+# Address
+snippet em.address.region
+	@region
+snippet em.address.province
+	@province
+snippet em.address.city
+	@city(${1:true})
+snippet em.address.county
+	@county(${1:true})
+snippet em.address.zip
+	@zip
+# Helper
+snippet em.helper.capitalize
+	@capitalize(${1:'hello'})
+snippet em.helper.upper
+	@upper(${1:'hello'})
+snippet em.helper.lower
+	@lower(${1:'HELLO'})
+snippet em.helper.pick
+	@pick(['a', 'e', 'i', 'o', 'u'])
+snippet em.helper.shuffle
+	@shuffle(['a', 'e', 'i', 'o', 'u'])
+# Miscellaneous
+snippet em.miscellaneous.guid
+	@guid
+snippet em.miscellaneous.id
+	@id
+snippet em.miscellaneous.increment
+	@increment(${1:1000})
+snippet em.demo.all
+	{
+	  "base": {
+	    "range": "@range(3, 7)",
+	    "string": "@string(7, 20)",
+	    "character": "@character('abcde')",
+	    "float": "@float(60, 100)",
+	    "integer": "@integer(60, 100)",
+	    "natural": "@natural(60, 100)",
+	    "boolean": "@boolean"
+	  },
+	  "date": {
+	    "date": "@date",
+	    "time": "@time",
+	    "datetime": "@datetime",
+	    "now": "@now"
+	  },
+	  "image": {
+	    "image": "@image('200x100', '#50B347', '#FFF', 'EasyMock')"
+	  },
+	  "color": {
+	    "color": "@color",
+	    "hex": "@hex",
+	    "rgb": "@rgb",
+	    "rgba": "@rgba",
+	    "hsl": "@hsl"
+	  },
+	  "text": {
+	    "paragraph": "@paragraph(1, 3)",
+	    "sentence": "@sentence(3, 5)",
+	    "word": "@word(3, 5)",
+	    "title": "@title(3, 5)",
+	    "cparagraph": "@cparagraph(1, 3)",
+	    "csentence": "@csentence(3, 5)",
+	    "cword": "@cword('零一二三四五六七八九十', 5, 7)",
+	    "ctitle": "@ctitle(3, 5)"
+	  },
+	  "name": {
+	    "first": "@first",
+	    "last": "@last",
+	    "name": "@name",
+	    "cfirst": "@cfirst",
+	    "clast": "@clast",
+	    "cname": "@cname"
+	  },
+	  "web": {
+	    "url": "@url",
+	    "domain": "@domain",
+	    "protocol": "@protocol",
+	    "tld": "@tld",
+	    "email": "@email",
+	    "ip": "@ip"
+	  },
+	  "address": {
+	    "region": "@region",
+	    "province": "@province",
+	    "city": "@city(true)",
+	    "county": "@county(true)",
+	    "zip": "@zip"
+	  },
+	  "helper": {
+	    "capitalize": "@capitalize('hello')",
+	    "upper": "@upper('hello')",
+	    "lower": "@lower('HELLO')",
+	    "pick": "@pick(['a', 'e', 'i', 'o', 'u'])",
+	    "shuffle": "@shuffle(['a', 'e', 'i', 'o', 'u'])"
+	  },
+	  "miscellaneous": {
+	    "id": "@id",
+	    "guid": "@guid",
+	    "increment": "@increment(1000)"
+	  }
+	}

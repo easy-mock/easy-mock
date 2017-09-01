@@ -1,0 +1,157 @@
+@import '../../styles/base/var.css';
+
+@c project {
+  @d list {
+    margin-top: var(--base-padding);
+
+    .ivu-row {
+      margin-left: -10px;
+      margin-right: -10px;
+    }
+
+    .ivu-col {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+
+  @d item {
+    background: #fff;
+    padding: 0 14px 20px 14px;
+    box-shadow: 0 1px 5px #e5e5e5;
+    border-radius: 4px;
+    transition: var(--all-transition);
+    position: relative;
+    margin-bottom: var(--base-padding);
+    cursor: pointer;
+
+    &:hover {
+      background: #fbfbfb;
+    }
+
+    &.is-join,
+    &.is-group {
+      h2, .project-collect, i {
+        color: #fff;
+      }
+
+      .project-url,
+      .project-description,
+      .project-member,
+      .ivu-btn:hover {
+        background: #fff;
+        border-color: #fff;
+      }
+
+      .ivu-btn {
+        border-color: #fff;
+      }
+    }
+
+    @when join {
+      background: var(--color-primary);
+
+      &:hover {
+        background: color(var(--color-primary) a(90%));
+      }
+      .ivu-btn:hover i {
+        color: var(--color-primary);
+      }
+    }
+
+    @when group {
+      background: var(--color-red);
+
+      &:hover {
+        background: color(var(--color-red) a(90%));
+      }
+      .ivu-btn:hover i {
+        color: var(--color-red);
+      }
+    }
+
+    h2 {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .project-collect {
+      text-align: center;
+      font-size: 26px;
+      color: var(--color-red);
+
+      i {
+        cursor: pointer;
+      }
+    }
+
+    h2,
+    .project-url,
+    .project-description,
+    .project-member {
+      @utils-ellipsis;
+      @utils-user-select none;
+    }
+
+    .project-url,
+    .project-description,
+    .project-member {
+      padding: 10px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      margin-top: 10px;
+      background: #f5f5f5;
+
+      &:before {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: var(--color-red);
+        border-radius: 4px;
+        margin-bottom: 3px;
+      }
+    }
+
+    .project-description:before {
+      background: var(--color-primary);
+    }
+
+    .project-member {
+      display: flex;
+
+      &:before {
+        display: none;
+      }
+
+      img {
+        width: 20px;
+        height: 20px;
+        display: block;
+        border-radius: 4px;
+        margin-right: 12px;
+      }
+    }
+
+    .project-control {
+      margin-top: 10px;
+      margin-left: 1px;
+      width: 100%;
+
+      .ivu-btn {
+        width: 33%;
+      }
+    }
+  }
+}
+
+.list-complete-item {
+  transition: all 1s;
+}
+.list-complete-enter, .list-complete-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.list-complete-leave-active {
+  position: absolute;
+}

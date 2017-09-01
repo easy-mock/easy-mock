@@ -1,0 +1,7 @@
+:root {
+  --base-padding: 20px;
+  --body-width: 1020px;
+  --all-transition: all .3s;
+  --color-primary: #2d8cf0;
+  --color-red: #f84c5b;
+}
