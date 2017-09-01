@@ -24,7 +24,7 @@
   "dependencies": {
     "@tweenjs/tween.js": "^17.1.0",
     "axios": "^0.15.3",
-    "bcrypt": "^0.8.7",
+    "bcrypt-nodejs": "0.0.3",
     "brace": "^0.10.0",
     "bunyan": "^1.8.5",
     "clipboard": "^1.7.1",
@@ -120,5 +120,8 @@
     "webpack-hot-middleware": "^2.18.2",
     "webpack-merge": "^4.1.0",
     "webpack-node-externals": "^1.6.0"
+  },
+  "optionalDependencies": {
+    "fsevents": "*"
   }
 }
