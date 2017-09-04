@@ -2,12 +2,20 @@
 
 /* eslint prefer-rest-params: 0 */
 const cofnig = require('config')
+const path = require('path')
+const fs = require('fs')
+const koa = require('koa')
 
 const m = require('../../models')
 const app = require('../../app')
-const request = require('supertest').agent(app.listen())
-
 const routerPrefix = cofnig.get('routerPrefix')
+const request = require('supertest').agent(app.listen())
+const swaggerJSON = fs.readFileSync(path.join(__dirname, './swagger.json'), 'utf-8')
+
+// 代理 Swagger
+koa().use(function * () {
+  this.body = JSON.parse(swaggerJSON)
+}).listen(7400)
 
 function createRequest (prefix) {
   prefix = prefix || ''
@@ -47,7 +55,7 @@ exports.cp = function (token) {
       name: 'project',
       url: '/project',
       description: '我是描述',
-      swagger_url: 'http://petstore.swagger.io/v2/swagger.json'
+      swagger_url: 'http://127.0.0.1:7400'
     }, body)
     return exports.r('post', '/project/create', token, newBody)
   }
