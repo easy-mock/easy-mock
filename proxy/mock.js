@@ -32,7 +32,8 @@ exports.updateById = function (mock) {
       method: mock.method,
       parameters: mock.parameters,
       description: mock.description,
-      response_model: mock.response_model
+      response_model: mock.response_model,
+      is_authentic: mock.is_authentic
     }
   })
 }

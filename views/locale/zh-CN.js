@@ -164,7 +164,7 @@ export default {
         { category: '编辑界面（非编辑状态有效）', list: ['关闭', '格式化', '预览（只在更新时生效）'] }
       ],
       columns: ['描述', '操作'],
-      action: ['预览接口', '编辑接口', '复制接口地址', '克隆', '删除'],
+      action: ['预览接口', '编辑接口', '复制接口地址', '克隆', '删除', '切换数据源'],
       copySuccess: '接口地址已复制到剪贴板',
       syncSwagger: {
         action: '同步 Swagger',

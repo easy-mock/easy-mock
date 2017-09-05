@@ -164,7 +164,7 @@ export default {
         { category: 'Edit（for not editmode）', list: ['Close', 'Formating', 'Preview'] }
       ],
       columns: ['Description', 'Action'],
-      action: ['Preview Mock', 'Edit Mock', 'Copy Mock Address', 'Copy', 'Delete'],
+      action: ['Preview Mock', 'Edit Mock', 'Copy Mock Address', 'Copy', 'Delete', 'Switch Api Address'],
       copySuccess: 'Project address is in clipboard',
       syncSwagger: {
         action: 'Sync Swagger',

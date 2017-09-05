@@ -179,15 +179,17 @@ export default {
         {
           title: this.$t('p.detail.columns[1]'),
           key: 'action',
-          width: 160,
+          width: 180,
           align: 'center',
           render: (h, params) => {
+            const switchAddressIcon = params.row.is_authentic ? 'toggle-filled' : 'toggle'
             return (
               <div>
                 <Button-group>
                   <i-button size="small" title={this.$t('p.detail.action[0]')} onClick={this.preview.bind(this, params.row)}><icon type="eye"></icon></i-button>
                   <i-button size="small" title={this.$t('p.detail.action[1]')} onClick={this.openEditor.bind(this, params.row)}><icon type="edit"></icon></i-button>
                   <i-button size="small" title={this.$t('p.detail.action[2]')} class="copy-url" onClick={this.clip.bind(this, params.row.url)}><icon type="link"></icon></i-button>
+                  <i-button size="small" title={this.$t('p.detail.action[5]')} class="switch-address" onClick={this.switchAuthentic.bind(this, params.row)}><icon type={switchAddressIcon}></icon></i-button>
                 </Button-group>
                 <dropdown>
                   <i-button size="small"><icon type="more"></icon></i-button>
@@ -297,6 +299,22 @@ export default {
         }
       })
     },
+    switchAuthentic (mock) {
+      const isAuthentic = mock.is_authentic
+      api.mock.update({
+        data: {
+          ...mock,
+          id: mock._id,
+          is_authentic: !isAuthentic
+        }
+      }).then((res) => {
+        if (res.data.success) {
+          this.$Message.success('更新成功')
+          this.$store.commit('mock/SET_REQUEST_PARAMS', { pageIndex: 1 })
+          this.$store.dispatch('mock/FETCH', this.$route)
+        }
+      })
+    },
     remove (mockId) {
       const ids = this.selection.length
         ? this.selection.map(item => item._id)
@@ -321,6 +339,7 @@ export default {
       this.$store.dispatch('project/WORKBENCH', this.project.extend)
     },
     clone (mock) {
+      console.log('clone: mock: ', this.$route, mock, `${mock.url}_copy_${new Date().getTime()}`)
       this.$store.dispatch('mock/CREATE', {
         route: this.$route,
         ...mock,

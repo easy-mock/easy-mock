@@ -179,6 +179,7 @@ exports.update = function * () {
   const id = this.checkBody('id').notEmpty().value
   const mode = this.checkBody('mode').value
   const description = this.checkBody('description').value
+  const isAuthentic = this.checkBody('is_authentic').value
   const url = this.checkBody('url').empty()
     .match(/^\/.*$/i, 'URL 必须以 / 开头').value
   const method = this.checkBody('method').empty().toLow().in([
@@ -212,6 +213,7 @@ exports.update = function * () {
   mock.mode = mode || mock.mode
   mock.method = method || mock.method
   mock.description = description || mock.description
+  mock.is_authentic = isAuthentic
 
   // 更新属性后查重
   const existMock = yield mockProxy.findOne({
