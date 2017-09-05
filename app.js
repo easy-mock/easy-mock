@@ -72,5 +72,5 @@ app
   .use(middleware.view(app))
 
 if (!module.parent) {
-  app.listen(config.get('port'))
+  app.listen(config.get('port'), config.get('host'))
 }
