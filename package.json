@@ -16,7 +16,7 @@
     "build:server": "webpack --config build/webpack.server.config.js --progress --hide-modules"
   },
   "author": "Chuangker",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "keywords": [
     "easy-mock",
     "mock"
