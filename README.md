@@ -6,7 +6,7 @@
   <a href="https://circleci.com/gh/easy-mock/easy-mock/tree/dev"><img src="https://img.shields.io/circleci/project/easy-mock/easy-mock/dev.svg" alt="Build Status"></a>
   <a href="https://codecov.io/github/easy-mock/easy-mock?branch=dev"><img src="https://img.shields.io/codecov/c/github/easy-mock/easy-mock/dev.svg" alt="Coverage Status"></a>
   <a href="http://standardjs.com"><img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg" alt="js-standard-style"></a>
-  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+  <a href="https://opensource.org/licenses/GPL-3.0"><img src="https://img.shields.io/badge/license-GPL--3.0-blue.svg" alt="License"></a>
 </p>
 
 <p align="center">
@@ -175,4 +175,4 @@ Easy Mock 目前由 [大搜车无线架构团队](http://f2e.souche.com/blog/) �
 </table>
 
 ## License
-[MIT](https://opensource.org/licenses/MIT)
+[GPL-3.0](https://opensource.org/licenses/GPL-3.0)
