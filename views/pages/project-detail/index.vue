@@ -184,7 +184,7 @@ export default {
           render: (h, params) => {
             const switchAddressIcon = params.row.is_authentic ? 'toggle-filled' : 'toggle'
             let switchAddressButton = <i-button size="small" title={this.$t('p.detail.action[5]')} class="switch-address" onClick={this.switchAuthentic.bind(this, params.row)}><icon type={switchAddressIcon}></icon></i-button>
-            switchAddressButton = this.project.address ? switchAddressButton: null
+            switchAddressButton = this.project.address ? switchAddressButton : null
             return (
               <div>
                 <Button-group>
@@ -345,7 +345,6 @@ export default {
       this.$store.dispatch('project/WORKBENCH', this.project.extend)
     },
     clone (mock) {
-      console.log('clone: mock: ', this.$route, mock, `${mock.url}_copy_${new Date().getTime()}`)
       this.$store.dispatch('mock/CREATE', {
         route: this.$route,
         ...mock,

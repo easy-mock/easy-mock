@@ -290,9 +290,8 @@ exports.getMock = function * () {
     this.throw(404)
   }
 
+  let project
   try {
-    let project
-
     if (userName.length === 24) {
       // 现以 项目id 作为起始路径
       project = yield projectProxy.findOne({ _id: userName })
@@ -338,6 +337,39 @@ exports.getMock = function * () {
     options._req.cookies = this.cookies.get.bind(this)
     return options.template.call(options.context.currentContext, options)
   }.bind(this)
+
+  if (project.address && mock.is_authentic) {
+    const mode = project.address + mock.url
+    const proxy = mode.split('?')
+    const url = new URL(proxy[0])
+    const queryString = _.assign({}, qs.parse(proxy[1]), query)
+    const params = getParams(mock.url, reqUrl)
+    const pathname = pathToRegexp.compile(url.pathname)(params)
+    try {
+      data = yield axios({
+        method: method,
+        url: url.origin + pathname,
+        params: queryString,
+        data: body,
+        timeout: 10000
+      }).then(res => res.data)
+    } catch (error) {
+      this.body = this.util.refail(error.message || '无法完成代理请求')
+      return
+    }
+    yield mockCountProxy.newAndSave(mock.id)
+    if (callbackName) {
+      this.type = 'text/javascript'
+      this.body = `${callbackName}(${JSON.stringify(data, null, 2)})`
+      // JSON parse vs eval fix. https://github.com/rack/rack-contrib/pull/37
+      this.body = this.body
+        .replace(/\u2028/g, '\\u2028')
+        .replace(/\u2029/g, '\\u2029')
+    } else {
+      this.body = data
+    }
+    return
+  }
 
   if (/^http(s)?/.test(mock.mode)) {
     const proxy = mock.mode.split('?')
