@@ -122,6 +122,9 @@ exports.create = function * () {
   const swaggerUrl = this.checkBody('swagger_url').empty().isUrl(null, {
     allow_underscores: true
   }).value
+  const address = this.checkBody('address').empty().isUrl(null, {
+    allow_underscores: true
+  }).value
   const memberIds = this.checkBody('members').empty()
     .type('array').value
   const url = this.checkBody('url').notEmpty()
@@ -134,6 +137,7 @@ exports.create = function * () {
     name,
     url,
     swagger_url: swaggerUrl,
+    address: address,
     description: description || name
   }
 
@@ -248,6 +252,9 @@ exports.update = function * () {
   const swaggerUrl = this.checkBody('swagger_url').empty().isUrl(null, {
     allow_underscores: true
   }).value
+  const address = this.checkBody('address').empty().isUrl(null, {
+    allow_underscores: true
+  }).value
   const memberIds = this.checkBody('members').empty()
     .type('array').value
   const url = this.checkBody('url').empty()
@@ -296,6 +303,7 @@ exports.update = function * () {
   project.name = name || project.name
   project.members = memberIds || project.members
   project.swagger_url = swaggerUrl || project.swagger_url
+  project.address = address || project.address
   project.description = description || project.description
 
   const existQuery = {
