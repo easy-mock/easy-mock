@@ -276,6 +276,7 @@ exports.delete = function * () {
 exports.getMock = function * () {
   const query = this.query || {}
   const body = this.request.body || {}
+  const header = this.request.header || {}
   const method = this.method.toLowerCase()
   const urlArr = _.filter(this.path.split('/')) // filter empty
   const userName = urlArr[1]
@@ -351,6 +352,12 @@ exports.getMock = function * () {
         url: url.origin + pathname,
         params: queryString,
         data: body,
+        headers: {
+          'content-type': header['content-type'] || 'application/json',
+          'x-authorization': header['x-authorization'] || '',
+          'client-key': header['client-key'] || '',
+          'accept': header['accept'] || 'application/json'
+        },
         timeout: 10000
       }).then(res => res.data)
     } catch (error) {
