@@ -181,6 +181,17 @@ export default {
           key: 'action',
           width: 180,
           align: 'center',
+          filters: [
+            { label: 'api', value: 'api' },
+            { label: 'mock', value: 'mock' }
+          ],
+          filterMethod (value, row) {
+            const isAuthentic = row.is_authentic
+            if (value === 'api') {
+              return isAuthentic
+            }
+            return !isAuthentic
+          },
           render: (h, params) => {
             const switchAddressIcon = params.row.is_authentic ? 'toggle-filled' : 'toggle'
             let switchAddressButton = <i-button size="small" title={this.$t('p.detail.action[5]')} class="switch-address" onClick={this.switchAuthentic.bind(this, params.row)}><icon type={switchAddressIcon}></icon></i-button>
