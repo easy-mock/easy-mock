@@ -53,7 +53,7 @@ app
     jwtExp: config.get('jwt.expire'),
     collection: config.get('jwt.collection'),
     jwtOptions: {
-      secret: config.get('jwt.key'),
+      secret: config.get('jwt.secret'),
       key: config.get('jwt.key')
     },
     jwtUnless () {
