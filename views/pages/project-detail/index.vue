@@ -10,6 +10,9 @@
     <editor v-model="editor"></editor>
     <div v-shortkey="['tab']" @shortkey="handleKeyTab()"></div>
     <em-keyboard-short v-model="keyboards"></em-keyboard-short>
+    <Back-top>
+      <em-add icon="arrow-up-c" :bottom="90"></em-add>
+    </Back-top>
     <transition name="fade" mode="out-in">
       <project v-if="pageName === '设置'" key="a" :project-data="project"></project>
       <div
