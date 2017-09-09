@@ -1,5 +1,5 @@
 set -e
-echo "{\"db\": \"mongodb://localhost/easy-mock\"}" > ./config/test.json
+echo "{\"db\": \"mongodb://localhost/easy-mock\", \"jwt\": { \"secret\": \"test\" }}" > ./config/test.json
 npm run lint
 npm test
 
