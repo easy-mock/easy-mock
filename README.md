@@ -16,9 +16,13 @@
     <img alt="Souche Inc." src="http://img.souche.com/f2e/08aa2b695f6298302f767b2439db4537.png" width="200">
   </a>
 </p>
-<p align="center">
-  <a href="./README/zh_CN.md" target="_blank">中文说明文档</a>
-</p>
+
+## Links
+
+- [简体中文介绍](README.zh_CN.md)
+- [Online Manual](https://easy-mock.com/docs)
+- [Easy Mock CLI](https://github.com/easy-mock/easy-mock-cli) - A command line
+  tool to generate an **api.js** file quickly based on **Easy Mock**.
 
 ## Introduction
 
@@ -48,16 +52,6 @@ visualization view.
 - More flexible and extensible in response data
 - Use [Mock.js](http://mockjs.com/) schema
 - Support [restc](https://github.com/ElemeFE/restc) to preview API
-
-## Links
-
-- [Online Manual](https://easy-mock.com/docs)
-- [Easy Mock CLI](https://github.com/easy-mock/easy-mock-cli) - A command line
-  tool to generate an **api.js** file quickly based on **Easy Mock**.
-
-### International READMEs
-
-- [zh-CN](README/zh_CN.md)
 
 ## Quick Start
 
