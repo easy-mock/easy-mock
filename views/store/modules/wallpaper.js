@@ -22,7 +22,8 @@ export default {
           url = /\.com/.test(data.url) ? data.url : 'https://cn.bing.com' + data.url
           copyright = {
             name: 'Bing',
-            link: data.copyrightlink
+            link: /\.com/.test(data.copyrightlink)
+              ? data.copyrightlink : 'https://cn.bing.com' + data.copyrightlink
           }
         } else { // unsplash
           url = data.urls.raw + '?w=2200'

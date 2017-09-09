@@ -23,20 +23,28 @@ exports.proxy = function * () {
 
 exports.wallpaper = function * () {
   const cache = unsplashCache.get('one')
-  const bingAPI = 'https://cn.bing.com/HPImageArchive.aspx?format=js&n=1'
-  const unsplashAPI = 'https://api.unsplash.com/photos/random?orientation=landscape&count=1&client_id=' + unsplashClientId
+  const wallpaperAPI = unsplashClientId
+    ? 'https://api.unsplash.com/photos/random?orientation=landscape&count=1&client_id=' + unsplashClientId
+    : 'https://cn.bing.com/HPImageArchive.aspx?format=js&n=1'
 
   if (cache) {
     this.body = cache
     return
   }
 
-  if (unsplashClientId) {
-    const res = yield axios.get(unsplashAPI)
-    this.body = { type: 'unsplash', data: res.data }
-  } else {
-    const res = yield axios.get(bingAPI)
-    this.body = { type: 'bing', data: res.data.images }
+  try {
+    const res = yield axios.get(wallpaperAPI)
+    this.body = unsplashClientId
+      ? { type: 'unsplash', data: res.data }
+      : { type: 'bing', data: res.data.images }
+  } catch (error) {
+    this.body = {
+      type: 'bing',
+      data: [{
+        url: '/az/hprichbg/rb/SWFC_ZH-CN9558503653_1920x1080.jpg',
+        copyrightlink: '/search?q=%e4%b8%8a%e6%b5%b7%e4%b8%96%e7%95%8c%e9%87%91%e8%9e%8d%e4%b8%ad%e5%bf%83&form=hpcapt&mkt=zh-cn'
+      }]
+    }
   }
   unsplashCache.set('one', this.body)
 }
