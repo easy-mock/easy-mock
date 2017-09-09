@@ -131,7 +131,8 @@
     }
 
     img {
-      width: 100%;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       display: block;
       margin-bottom: 20px;
