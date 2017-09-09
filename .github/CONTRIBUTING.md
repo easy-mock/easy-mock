@@ -1,24 +1,24 @@
-## Easy Mock 贡献指南
+## Easy Mock Contributing Guide
 
-Hi，感谢你使用 Easy Mock。
+Hi, Thank you for your attention to Easy Mock.
 
-如果你愿意为 Easy Mock 贡献代码或提供建议，请阅读以下内容。
+If you are willing to contribute code or provide suggestions for Easy Mock, please make sure to take a moment and read through the following guidelines.
 
 ### Issue
 
-- issue 仅用于提交 Bug 或 Feature 相关的内容，其它内容可能会被直接关闭。
-- 在提交 issue 之前，请搜索相关内容是否已被提出。
+- Issues are exclusively for bug reports and feature requests. Other questions may be closed directly.
+- Before submitting an issue, please check if similar problems have already been issued.
 
 ### Pull Request
 
-- 请先 fork 一份到自己的项目下。
-- commit 提交规范参考 [angular](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#-commit-message-guidelines)。
-- 创建一个新的分支来让你完成 **修复/改进**。
-- 添加相关测试用例，并通过测试。
-- 提交 PR 前请 rebase，确保 commit 记录的整洁。
-- 确保 PR 是提交到 dev 分支，而不是 master 分支。
-- 在 PR 中给出相关的描述信息。
+- Fork this repository to your own account.
+- Commit Messages should conform to [Angular's guidelines](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#-commit-message-guidelines).
+- Create a new topic branch to contain your feature, change, or fix.
+- Make sure `npm test` passes.
+- Rebase before creating a PR to keep commit history clear.
+- Make sure PRs are created to `dev` branch instead of `master` branch.
+- If you are fixing a bug, please include detailed description of the bug in the PR.
 
-### 代码规范
+### Code Style
 
-遵循 Standard [ESLint](http://standardjs.com) 即可。
+Just comply with the ESLint configuration of [Standard](http://standardjs.com).

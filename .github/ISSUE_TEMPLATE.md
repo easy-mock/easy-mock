@@ -1,11 +1,11 @@
-<!-- 问题可能已经存在！请在创建之前搜索相关问题。 -->
+<!-- Before submitting an issue, please check if similar problems have already been issued. -->
 
-## 出现什么问题？
+## OS / Browser Version
 
-## 如何能重现这个问题？
+## Node.js / MongoDB Version
 
-## 期望的结果？
+## Steps to reproduce
 
-## 操作系统版本 / 浏览器版本？
+## What is Expected？
 
-<!-- 如果是部署出现问题，还应提供 Node、MongoDB、服务器 的版本信息与错误日志。 -->
+## What is actually happening？
