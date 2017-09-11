@@ -133,7 +133,7 @@ function createMock (projectId, swaggerInfo) {
     const promises = []
 
     Object.keys(paths).forEach((api) => {
-      const apiUrl = path.join(basePath, api)
+      const apiUrl = path.posix.join(basePath, api)
       // Object.keys(paths[api]) => ['get', 'post', ...]
       Object.keys(paths[api]).forEach((method) => {
         method = method.toLowerCase()
