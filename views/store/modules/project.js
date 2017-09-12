@@ -4,13 +4,6 @@ export default {
   namespaced: true,
   state: {
     list: [],
-    page: {
-      description: '',
-      placeholder: '',
-      title: '',
-      icon: '',
-      type: 0 // 0.个人项目 1.团队项目 2.工作台
-    },
     keywords: '',
     pageIndex: 1,
     projectType: '',
@@ -37,44 +30,17 @@ export default {
       state.projectType = payload.projectType || state.projectType
       state.filterByAuthor = payload.filterByAuthor || state.filterByAuthor
       state.keywords = payload.keywords !== undefined ? payload.keywords : state.keywords
-    },
-    SET_PAGE (state, payload) {
-      state.page = payload
     }
   },
   actions: {
     INIT_PAGE ({ commit, rootState }, route) {
       switch (route.fullPath) {
         case '/workbench':
-          commit('SET_PAGE', {
-            title: '工作台',
-            description: '将正在进行的项目添加到工作台中以提高工作效率。',
-            placeholder: '想起飞吗？快去将项目添加到工作台呀。',
-            icon: 'code-working',
-            type: 2
-          })
           commit('SET_REQUEST_PARAMS', {
             projectType: 'workbench'
           })
           break
-        case '/':
-          commit('SET_PAGE', {
-            title: '个人项目',
-            description: '这里将展示你的个人项目，当然也包括协同项目。',
-            placeholder: '想早点回家吗？快来创建 Mock 呀。',
-            icon: 'person',
-            type: 0
-          })
-          break
         default:
-          const groupName = (route.query && route.query.name) || '团队项目'
-          commit('SET_PAGE', {
-            title: groupName,
-            description: `欢迎来到${groupName}，与大家一起愉快的 Mock 吧。`,
-            placeholder: '团队项目更适合多人协作，快来创建项目吧。',
-            icon: 'person-stalker',
-            type: 1
-          })
           commit('SET_REQUEST_PARAMS', {
             groupId: route.params.id
           })

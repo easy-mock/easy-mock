@@ -19,37 +19,37 @@
           </div>
           <Submenu name="1">
             <template slot="title">
-              <Icon type="pound"></Icon> 我的项目
+              <Icon type="pound"></Icon> {{$t('c.layout.menu[0][0]')}}
             </template>
             <Menu-item
               name="/"
               @click.native="$router.push('/')">
-              <Icon type="person"></Icon> 个人项目
+              <Icon type="person"></Icon> {{$t('c.layout.menu[0][1]')}}
             </Menu-item>
             <Menu-item
               name="/group"
               @click.native="$router.push('/group')">
-              <Icon type="person-stalker"></Icon> 团队项目
+              <Icon type="person-stalker"></Icon> {{$t('c.layout.menu[0][2]')}}
             </Menu-item>
           </Submenu>
           <Menu-item
             name="/workbench"
             @click.native="$router.push('/workbench')">
-            <Icon type="code-working"></Icon> 工作台
+            <Icon type="code-working"></Icon> {{$t('c.layout.menu[1]')}}
           </Menu-item>
           <Menu-item
             name="/dashboard"
             @click.native="$router.push('/dashboard')">
-            <Icon type="ios-speedometer"></Icon> 数据
+            <Icon type="ios-speedometer"></Icon> {{$t('c.layout.menu[2]')}}
           </Menu-item>
           <Menu-item
             name="/docs"
             @click.native="$router.push('/docs')">
-            <Icon type="ios-book"></Icon> 文档
+            <Icon type="ios-book"></Icon> {{$t('c.layout.menu[3]')}}
           </Menu-item>
           <Submenu name="100">
             <template slot="title">
-              <Icon type="egg"></Icon> 彩蛋
+              <Icon type="egg"></Icon> {{$t('c.layout.menu[4][0]')}}
             </template>
             <li
               class="ivu-menu-item"
@@ -59,12 +59,12 @@
             <li
               class="ivu-menu-item"
               @click="open('https://github.com/easy-mock/easy-mock-cli')">
-              <Icon type="link"></Icon> API 生成工具
+              <Icon type="link"></Icon> {{$t('c.layout.menu[4][1]')}}
             </li>
             <li
               class="ivu-menu-item"
               @click="open('http://mockjs.com/examples.html')">
-              <Icon type="link"></Icon> Mock 语法
+              <Icon type="link"></Icon> {{$t('c.layout.menu[4][2]')}}
             </li>
           </Submenu>
           <Submenu name="5" class="nav-avatar" v-show="userHeadImg">
@@ -74,12 +74,12 @@
             <Menu-item
               name="/profile"
               @click.native="$router.push('/profile')">
-              <Icon type="edit"></Icon> 编辑资料
+              <Icon type="edit"></Icon> {{$t('c.layout.menu[5][0]')}}
             </Menu-item>
             <Menu-item
               name="/log-out"
               @click.native="logOut">
-              <Icon type="log-out"></Icon> 退出
+              <Icon type="log-out"></Icon> {{$t('c.layout.menu[5][1]')}}
             </Menu-item>
           </Submenu>
           <Menu-item
@@ -87,7 +87,7 @@
             name="/login"
             @click.native="$router.push('/login')"
             v-show="!userHeadImg">
-            <Icon type="log-in"></Icon> 登录
+            <Icon type="log-in"></Icon> {{$t('c.layout.menu[5][2]')}}
           </Menu-item>
         </Menu>
       </div>

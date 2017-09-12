@@ -7,7 +7,7 @@
       <div class="panel-info">
         <em-spots :size="10"></em-spots>
         <div class="wrapper">
-          <h2>{{isEdit ? '更新接口' : '创建接口'}}</h2>
+          <h2>{{isEdit ? $t('p.detail.editor.title[0]') : $t('p.detail.editor.title[1]')}}</h2>
           <div class="em-editor__form">
             <Form label-position="top">
               <Form-item label="Method">
@@ -20,23 +20,23 @@
                   <span slot="prepend">/</span>
                 </i-input>
               </Form-item>
-              <Form-item label="描述">
+              <Form-item :label="$t('p.detail.columns[0]')">
                 <i-input v-model="temp.description"></i-input>
               </Form-item>
-              <Form-item label="自动关闭" v-if="isEdit">
+              <Form-item :label="$t('p.detail.editor.autoClose')" v-if="isEdit">
                 <i-switch v-model="autoClose"></i-switch>
               </Form-item>
               <Form-item>
-                <Button type="primary" long @click="submit">{{isEdit ? '更新' : '创建'}}</Button>
+                <Button type="primary" long @click="submit">{{isEdit ? $t('p.detail.editor.action[0]') : $t('p.detail.editor.action[1]')}}</Button>
               </Form-item>
             </Form>
           </div>
           <div class="em-editor__control">
             <div class="em-proj-detail__switcher">
               <ul>
-                <li @click="format" v-shortkey="['ctrl', 'f']" @shortkey="format">格式化</li>
-                <li @click="preview" v-if="isEdit" v-shortkey="['ctrl', 'v']" @shortkey="preview">预览</li>
-                <li @click="close" v-shortkey="['ctrl', 'x']" @shortkey="close">关闭</li>
+                <li @click="format" v-shortkey="['ctrl', 'f']" @shortkey="format">{{$t('p.detail.editor.control[0]')}}</li>
+                <li @click="preview" v-if="isEdit" v-shortkey="['ctrl', 'v']" @shortkey="preview">{{$t('p.detail.editor.control[1]')}}</li>
+                <li @click="close" v-shortkey="['ctrl', 'x']" @shortkey="close">{{$t('p.detail.editor.control[2]')}}</li>
               </ul>
             </div>
           </div>
@@ -149,14 +149,14 @@ export default {
       try {
         const value = (new Function(`return ${this.temp.mode}`))() // eslint-disable-line
         if (!value) {
-          this.$Message.error('接口数据不能为空。')
+          this.$Message.error(this.$t('p.detail.editor.submit.error[0]'))
           return
         } else if (typeof value !== 'object') {
           throw new Error()
         }
       } catch (error) {
         if (!/^http(s)?:\/\//.test(this.temp.mode)) {
-          this.$Message.error(error.message || '请检查数据定义是否符合要求。')
+          this.$Message.error(error.message || this.$t('p.detail.editor.submit.error[1]'))
           return
         }
       }
@@ -170,7 +170,7 @@ export default {
           }
         }).then((res) => {
           if (res.data.success) {
-            this.$Message.success('更新成功')
+            this.$Message.success(this.$t('p.detail.editor.submit.updateSuccess'))
             this.value.url = mockUrl
             this.value.mode = this.temp.mode
             this.value.method = this.temp.method
@@ -184,7 +184,10 @@ export default {
           ...this.temp,
           url: mockUrl
         }).then((res) => {
-          if (res.data.success) this.close()
+          if (res.data.success) {
+            this.$Message.success(this.$t('p.detail.create.success'))
+            this.close()
+          }
         })
       }
     },

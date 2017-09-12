@@ -3,8 +3,8 @@
     <em-header
       :spots="6"
       icon="ios-speedometer"
-      title="数据"
-      description="这里将实时显示应用的使用情况。">
+      :title="$t('p.dashboard.header.title')"
+      :description="$t('p.dashboard.header.description')">
     </em-header>
     <em-keyboard-short></em-keyboard-short>
     <div class="em-container em-dashboard__content">
@@ -13,10 +13,10 @@
           <transition name="fadeLeft">
             <div class="em-dashboard__item em-dashboard__item--key"
               v-show="pageAnimated">
-              <h2><Icon type="stats-bars"></Icon> 接口累积调用</h2>
+              <h2><Icon type="stats-bars"></Icon> {{$tc('p.dashboard.total.mockUse', 1)}}</h2>
               <p class="number">
                 <em-animated-integer :value="total.mockUseCount"></em-animated-integer>
-                <span>次</span>
+                <span>{{$tc('p.dashboard.total.mockUse', 2)}}</span>
               </p>
             </div>
           </transition>
@@ -24,10 +24,10 @@
         <Col span="6">
           <transition name="fadeRight">
             <div class="em-dashboard__item" v-show="pageAnimated">
-              <h2><Icon type="cube"></Icon> 累积项目</h2>
+              <h2><Icon type="cube"></Icon> {{$tc('p.dashboard.total.project', 1)}}</h2>
               <p class="number">
                 <em-animated-integer :value="total.projectCount"></em-animated-integer>
-                <span>个</span>
+                <span>{{$tc('p.dashboard.total.project', 2)}}</span>
               </p>
             </div>
           </transition>
@@ -35,10 +35,10 @@
         <Col span="6">
           <transition name="fadeRight">
             <div class="em-dashboard__item" v-show="pageAnimated">
-              <h2><Icon type="link"></Icon> 累积接口</h2>
+              <h2><Icon type="link"></Icon> {{$tc('p.dashboard.total.mock', 1)}}</h2>
               <p class="number">
                 <em-animated-integer :value="total.mockCount"></em-animated-integer>
-                <span>个</span>
+                <span>{{$tc('p.dashboard.total.mock', 2)}}</span>
               </p>
             </div>
           </transition>
@@ -49,10 +49,10 @@
           <transition name="fadeLeft">
             <div class="em-dashboard__item em-dashboard__item--key" v-show="pageAnimated">
               <em-spots :size="6"></em-spots>
-              <h2><Icon type="person"></Icon> 累积用户</h2>
+              <h2><Icon type="person"></Icon> {{$tc('p.dashboard.total.user', 1)}}</h2>
               <p class="number">
                 <em-animated-integer :value="total.userCount"></em-animated-integer>
-                <span>位</span>
+                <span>{{$tc('p.dashboard.total.user', 2)}}</span>
               </p>
             </div>
           </transition>
@@ -61,10 +61,10 @@
           <transition name="fadeRight">
             <div class="em-dashboard__item" v-show="pageAnimated">
               <em-spots :size="6"></em-spots>
-              <h2><Icon type="person-add"></Icon> 新增用户</h2>
+              <h2><Icon type="person-add"></Icon> {{$tc('p.dashboard.today.user', 1)}}</h2>
               <p class="number">
                 <em-animated-integer :value="today.userCount"></em-animated-integer>
-                <span>位</span>
+                <span>{{$tc('p.dashboard.today.user', 2)}}</span>
               </p>
             </div>
           </transition>
@@ -74,10 +74,10 @@
         <Col span="12">
           <transition name="fadeLeft">
             <div class="em-dashboard__item em-dashboard__item--key" v-show="pageAnimated">
-              <h2><Icon type="stats-bars"></Icon> 今日接口累积调用</h2>
+              <h2><Icon type="stats-bars"></Icon> {{$tc('p.dashboard.today.mockUse', 1)}}</h2>
               <p class="number">
                 <em-animated-integer :value="today.mockUseCount"></em-animated-integer>
-                <span>次</span>
+                <span>{{$tc('p.dashboard.today.mockUse', 2)}}</span>
               </p>
             </div>
           </transition>
@@ -85,10 +85,10 @@
         <Col span="6">
           <transition name="fadeRight">
             <div class="em-dashboard__item" v-show="pageAnimated">
-              <h2><Icon type="cube"></Icon> 新增项目</h2>
+              <h2><Icon type="cube"></Icon> {{$tc('p.dashboard.today.project', 1)}}</h2>
               <p class="number">
                 <em-animated-integer :value="today.projectCount"></em-animated-integer>
-                <span>个</span>
+                <span>{{$tc('p.dashboard.today.project', 2)}}</span>
               </p>
             </div>
           </transition>
@@ -96,10 +96,10 @@
         <Col span="6">
           <transition name="fadeRight">
             <div class="em-dashboard__item" v-show="pageAnimated">
-              <h2><Icon type="link"></Icon> 新增接口</h2>
+              <h2><Icon type="link"></Icon> {{$tc('p.dashboard.today.mock', 1)}}</h2>
               <p class="number">
                 <em-animated-integer :value="today.mockCount"></em-animated-integer>
-                <span>个</span>
+                <span>{{$tc('p.dashboard.today.mock', 2)}}</span>
               </p>
             </div>
           </transition>

@@ -3,42 +3,42 @@
       v-shortkey="['shift', '?']" @shortkey="show">
     <Modal
       v-model="visible"
-      title="键盘快捷键"
+      :title="$t('c.keyboardShort.modalTitle')"
       :transfer="false">
       <div class="em-keyboard-short__content">
         <Row :gutter="20">
           <i-col :span="12">
             <div>
-              <h2>全局导航</h2>
+              <h2>{{$t('c.keyboardShort.keyboards[0].category')}}</h2>
               <ul>
                 <li>
                   <code class="keyboard-short">p</code>
-                  个人项目
+                  {{$t('c.keyboardShort.keyboards[0].list[0]')}}
                 </li>
                 <li>
                   <code class="keyboard-short">g</code>
-                  团队项目
+                  {{$t('c.keyboardShort.keyboards[0].list[1]')}}
                 </li>
                 <li>
                   <code class="keyboard-short">w</code>
-                  工作台
+                  {{$t('c.keyboardShort.keyboards[0].list[2]')}}
                 </li>
                 <li>
                   <code class="keyboard-short">d</code>
-                  文档
+                  {{$t('c.keyboardShort.keyboards[0].list[3]')}}
                 </li>
               </ul>
             </div>
             <div>
-              <h2>全局操作</h2>
+              <h2>{{$t('c.keyboardShort.keyboards[1].category')}}</h2>
               <ul>
                 <li>
                   <code class="keyboard-short">n</code>
-                  创建项目
+                  {{$t('c.keyboardShort.keyboards[1].list[0]')}}
                 </li>
                 <li>
                   <code class="keyboard-short">s</code>
-                  搜索
+                  {{$t('c.keyboardShort.keyboards[1].list[1]')}}
                 </li>
               </ul>
             </div>

@@ -1,4 +1,3 @@
-import iView from 'iview'
 import * as api from '../../api'
 
 export default {
@@ -6,10 +5,6 @@ export default {
   state: {
     list: [],
     project: {},
-    page: {
-      description: '',
-      title: ''
-    },
     keywords: '',
     pageIndex: 1
   },
@@ -29,9 +24,6 @@ export default {
     SET_REQUEST_PARAMS (state, payload) {
       state.keywords = payload.keywords || state.keywords
       state.pageIndex = payload.pageIndex || state.pageIndex
-    },
-    SET_PAGE (state, payload) {
-      state.page = payload
     }
   },
   actions: {
@@ -63,7 +55,6 @@ export default {
         }
       }).then((res) => {
         if (res.data.success) {
-          iView.Message.success('创建成功')
           commit('SET_REQUEST_PARAMS', {pageIndex: 1})
           dispatch('FETCH', route)
         }

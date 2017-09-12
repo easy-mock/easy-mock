@@ -1,8 +1,8 @@
 <template>
   <div class="em-new">
     <em-header icon="plus-round"
-      title="创建项目"
-      description="创建一个令人愉快的项目。">
+      :title="$t('p.new.header.title')"
+      :description="$t('p.new.header.description')">
     </em-header>
     <em-keyboard-short></em-keyboard-short>
     <project></project>
