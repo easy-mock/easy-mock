@@ -191,6 +191,7 @@ The QQ group number is **595325417**, and here's the QR code of the group:
 If you deployed Easy Mock in your own server, please [tell us](https://github.com/easy-mock/easy-mock/issues/47)
 
 * [Souche Inc.](https://blog.souche.com/)
+* [Ruff](https://ruff.io/)
 
 ## Core Contributors
 
