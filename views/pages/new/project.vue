@@ -3,10 +3,11 @@
     <div class="em-container" v-show="pageAnimated">
       <div class="em-new__content">
         <Form label-position="top" :model="form" ref="formValidate">
-          <Form-item label="归属 / 项目名">
+          <Form-item
+            :label="$tc('p.new.form.name', 1)">
             <template slot="label">
-              归属 / 项目名
-              <Tooltip content="尽量简短表意。例：petstore">
+              {{$tc('p.new.form.name', 1)}}
+              <Tooltip :content="$tc('p.new.form.name', 2)">
                 <Icon type="help-circled"></Icon>
               </Tooltip>
             </template>
@@ -26,10 +27,11 @@
               </Col>
             </Row>
           </Form-item>
-          <Form-item label="URL">
+          <Form-item
+            :label="$tc('p.new.form.url', 1)">
             <template slot="label">
-              项目基础 URL
-              <Tooltip content="尽量简短表意。例：/nba">
+              {{$tc('p.new.form.url', 1)}}
+              <Tooltip :content="$tc('p.new.form.url', 2)">
                 <Icon type="help-circled"></Icon>
               </Tooltip>
             </template>
@@ -37,24 +39,24 @@
               <span slot="prepend">/</span>
             </i-input>
           </Form-item>
-          <Form-item label="项目描述"  class="em-new__form-hr">
-            <i-input v-model="form.projectDesc" placeholder="不填默认为项目名"></i-input>
+          <Form-item :label="$tc('p.new.form.description', 1)"  class="em-new__form-hr">
+            <i-input v-model="form.projectDesc"
+              :placeholder="$tc('p.new.form.description', 2)"></i-input>
           </Form-item>
-          <Form-item label="Swagger Docs API">
+          <Form-item :label="$tc('p.new.form.swagger', 0)">
             <template slot="label">
-              Swagger Docs API
-              <span>(可选)</span>
+              {{$tc('p.new.form.swagger', 0)}}
+              <span>({{$tc('p.new.form.swagger', 1)}})</span>
             </template>
             <i-input v-model="form.projectSwagger" placeholder="http://example.com/swagger.json"></i-input>
             <p class="em-new__form-description">
-            如果后台有提供 Swagger 文档（并且没有验证授权的问题）, 于是我们可以在此处填写 Swagger 的接口地址,
-            Easy Mock 会自动基于此接口创建 Mock 接口. <router-link to="/docs#swagger"><Icon type="help-circled"></Icon></router-link>
+            {{$tc('p.new.form.swagger', 2)}} <router-link to="/docs#swagger"><Icon type="help-circled"></Icon></router-link>
             </p>
           </Form-item>
-          <Form-item label="邀请成员" class="em-new__form-hr">
+          <Form-item :label="$t('p.new.form.member[0]')" class="em-new__form-hr">
             <template slot="label">
-              邀请成员 协同编辑
-              <span>({{isGroup ? '团队项目下，该配置不生效' : '可选'}})</span>
+              {{$t('p.new.form.member[0]')}}
+              <span>({{isGroup ? $tc('p.new.form.member[1]', 2) : $tc('p.new.form.member[1]', 1)}})</span>
             </template>
             <i-select
               v-model="form.projectMembers"
@@ -62,7 +64,7 @@
               filterable
               remote
               :disabled="isGroup"
-              placeholder="用户昵称、用户名，支持模糊匹配"
+              :placeholder="$t('p.new.form.member[2]')"
               :remote-method="remote"
               :loading="remoteLoading">
               <Option v-for="option in users"
@@ -71,18 +73,18 @@
             </i-select>
           </Form-item>
           <Form-item :class="{'em-new__form-hr': isEdit}">
-            <Button type="primary" long @click="submit">{{isEdit ? '保存' : '创建'}}</Button>
+            <Button type="primary" long @click="submit">{{isEdit ? $t('p.new.form.button.update') : $t('p.new.form.button.create')}}</Button>
           </Form-item>
-          <Form-item label="请输入项目名称以进行确认" v-if="isEdit">
-            <i-input v-model="confirmName" placeholder="项目名确认"></i-input>
+          <Form-item :label="$tc('p.new.form.confirm', 0)" v-if="isEdit">
+            <i-input v-model="confirmName" :placeholder="$tc('p.new.form.confirm', 1)"></i-input>
             <p class="em-new__form-description">
-            出于某些原因，删除也许会失败。但如果你执意删除，必须知道此操作无法撤消，这将永久删除 <strong style="word-break:break-all;">
+            {{$tc('p.new.form.confirm', 2)}} <strong style="word-break:break-all;">
               {{(projectData.user && projectData.user.nick_name) || (projectData.group && projectData.group.name) }} / {{projectData.name}}
             </strong>
             </p>
           </Form-item>
           <Form-item v-if="isEdit">
-            <Button type="error" long @click="remove" :disabled="confirmName !== projectData.name">删除项目</Button>
+            <Button type="error" long @click="remove" :disabled="confirmName !== projectData.name">{{$t('p.new.form.button.delete')}}</Button>
           </Form-item>
         </Form>
       </div>
@@ -200,7 +202,7 @@ export default {
       if (this.isEdit) {
         api.project.update({ data }).then((res) => {
           if (res.data.success) {
-            this.$Message.success('更新成功')
+            this.$Message.success(this.$t('p.new.form.success.update'))
             this.$store.commit('mock/SET_REQUEST_PARAMS', {pageIndex: 1})
             this.$store.dispatch('mock/FETCH', this.$route)
           }
@@ -214,7 +216,7 @@ export default {
           data: data
         }).then((res) => {
           if (res.data.success) {
-            this.$Message.success('创建成功')
+            this.$Message.success(this.$t('p.new.form.success.create'))
             if (data.group) {
               const group = this.groups.filter(item => item.value === data.group)[0]
               this.$router.push(`/group/${group.value}?name=${group.label}`)
@@ -257,7 +259,7 @@ export default {
     remove () {
       const projectId = this.projectData._id
       this.$store.dispatch('project/REMOVE', projectId).then(() => {
-        this.$Message.success(this.projectData.name + ' 已删除')
+        this.$Message.success(this.$t('p.new.form.success.delete', { name: this.projectData.name }))
         this.$router.push('/')
       })
     }

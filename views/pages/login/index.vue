@@ -3,16 +3,20 @@
     <transition name="zoom">
       <div class="em-index__login" v-if="page === 0">
         <img src="/public/images/easy-mock.png">
-        <p>伪造数据，我们更高效</p>
-        <p>但，不仅于此</p>
+        <p>{{$tc('p.login.description', 1)}}</p>
+        <p>{{$tc('p.login.description', 2)}}</p>
         <transition name="fadeUp" mode="out-in">
-          <i-button type="primary" long @click.stop="start" v-if="!isLogin" key="start">开始吧</i-button>
-          <i-button type="success" long @click.stop="login" v-else key="login">登录</i-button>
+          <i-button type="primary" long @click.stop="start" v-if="!isLogin" key="start">{{$tc('p.login.form.button', 1)}}</i-button>
+          <i-button type="success" long @click.stop="login" v-else key="login">{{$tc('p.login.form.button', 2)}}</i-button>
         </transition>
         <transition name="fadeLeft">
           <div v-show="isLogin" v-click-outside="onClickOutside">
-            <i-input size="large" placeholder="用户名，没有会自动注册哦" ref="user" v-model="userName" @on-enter="login"></i-input>
-            <i-input size="large" placeholder="密码" type="password" v-model="password" @on-enter="login"></i-input>
+            <i-input size="large"
+              :placeholder="$tc('p.login.form.placeholder', 1)"
+              ref="user" v-model="userName" @on-enter="login"></i-input>
+            <i-input size="large"
+              :placeholder="$tc('p.login.form.placeholder', 2)"
+              type="password" v-model="password" @on-enter="login"></i-input>
           </div>
         </transition>
       </div>
@@ -35,9 +39,10 @@
       <transition name="fade">
         <div class="fullscreen-by" v-if="wallpaperCopyright">
           <div v-if="wallpaperCopyright.name === 'Bing'">
+            Photo by
             <a :href="wallpaperCopyright.link" target="_blank">
-              由 <strong>{{wallpaperCopyright.name}}</strong>
-            </a> 提供
+              <strong>{{wallpaperCopyright.name}}</strong>
+            </a>
           </div>
           <div v-else>
             Photo by
@@ -54,7 +59,7 @@
           </div>
         </div>
       </transition>
-      <div class="about-btn" @click="page = 1">Easy Mock 是什么？</div>
+      <div class="about-btn" @click="page = 1">{{$tc('p.login.about', 1)}}</div>
     </div>
 
     <div class="em-index__section section-about" style="z-index: 5"
@@ -72,7 +77,7 @@
             class="section-description"
             key="b"
             v-show="featureVisible">
-            是一个可视化，并且能快速生成模拟数据的服务。
+            {{$tc('p.login.about', 2)}}
           </div>
         </transition-group>
         <Row :gutter="100">
@@ -82,8 +87,8 @@
                 <div class="feature-icon">
                   <img src="/public/images/icon-swagger.png" style="margin-left: 1px;">
                 </div>
-                <h2>Swagger</h2>
-                <p>这是一个重磅级特性，通过 Swagger 只需1秒就能创建好项目所有的 Mock 接口，效率瞬间提高了 99%。</p>
+                <h2>{{$tc('p.login.feature[0]', 1)}}</h2>
+                <p>{{$tc('p.login.feature[0]', 2)}}</p>
               </div>
             </transition>
           </i-col>
@@ -93,8 +98,8 @@
                 <div class="feature-icon">
                   <img src="/public/images/icon-mock.png" style="margin-left: 1px;">
                 </div>
-                <h2>Mock.js</h2>
-                <p>也许你用过这个工具，很棒！现在 Easy Mock 内置了 Mock.js，我们可以更愉快的伪造数据了。</p>
+                <h2>{{$tc('p.login.feature[1]', 1)}}</h2>
+                <p>{{$tc('p.login.feature[1]', 2)}}</p>
               </div>
             </transition>
           </i-col>
@@ -104,8 +109,8 @@
                 <div class="feature-icon">
                   <img src="/public/images/icon-command.png">
                 </div>
-                <h2>Easy Mock CLI</h2>
-                <p>CLI 是一个基于 Easy Mock 快速生成 api.js 的命令行工具。有了它，你再也不需要手动创建 api.js 了。</p>
+                <h2>{{$tc('p.login.feature[2]', 1)}}</h2>
+                <p>{{$tc('p.login.feature[2]', 2)}}</p>
               </div>
             </transition>
           </i-col>
@@ -117,8 +122,8 @@
                 <div class="feature-icon">
                   <Icon type="ios-book"></Icon>
                 </div>
-                <h2>文档</h2>
-                <p>为了让你掌握 Easy Mock，我们提供了非常详尽的使用文档。如果你发现问题或是建议可以与我们进行反馈。</p>
+                <h2>{{$tc('p.login.feature[3]', 1)}}</h2>
+                <p>{{$tc('p.login.feature[3]', 2)}}</p>
               </div>
             </transition>
           </i-col>
@@ -128,8 +133,8 @@
                 <div class="feature-icon">
                   <Icon type="ribbon-b"></Icon>
                 </div>
-                <h2>响应式数据</h2>
-                <p>想要数据联动那是不可能了，不过 Easy Mock 支持响应式数据。通过判断入参返回对应的数据。</p>
+                <h2>{{$tc('p.login.feature[4]', 1)}}</h2>
+                <p>{{$tc('p.login.feature[4]', 2)}}</p>
               </div>
             </transition>
           </i-col>
@@ -139,8 +144,8 @@
                 <div class="feature-icon">
                   <Icon type="lightbulb"></Icon>
                 </div>
-                <h2>语法提示</h2>
-                <p>你也许时常忘记 Mock.js 的语法，不过没关系。现在只需要在编辑器里输入 em 就能获得相应提示。</p>
+                <h2>{{$tc('p.login.feature[5]', 1)}}</h2>
+                <p>{{$tc('p.login.feature[5]', 2)}}</p>
               </div>
             </transition>
           </i-col>
@@ -247,8 +252,8 @@ export default {
       }).catch((res) => {
         if (res.data.message === '用户不存在') {
           this.$Modal.confirm({
-            title: '提示',
-            content: '该用户不存在, 是否根据当前输入的用户名和密码注册用户?注：请妥善保管好你的密码，目前无法提供找回密码的通道。',
+            title: this.$t('confirm.title'),
+            content: this.$t('p.login.confirm.register.content'),
             onOk: () => {
               this.register()
             }
@@ -264,7 +269,7 @@ export default {
         }
       }).then((res) => {
         if (res.data.success) {
-          this.$Message.success('注册成功')
+          this.$Message.success(this.$t('p.login.confirm.register.success'))
           this.login()
         }
       })

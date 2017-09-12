@@ -19,7 +19,7 @@
 
 ## Links
 
-- [简体中文介绍](README.zh_CN.md)
+- [简体中文介绍](README.zh-CN.md)
 - [Online Manual](https://easy-mock.com/docs)
 - [Easy Mock CLI](https://github.com/easy-mock/easy-mock-cli) - A command line
   tool to generate an **api.js** file quickly based on **Easy Mock**.

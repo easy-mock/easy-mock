@@ -59,6 +59,7 @@
     "v-click-outside": "^0.0.8",
     "vm2": "^3.4.6",
     "vue": "^2.4.2",
+    "vue-i18n": "^7.2.0",
     "vue-ls": "^2.3.0",
     "vue-router": "^2.7.0",
     "vue-server-renderer": "^2.4.2",

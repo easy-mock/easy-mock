@@ -4,13 +4,13 @@
     <p>{{mock.method}}</p>
     <h2>URL</h2>
     <p>{{mock.url}}</p>
-    <h2>描述</h2>
+    <h2>{{$t('p.detail.expand.description')}}</h2>
     <p>{{mock.description}}</p>
     <Tabs value="request" v-if="mock.parameters || mock.response_model">
-      <Tab-pane label="请求参数" name="request" v-if="mock.parameters">
+      <Tab-pane :label="$t('p.detail.expand.tab[0]')" name="request" v-if="mock.parameters">
         <Table :columns="columnsRequest" :data="request"></Table>
       </Tab-pane>
-      <Tab-pane label="响应参数" name="response" v-if="mock.response_model">
+      <Tab-pane :label="$t('p.detail.expand.tab[1]')" name="response" v-if="mock.response_model">
         <Table :columns="columnsResponse" :data="response"></Table>
       </Tab-pane>
       <Tab-pane label="Class Model" name="class" v-if="mock.response_model && classList.length">
@@ -62,10 +62,10 @@ export default {
             })
           }
         },
-        { title: '参数名', key: 'name' },
-        { title: '描述', key: 'description' },
-        { title: '参数类型', key: 'paramType' },
-        { title: '数据类型', key: 'dataType' }
+        { title: this.$t('p.detail.expand.columnsRequest[0]'), key: 'name' },
+        { title: this.$t('p.detail.expand.columnsRequest[1]'), key: 'description' },
+        { title: this.$t('p.detail.expand.columnsRequest[2]'), key: 'paramType' },
+        { title: this.$t('p.detail.expand.columnsRequest[3]'), key: 'dataType' }
       ],
       columnsResponse: [
         {
@@ -79,9 +79,9 @@ export default {
             })
           }
         },
-        { title: '状态码', key: 'code' },
-        { title: '描述', key: 'message' },
-        { title: '返回类型', key: 'type' }
+        { title: this.$t('p.detail.expand.columnsResponse[0]'), key: 'code' },
+        { title: this.$t('p.detail.expand.columnsResponse[1]'), key: 'message' },
+        { title: this.$t('p.detail.expand.columnsResponse[2]'), key: 'type' }
       ]
     }
   },
@@ -90,7 +90,7 @@ export default {
       return this.formatJSON(this.mock.parameters, (data, len) => {
         return {
           name: data.name,
-          description: data.description || '太懒了，居然不写描述',
+          description: data.description || this.$t('p.detail.expand.defaultDescription'),
           paramType: data.paramType || data.in,
           dataType: data.type,
           models: len === 1 ? data.type : []
@@ -102,7 +102,7 @@ export default {
         return {
           type: data.type,
           code: data.code,
-          message: data.message || data.description || '太懒了，居然不写描述',
+          message: data.message || data.description || this.$t('p.detail.expand.defaultDescription'),
           models: len === 1 ? data.type : []
         }
       })

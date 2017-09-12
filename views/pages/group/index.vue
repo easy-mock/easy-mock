@@ -10,34 +10,40 @@
       @on-ok="submit"
       :closable="false">
       <Tabs v-model="tabName">
-        <Tab-pane label="创建团队" name="create" :disabled="tabName === 'rename'">
+        <Tab-pane
+          :label="$tc('p.group.modal.tab.create', 0)"
+          name="create" :disabled="tabName === 'rename'">
           <Form :label-width="64">
-            <Form-item label="团队名称">
+            <Form-item :label="$tc('p.group.modal.tab.create', 1)">
               <i-input
                 v-model="groupName"
-                placeholder="建议名字取特殊一点，防止别人误加入"
+                :placeholder="$tc('p.group.modal.tab.create', 2)"
                 @on-enter="submit"
                 ref="inputCreate"></i-input>
             </Form-item>
           </Form>
         </Tab-pane>
-        <Tab-pane label="加入团队" name="join" :disabled="tabName === 'rename'">
+        <Tab-pane
+          :label="$tc('p.group.modal.tab.join', 0)"
+          name="join" :disabled="tabName === 'rename'">
           <Form :label-width="64">
-            <Form-item label="团队名称">
+            <Form-item :label="$tc('p.group.modal.tab.join', 1)">
               <i-input
                 v-model="groupName"
                 @on-enter="submit"
-                placeholder="请输入团队名称"></i-input>
+                :placeholder="$tc('p.group.modal.tab.join', 2)"></i-input>
             </Form-item>
           </Form>
         </Tab-pane>
-        <Tab-pane label="编辑团队" name="rename" :disabled="tabName !== 'rename'">
+        <Tab-pane
+          :label="$tc('p.group.modal.tab.edit', 0)"
+          name="rename" :disabled="tabName !== 'rename'">
           <Form :label-width="64">
-            <Form-item label="团队名称">
+            <Form-item :label="$tc('p.group.modal.tab.edit', 1)">
               <i-input
                 v-model="groupName"
                 @on-enter="submit"
-                placeholder="建议名字取特殊一点，防止别人误加入"></i-input>
+                :placeholder="$tc('p.group.modal.tab.edit', 2)"></i-input>
             </Form-item>
           </Form>
         </Tab-pane>
@@ -45,14 +51,13 @@
     </Modal>
     <em-placeholder :show="groups.length === 0">
       <Icon :type="keywords ? 'outlet' : 'happy-outline'"></Icon>
-      <p>{{keywords ? '没有匹配到相关团队。' : '想一起玩吗？快来创建团队呀。'}}</p>
+      <p>{{keywords ? $tc('p.group.placeholder', 1) : $tc('p.group.placeholder', 2)}}</p>
     </em-placeholder>
     <em-header
       icon="person-stalker"
-      title="团队项目"
-      description="这里将展示你所创建的以及加入的团队。">
+      :title="$t('p.group.header.title')"
+      :description="$t('p.group.header.description')">
     </em-header>
-
     <transition name="fade">
       <div class="em-container em-group__list" v-show="pageAnimated">
         <div class="ivu-row">
@@ -94,9 +99,12 @@ export default {
       keywords: '',
       keyboards: [
         {
-          category: '操作',
+          category: this.$t('p.group.keyboards[0].category'),
           list: [
-            { description: '新建团队', shorts: ['ctrl', 'c'] }
+            {
+              description: this.$tc('p.group.keyboards[0].list', 0),
+              shorts: ['ctrl', 'c']
+            }
           ]
         }
       ]
@@ -131,22 +139,36 @@ export default {
     submit () {
       this.modalShow = false
       if (this.tabName === 'create') {
-        this.$store.dispatch('group/ADD', this.groupName)
+        this.$store.dispatch('group/ADD', this.groupName).then(body => {
+          if (body.success) this.$Message.success(this.$t('p.group.create.success'))
+        })
       } else if (this.tabName === 'join') {
-        this.$store.dispatch('group/JOIN', this.groupName)
+        this.$store.dispatch('group/JOIN', this.groupName).then(body => {
+          if (body.success) {
+            this.$Message.success(this.$t('p.group.join.success', {groupName: this.groupName}))
+          } else {
+            this.$Message.warning(this.$t('p.group.join.warning', {groupName: this.groupName}))
+          }
+        })
       } else {
         this.$store.dispatch('group/RENAME', {
           id: this.renameGroup._id,
           name: this.groupName
+        }).then(body => {
+          if (body.success) this.$Message.success(this.$t('p.group.update.success'))
         })
       }
     },
     remove (group) {
       this.$Modal.confirm({
-        title: '提示',
-        content: `此操作将 <strong>解散</strong> 或 <strong>退出</strong> 团队 <strong>${group.name}</strong> , 是否继续?`,
+        title: this.$t('confirm.title'),
+        content: this.$t('p.group.confirm.delete.content', { name: group.name }),
         onOk: () => {
-          this.$store.dispatch('group/REMOVE', group._id)
+          this.$store.dispatch('group/REMOVE', group._id).then(body => {
+            if (body.success) {
+              this.$Message.success(this.$t('p.group.remove.success'))
+            }
+          })
         }
       })
     },

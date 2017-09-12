@@ -58,13 +58,13 @@ instance.interceptors.response.use((res) => {
     if (body.code === 10001) {
       body.data.forEach((date) => {
         iView.Notice.error({
-          title: '提示',
+          title: 'Error',
           desc: date[Object.keys(date)[0]]
         })
       })
     } else if (messageUnless.indexOf(body.message) === -1) {
       iView.Notice.error({
-        title: '提示',
+        title: 'Error',
         desc: body.message
       })
     }
