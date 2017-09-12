@@ -188,8 +188,7 @@ The QQ group number is **595325417**, and here's the QR code of the group:
 
 ## Who Deployed Easy Mock
 
-If you deployed Easy Mock in your own server, we invite you to make a pull
-request to add yourself to the list below.
+If you deployed Easy Mock in your own server, please [tell us](https://github.com/easy-mock/easy-mock/issues/47)
 
 * [Souche Inc.](https://blog.souche.com/)
 

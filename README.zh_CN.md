@@ -160,7 +160,7 @@ Easy Mock 目前由[大搜车无线架构团队](http://f2e.souche.com/blog/)进
 
 ## 在使用的团队或公司
 
-如有内网部署，请务必通过 Pull Request 的方式在此添加公司或者团队。
+如有内网部署，请务必[告诉我们](https://github.com/easy-mock/easy-mock/issues/47)
 
 * [大搜车](https://blog.souche.com/)
 
