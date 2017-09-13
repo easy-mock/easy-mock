@@ -165,6 +165,8 @@ Easy Mock 目前由[大搜车无线架构团队](http://f2e.souche.com/blog/)进
 * [大搜车](https://blog.souche.com/)
 * [Ruff](https://ruff.io/zh-cn/)
 
+* [Ruff](https://ruff.io/zh-cn/)
+
 ## 核心贡献者
 
 <table id="contributors">

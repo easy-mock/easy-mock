@@ -193,6 +193,8 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
 * [Souche Inc.](https://blog.souche.com/)
 * [Ruff](https://ruff.io/)
 
+* [Ruff](https://ruff.io/)
+
 ## Core Contributors
 
 <table id="contributors">
