@@ -54,13 +54,14 @@
           <Form-item label="邀请成员" class="em-new__form-hr">
             <template slot="label">
               邀请成员 协同编辑
-              <span>(可选)</span>
+              <span>({{isGroup ? '团队项目下，该配置不生效' : '可选'}})</span>
             </template>
             <i-select
               v-model="form.projectMembers"
               multiple
               filterable
               remote
+              :disabled="isGroup"
               placeholder="用户昵称、用户名，支持模糊匹配"
               :remote-method="remote"
               :loading="remoteLoading">
@@ -157,6 +158,13 @@ export default {
     },
     isEdit () {
       return !!this.projectData
+    },
+    isGroup () {
+      if (this.projectData) {
+        return !!this.projectData.group
+      } else {
+        return this.form.groupId !== this.user.id
+      }
     }
   },
   methods: {
@@ -186,7 +194,7 @@ export default {
         swagger_url: this.form.projectSwagger,
         description: this.form.projectDesc,
         url: this.convertUrl(this.projectUrl),
-        members: this.form.projectMembers
+        members: this.isGroup ? [] : this.form.projectMembers
       }
 
       if (this.isEdit) {
