@@ -230,10 +230,16 @@ export default {
             const list = res.data.data.map(item => {
               return {
                 value: item._id,
-                label: item.nick_name
+                label: item.nick_name,
+                userName: item.name
               }
             })
-            this.users = list.filter(item => item.label.toLowerCase().indexOf(query.toLowerCase()) > -1)
+            this.users = list.filter(item => {
+              const nickName = item.label.toLowerCase()
+              const userName = item.userName.toLowerCase()
+              const q = query.toLowerCase()
+              return nickName.indexOf(q) > -1 || userName.indexOf(q) > -1
+            })
           }
         })
       } else {
