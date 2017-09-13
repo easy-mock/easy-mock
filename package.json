@@ -32,7 +32,7 @@
     "config": "^1.26.1",
     "cross-env": "^5.0.1",
     "flatnest": "^1.0.0",
-    "iview": "^2.0.0",
+    "iview": "^2.3.2",
     "js-beautify": "^1.6.4",
     "json-schema-faker": "^0.4.0",
     "jszip": "^3.1.3",

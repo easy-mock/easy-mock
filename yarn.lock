@@ -1545,7 +1545,7 @@ copy-to@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/copy-to/-/copy-to-2.0.1.tgz#2680fbb8068a48d08656b6098092bdafc906f4a5"
 
-core-js@^2.4.0, core-js@^2.4.1, core-js@^2.5.0:
+core-js@^2.4.0, core-js@^2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.0.tgz#569c050918be6486b3837552028ae0466b717086"
 
@@ -3254,12 +3254,12 @@ istanbul@^0.4.5:
     which "^1.1.1"
     wordwrap "^1.0.0"
 
-iview@^2.0.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/iview/-/iview-2.2.0.tgz#50a3380d9ba0598c223d6f8ed8c55a70548e2f11"
+iview@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/iview/-/iview-2.3.2.tgz#9f2b5f1e97fa021dd23c1e35d6c52874b68842c0"
   dependencies:
     async-validator "^1.7.1"
-    core-js "^2.4.1"
+    core-js "^2.5.0"
     deepmerge "^1.5.0"
     popper.js "^0.6.4"
     tinycolor2 "^1.4.1"
