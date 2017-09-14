@@ -20,7 +20,7 @@
     "key": "user",
     "expire": "14 days",
     "collection": "tokens",
-    "secret": ""
+    "secret": "shared-secret"
   },
   "publicAPIs": [
     "/api/proxy",
