@@ -1,222 +1,222 @@
 export default {
   confirm: {
-    title: '提示'
+    title: 'Notification'
   },
   p: {
     dashboard: {
       header: {
-        title: '数据',
-        description: '这里将实时显示应用的使用情况。'
+        title: 'Dashboard',
+        description: 'Display your application usage in real time.'
       },
       total: {
-        user: '累积用户 | 位',
-        mock: '累积接口 | 个',
-        project: '累积项目 | 个',
-        mockUse: '接口累积调用 | 次'
+        user: 'Total Users | ',
+        mock: 'Total Mocks | ',
+        project: 'Total Projects | ',
+        mockUse: 'Total Mock Usage | '
       },
       today: {
-        user: '新增用户 | 位',
-        mock: '新增接口 | 个',
-        project: '新增项目 | 个',
-        mockUse: '今日接口累积调用 | 次'
+        user: 'New Users | ',
+        mock: 'New Mocks | ',
+        project: 'New Projects | ',
+        mockUse: 'Mock Usage Today | '
       }
     },
     docs: {
       header: {
-        title: '文档 | 更新日志',
-        description: '阅读文档能使你完全掌握 Easy Mock 的使用。 | 更新永无止境，只为让你开心。'
+        title: 'Docs | Release Notes',
+        description: 'Read docs and use Easy Mock like pro. | Never stop updating.'
       }
     },
     group: {
       header: {
-        title: '团队项目',
-        description: '这里将展示你所创建的以及加入的团队。'
+        title: 'Team Projects',
+        description: 'Teams you created or joined.'
       },
       modal: {
         tab: {
-          create: '创建团队 | 团队名称 | 建议名字取特殊一点，防止别人误加入',
-          join: '加入团队 | 团队名称 | 请输入团队名称',
-          edit: '编辑团队 | 团队名称 | 建议名字取特殊一点，防止别人误加入'
+          create: 'Create New Team | Name | Make your team name spical to avoid accidently access',
+          join: 'Join a Team | Name | Please type team name',
+          edit: 'Edit Team | Name | Make your team name spical to avoid accidently access'
         }
       },
-      placeholder: '没有匹配到相关团队。| 想一起玩吗？快来创建团队呀。',
+      placeholder: 'Not matched team founded. | Create your first team to start cooperating :)',
       keyboards: [{
-        category: '操作',
-        list: '新建团队'
+        category: 'Action',
+        list: 'Create New Teams'
       }],
       confirm: {
         delete: {
-          content: '此操作将 <strong>解散</strong> 或 <strong>退出</strong> 团队 <strong>{name}</strong> , 是否继续?'
+          content: 'You will <strong>dismiss</strong> or <strong>quit</strong> team <strong>{name}</strong> , are you sure?'
         }
       },
       create: {
-        success: '创建成功'
+        success: 'Create success'
       },
       update: {
-        success: '更新成功'
+        success: 'Update success'
       },
       remove: {
-        success: '操作成功'
+        success: 'Remove success'
       },
       join: {
-        success: '已加入 {groupName}',
-        warning: '{groupName} 不存在'
+        success: 'Alread joined {groupName}',
+        warning: '{groupName} not exsit'
       }
     },
     login: {
-      description: '伪造数据，我们更高效 | 但，不仅于此',
+      description: 'Mock more efficiently | ',
       form: {
-        button: '开始吧 | 登录',
-        placeholder: '用户名，没有会自动注册哦 | 密码'
+        button: 'Let\'go | Login',
+        placeholder: 'Username, will register if user doesn\'t exsit | Password'
       },
-      about: 'Easy Mock 是什么？| 是一个可视化，并且能快速生成模拟数据的服务。',
+      about: 'What is Easy Mock? | A vitrual API mock up tool, and generate mock up data.',
       feature: [
-        'Swagger | 这是一个重磅级特性，通过 Swagger 只需1秒就能创建好项目所有的 Mock 接口，效率瞬间提高了 99%。',
-        'Mock.js | 也许你用过这个工具，很棒！现在 Easy Mock 内置了 Mock.js，我们可以更愉快的伪造数据了。',
-        'Easy Mock CLI | CLI 是一个基于 Easy Mock 快速生成 api.js 的命令行工具。有了它，你再也不需要手动创建 api.js 了。',
-        '文档 | 为了让你掌握 Easy Mock，我们提供了非常详尽的使用文档。如果你发现问题或是建议可以与我们进行反馈。',
-        '响应式数据 | 想要数据联动那是不可能了，不过 Easy Mock 支持响应式数据。通过判断入参返回对应的数据。',
-        '语法提示 | 你也许时常忘记 Mock.js 的语法，不过没关系。现在只需要在编辑器里输入 em 就能获得相应提示。'
+        'Swagger | Kickass feature, using Swagger to create Mock API in few seconds, increase efficiency up to 99%.',
+        'Mock.js | Maybe you used this tool, greate! Now Easy Mock integrated Mock.js, it mockes up data more fast.',
+        'Easy Mock CLI | CLI helps you to generate api.js file. No need write api.js manualy.',
+        'Docs | We provide comprehensive documents to help you master Easy Mock. Contact us, if you found bugs or have feedback.',
+        'Responsive Data | Easy Mock suport responsive data. It reponses data based on request query parameters.',
+        'Syntax Lint | Forget syntax of Mock.js? No problem. Now type em in editor for syntax lint.'
       ],
       confirm: {
         register: {
-          content: '该用户不存在, 是否根据当前输入的用户名和密码注册用户?注：请妥善保管好你的密码，目前无法提供找回密码的通道。',
-          success: '注册成功'
+          content: 'User does\'t exsit, do you want create a new user with this username and password? Notice: You cannot retrieve your password if you forget in this version',
+          success: 'Register Success'
         }
       }
     },
     new: {
       header: {
-        title: '创建项目',
-        description: '创建一个令人愉快的项目。'
+        title: 'Create New Project',
+        description: 'Start your next amazing new project'
       },
       form: {
-        name: '归属 / 项目名 | 尽量简短表意。例：petstore',
-        url: '项目基础 URL | 尽量简短表意。例：/nba',
-        description: '项目描述 | 不填默认为项目名',
-        swagger: 'Swagger Docs API | 可选 | 如果后台有提供 Swagger 文档（并且没有验证授权的问题）, 于是我们可以在此处填写 Swagger 的接口地址, Easy Mock 会自动基于此接口创建 Mock 接口.',
-        member: '邀请成员 协同编辑 | 可选 | 用户昵称、用户名，支持模糊匹配',
-        confirm: '请输入项目名称以进行确认 | 项目名确认 | 出于某些原因，删除也许会失败。但如果你执意删除，必须知道此操作无法撤消，这将永久删除',
+        name: 'Belongs To / Project Name | Make it shot and expressive, e.g.：petstore',
+        url: 'Base URL | Make it shot and expressive, e.g.：/nba',
+        description: 'Description | Will be project name if null',
+        swagger: 'Swagger Docs API | Optional | If backend provides Swagger Doc (without authentication error), Easy Mock will create Mock based on Swagger API address you provide.',
+        member: ['Ask people join for collaboration', 'Optional | Lose effectiveness under team project', 'Support fuzzy search, user nickname, username'],
+        confirm: 'Please type in the name of the project to confirm. | Project name | This action <strong>CANNOT<strong> be undone. This will permanently delete project:',
         button: {
-          delete: '删除项目',
-          create: '创建',
-          update: '保存'
+          delete: 'Delete Project',
+          create: 'Create Project',
+          update: 'Save'
         },
         success: {
-          create: '创建成功',
-          update: '更新成功',
-          delete: '{name} 已删除'
+          create: 'Create Success',
+          update: 'Update Success',
+          delete: '{name} is deleted'
         }
       }
     },
     profile: {
       header: {
-        title: '编辑资料',
-        description: '个性化设置'
+        title: 'Edit Profile',
+        description: 'Personalize your profile'
       },
       modal: {
-        title: '查看头像'
+        title: 'View Profile Picture'
       },
       form: {
-        language: '语言',
-        nickName: '昵称',
-        password: '密码',
-        passwordCheck: '确认密码',
-        update: '更新资料',
-        avatar: '头像',
-        upload: '上传新图片'
+        language: 'Language',
+        nickName: 'Nick Name',
+        password: 'Password',
+        passwordCheck: 'Confirm password',
+        update: 'Update Profile',
+        avatar: 'Profile Picture',
+        upload: 'Upload New Picture'
       },
-      formatError: '文件格式不正确 | 文件 {name} 格式不正确，请上传 jpg 或 png 格式的图片。',
-      updateSuccess: '更新成功 | 请重新登录，以完成数据同步。',
-      validateError: '两次输入密码不一致!'
+      formatError: 'Unsupported picture formate | {name} is not support, please upload *.jpg or *.png picture.',
+      updateSuccess: 'Update Success | Please login again to check changes.',
+      validateError: 'Password is not matching!'
     },
     project: {
       header: {
-        title: ['个人项目', '{groupName}', '工作台'],
-        description: ['这里将展示你的个人项目，当然也包括协同项目。', '欢迎来到{groupName}，与大家一起愉快的 Mock 吧。', '将正在进行的项目添加到工作台中以提高工作效率。']
+        title: ['Personal Project', '{groupName}', 'Work Station'],
+        description: ['Here are all your personal projects, also projects you are working with.', 'Welcome join group {groupName}, Let\'s Mock up together.', 'Add projects to Work Station for faster access.']
       },
-      placeholder: ['想早点回家吗？快来创建 Mock 呀。', '团队项目更适合多人协作，快来创建项目吧。', '想起飞吗？快去将项目添加到工作台呀。', '没有匹配到相关项目。'],
-      filter: ['全部', '我创建的', '我加入的'],
-      cloneSuccess: '克隆成功',
-      copySuccess: '项目地址已复制到剪贴板',
-      deleteSuccess: '{name} 已删除',
+      placeholder: ['Wanna finish work faster? Let\'s Mock up。', 'Team Project is perfect for cooperation.', 'Wanna work faster? Add to projects to Work Station.', 'No match founded'],
+      filter: ['All', 'Created', 'Joined'],
+      cloneSuccess: 'Copy Success',
+      copySuccess: 'Project address is in clipboard',
+      deleteSuccess: '{name} is deleted',
       modal: {
         delete: {
-          title: '删除确认',
-          description: '出于某些原因，删除也许会失败。但如果你执意删除，必须知道此操作无法撤消，这将永久删除 | 请输入项目名称以进行确认。',
-          button: '删除',
-          placeholder: '项目名确认'
+          title: 'Confirm Delete',
+          description: 'Please type in the name of the project to confirm. | This action <strong>CANNOT<strong> be undone. This will permanently delete project:',
+          button: 'Delete',
+          placeholder: 'Project name'
         }
       },
-      control: ['复制项目地址', '克隆项目', '删除项目']
+      control: ['Copy Project Address', 'Copy Project', 'Delete Project']
     },
     detail: {
       header: {
-        description: ['个人项目', '团队项目']
+        description: ['Personal Project', 'Team Project']
       },
-      nav: ['接口列表', '设置'],
-      workbench: '工作台',
-      download: '打包下载 | 下载',
-      member: '项目成员',
+      nav: ['Mock List', 'Setting'],
+      workbench: 'Work Station',
+      download: 'Downlaod as zip file | Download',
+      member: 'Member List',
       keyboards: [
-        { category: '导航' },
-        { category: '操作', list: ['创建接口', '添加 / 移除工作台', '同步 Swagger'] },
-        { category: '编辑界面（非编辑状态有效）', list: ['关闭', '格式化', '预览（只在更新时生效）'] }
+        { category: 'Navigation' },
+        { category: 'Action', list: ['Create new Mock', 'Add / Remove Work Station', 'Sync with Swagger'] },
+        { category: 'Edit（for not editmode）', list: ['Close', 'Formating', 'Preview'] }
       ],
-      columns: ['描述', '操作'],
-      action: ['预览接口', '编辑接口', '复制接口地址', '克隆', '删除'],
-      copySuccess: '接口地址已复制到剪贴板',
+      columns: ['Description', 'Action'],
+      action: ['Preview Mock', 'Edit Mock', 'Copy Mock Address', 'Copy', 'Delete'],
+      copySuccess: 'Project address is in clipboard',
       syncSwagger: {
-        action: '同步 Swagger',
-        warning: '请先在设置页配置 Swagger 接口地址',
-        confirm: '该操作将同步最新 Swagger 接口，是否继续？',
-        success: '同步成功'
+        action: 'Sync Swagger',
+        warning: 'Please set up Swagger API address in settings page',
+        confirm: 'This will sync Swagger API, do you want contiune?',
+        success: 'Sync Success'
       },
       remove: {
-        confirm: ['该操作无法撤消，是否继续删除选中行? ', '该操作无法撤消，是否继续删除?'],
-        success: '删除成功'
+        confirm: ['This action <strong>CANNOT<strong> be undone. Are you sure want to delete selected row?', 'This action <strong>CANNOT<strong> be undone. Do you want contiune?'],
+        success: 'Delete Success'
       },
       create: {
-        action: '创建接口',
-        success: '创建成功'
+        action: 'Create Mock',
+        success: 'Create Success'
       },
       expand: {
-        description: '描述',
-        tab: ['请求参数', '响应参数'],
-        columnsRequest: ['参数名', '描述', '参数类型', '数据类型'],
-        columnsResponse: ['状态码', '描述', '返回类型'],
-        defaultDescription: '太懒了，居然不写描述'
+        description: 'Description',
+        tab: ['Request Parameters', 'Response Parameters'],
+        columnsRequest: ['Parameter', 'Description', 'Parameter Type', 'Data Type'],
+        columnsResponse: ['Status Code', 'Description', 'Response Type'],
+        defaultDescription: 'Too layz to inlude a description'
       },
       editor: {
-        title: ['更新接口', '创建接口'],
-        action: ['更新', '创建'],
-        autoClose: '自动关闭',
-        control: ['格式化', '预览', '关闭'],
+        title: ['Update Mock', 'Create New Mock'],
+        action: ['Updae', 'Create'],
+        autoClose: 'Auto Close',
+        control: ['Format', 'Preview', 'Close'],
         submit: {
-          error: ['接口数据不能为空。', '请检查数据定义是否符合要求。'],
-          updateSuccess: '更新成功'
+          error: ['Mock data can\'t be null', 'Please check data definiation is correct.'],
+          updateSuccess: 'Update Success'
         }
       }
     }
   },
   c: {
     keyboardShort: {
-      modalTitle: '键盘快捷键',
+      modalTitle: 'Keyboard Shortcuts',
       keyboards: [
-        { category: '全局导航', list: ['个人项目', '团队项目', '工作台', '文档'] },
-        { category: '全局操作', list: ['创建项目', '搜索'] }
+        { category: 'Global Navigations', list: ['Personal Projects', 'Team Projects', 'Work Station', 'Docs'] },
+        { category: 'Global Actions', list: ['Create New Project', 'Search'] }
       ]
     },
     layout: {
       menu: [
-        ['我的项目', '个人项目', '团队项目'],
-        '工作台', '数据', '文档',
-        ['彩蛋', 'API 生成工具', 'Mock 语法'],
-        ['编辑资料', '退出', '登录']
+        ['Project', 'Personal Project', 'Team Project'],
+        'Work Station', 'Dashboard', 'Docs',
+        ['More', 'API Generator', 'Mock Syntax'],
+        ['Edit Profile', 'Logout', 'Login']
       ]
     },
     logOut: {
-      text: '正在跳转...'
+      text: 'Redirecting...'
     }
   }
 }
