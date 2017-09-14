@@ -5,7 +5,7 @@ export default {
   p: {
     dashboard: {
       header: {
-        title: 'Data',
+        title: 'Dashboard',
         description: 'Display your application usage in real time.'
       },
       total: {
@@ -23,7 +23,7 @@ export default {
     },
     docs: {
       header: {
-        title: 'Docs | Update Logs',
+        title: 'Docs | Release Notes',
         description: 'Read docs and use Easy Mock like pro. | Never stop updating.'
       }
     },
@@ -93,7 +93,7 @@ export default {
       form: {
         name: 'Belongs To / Project Name | Make it shot and expressive, e.g.：petstore',
         url: 'Base URL | Make it shot and expressive, e.g.：/nba',
-        description: 'Descriptiong | Will be project name if null',
+        description: 'Description | Will be project name if null',
         swagger: 'Swagger Docs API | Optional | If backend provides Swagger Doc (without authentication error), Easy Mock will create Mock based on Swagger API address you provide.',
         member: 'Ask people join for collaboration | Optional | Support fuzzy search, user nickname, username',
         confirm: 'Please type in the name of the project to confirm. | Project name | This action <strong>CANNOT<strong> be undone. This will permanently delete project:',
@@ -133,9 +133,9 @@ export default {
     project: {
       header: {
         title: ['Personal Project', '{groupName}', 'Work Station'],
-        description: ['Here is all your personal project, also project you are working with.', 'Welcome join group {groupName}, Let\'s Mock up together.', 'Add to Work Station for faster access.']
+        description: ['Here are all your personal projects, also projects you are working with.', 'Welcome join group {groupName}, Let\'s Mock up together.', 'Add projects to Work Station for faster access.']
       },
-      placeholder: ['Wanna finish work faster? Let\' Mock up。', 'Team Project is perfect for cooperation.', 'Wanna work faster? Add to Work Station.', 'No match founded'],
+      placeholder: ['Wanna finish work faster? Let\'s Mock up。', 'Team Project is perfect for cooperation.', 'Wanna work faster? Add to projects to Work Station.', 'No match founded'],
       filter: ['All', 'Created', 'Joined'],
       cloneSuccess: 'Copy Success',
       copySuccess: 'Project address is in clipboard',
@@ -209,8 +209,8 @@ export default {
     },
     layout: {
       menu: [
-        ['My Project', 'Personal Project', 'Team Project'],
-        'Work Station', 'Data', 'Docs',
+        ['Project', 'Personal Project', 'Team Project'],
+        'Work Station', 'Dashboard', 'Docs',
         ['More', 'API Generator', 'Mock Syntax'],
         ['Edit Profile', 'Logout', 'Login']
       ]
