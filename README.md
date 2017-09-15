@@ -190,8 +190,13 @@ The QQ group number is **595325417**, and here's the QR code of the group:
 
 If you deployed Easy Mock in your own server, please [tell us](https://github.com/easy-mock/easy-mock/issues/47)
 
-* [Souche Inc.](https://blog.souche.com/)
-* [Ruff](https://ruff.io/)
+* [Souche inc | 大搜车](https://blog.souche.com/)
+* [Ruff](https://ruff.io/zh-cn/)
+* [Qiniu | 七牛](https://qiniu.com/)
+* [Head Spring | 恒达时讯](http://www.hdsxtech.com/)
+* [Digital Union | 数字联盟](https://www.shuzilm.cn/)
+* [CityTogo | 兔狗家装](http://tugou.com/)
+* [Mistong | 铭师堂](http://www.mistong.com/)
 
 ## Core Contributors
 
@@ -200,6 +205,16 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
   <td>
     <a href="https://github.com/chuangker">
       <img src="https://avatars3.githubusercontent.com/u/7939566?v=4&s=100"><br><span>chuangker</span>
+    </a>
+  </td>
+  <td>
+    <a href="https://github.com/XadillaX">
+      <img src="https://avatars0.githubusercontent.com/u/2842176?v=4&s=100"><br><span>XadillaX</span>
+    </a>
+  </td>
+  <td>
+    <a href="https://github.com/ostoc">
+      <img src="https://avatars2.githubusercontent.com/u/3025708?v=4&s=100"><br><span>ostoc</span>
     </a>
   </td>
 </tr>
