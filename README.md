@@ -20,6 +20,8 @@
 
 ## Links
 
+[![Join the chat at https://gitter.im/easy-mock-js/Lobby](https://badges.gitter.im/easy-mock-js/Lobby.svg)](https://gitter.im/easy-mock-js/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 - [简体中文介绍](README.zh-CN.md)
 - [Online Manual](https://easy-mock.com/docs)
 - [Easy Mock CLI](https://github.com/easy-mock/easy-mock-cli) - A command line
