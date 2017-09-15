@@ -162,16 +162,31 @@ Easy Mock 目前由[大搜车无线架构团队](http://f2e.souche.com/blog/)进
 
 如有内网部署，请务必[告诉我们](https://github.com/easy-mock/easy-mock/issues/47)
 
-* [大搜车](https://blog.souche.com/)
+* [Souche inc | 大搜车](https://blog.souche.com/)
 * [Ruff](https://ruff.io/zh-cn/)
+* [Qiniu | 七牛](https://qiniu.com/)
+* [Head Spring | 恒达时讯](http://www.hdsxtech.com/)
+* [Digital Union | 数字联盟](https://www.shuzilm.cn/)
+* [CityTogo | 兔狗家装](http://tugou.com/)
+* [Mistong | 铭师堂](http://www.mistong.com/)
 
-## 核心贡献者
+## Core Contributors
 
 <table id="contributors">
 <tr>
   <td>
     <a href="https://github.com/chuangker">
       <img src="https://avatars3.githubusercontent.com/u/7939566?v=4&s=100"><br><span>chuangker</span>
+    </a>
+  </td>
+  <td>
+    <a href="https://github.com/XadillaX">
+      <img src="https://avatars0.githubusercontent.com/u/2842176?v=4&s=100"><br><span>XadillaX</span>
+    </a>
+  </td>
+  <td>
+    <a href="https://github.com/ostoc">
+      <img src="https://avatars2.githubusercontent.com/u/3025708?v=4&s=100"><br><span>ostoc</span>
     </a>
   </td>
 </tr>
