@@ -1,5 +1,6 @@
 {
   "port": 7300,
+  "host": "",
   "pageSize": 30,
   "routerPrefix": {
     "mock": "/mock",
