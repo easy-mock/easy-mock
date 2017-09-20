@@ -20,7 +20,7 @@
     "key": "user",
     "expire": "14 days",
     "collection": "tokens",
-    "secret": ""
+    "secret": "shared-secret"
   },
   "publicAPIs": [
     "/api/proxy",
@@ -64,7 +64,7 @@
   },
   "fe": {
     "uploadAPI": "",
-    "storageNamespace": "",
+    "storageNamespace": "easy-mock_",
     "timeout": 25000,
     "publicPath": "/dist/",
     "mockPrefix": "/mock/",
