@@ -278,6 +278,43 @@ Easy Mock 是一个可视化，并且能快速生成 **模拟数据** 的持久�
 
 另外，无法在函数中使用 **setInterval**、**setTimeout** 等方法进行异步操作。{.warning}
 
+### 自定义响应
+
+当定义的数据结构中包含 _res 字段的时候，会进入一个特殊逻辑，可以给返回的请求添加一些定制信息。
+
+| 字段 | 描述 | 
+|:---:|:----:|
+| status | 可以定制返回的 http status code，默认是 200 |
+| cookies | 可以定制需要设置的 cookie（暂时不支持设置过期时间等） |
+| headers | 可以定制返回的 response 的 header |
+| data | 如果有这个字段，会以此数据直接覆盖整个返回的数据，并且此处不支持 mock 的语法（如果 _res.status 的值为 200，则不会覆盖默认定义的 mock 数据） |
+
+```js
+{
+  "success": true,
+  "data": {
+    "default": "hah"
+  },
+  "_res":{
+    "status": 400,
+    "data": {
+      "success": false
+    },
+    "cookies": {
+      "test": "true"
+    },
+    "headers": {
+      "Power": "easy-mock"
+    }
+  }
+}
+```
+
+以此定义为例，当 _res.status 的值为 400 的时候，用户端接收到的响应将会是 _res.data 中定义的数据，并且返回一个 status code 为 400 的响应，响应的 header 中会包含一个叫做 Power 的值，并为浏览器设置一个叫做 test 的 cookie。
+
+当你想要返回正常的 mock 数据的时候，修改 _res.status 为 200，或者将整个 _res 删掉即可。
+
+
 ## Tips
 
 掌握这部分内容，可进一步提高效率。
