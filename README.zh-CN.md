@@ -42,6 +42,7 @@ Easy Mock 是一个可视化，并且能快速生成**模拟数据**的持久化
   - 支持显示接口入参与返回值
   - 支持显示实体类
 - 支持灵活性与扩展性更高的响应式数据开发
+- 支持自定义响应配置（例：status/headers/cookies）
 - 支持 [Mock.js](http://mockjs.com/) 语法
 - 支持 [restc](https://github.com/ElemeFE/restc) 方式的接口预览
 

@@ -51,6 +51,7 @@ visualization view.
   - Support displaying parameters and the return value
   - Support displaying class model
 - More flexible and extensible in response data
+- Support for custom response configuration (example: status/headers/cookies)
 - Use [Mock.js](http://mockjs.com/) schema
 - Support [restc](https://github.com/ElemeFE/restc) to preview API
 
