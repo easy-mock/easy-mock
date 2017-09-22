@@ -406,7 +406,7 @@ exports.getMock = function * () {
           }
         }
       }
-      if(_res.status && parseInt(_res.status) === 200 && _res.data) {
+      if(_res.status && parseInt(_res.status) !== 200 && _res.data) {
         data = _res.data
       }
       delete data['_res']
