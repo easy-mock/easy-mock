@@ -53,14 +53,14 @@
             {{$tc('p.new.form.swagger', 2)}} <router-link to="/docs#swagger"><Icon type="help-circled"></Icon></router-link>
             </p>
           </Form-item>
-          <Form-item label="项目地址">
+          <Form-item :label="$tc('p.new.form.address', 0)">
             <template slot="label">
-              API 服务地址
-              <span>(可选)</span>
+              {{$tc('p.new.form.address', 0)}}
+              <span>({{$tc('p.new.form.address', 1)}})</span>
             </template>
             <i-input v-model="form.projectAddress" placeholder="http://example.com"></i-input>
             <p class="em-new__form-description">
-              我们可以在此处填写项目地址, Easy Mock 可以提供 mock 数据和真实数据之间的切换, API 测试完成即可无缝投入使用.
+              {{$tc('p.new.form.address', 2)}}
             </p>
           </Form-item>
           <Form-item :label="$t('p.new.form.member[0]')" class="em-new__form-hr">

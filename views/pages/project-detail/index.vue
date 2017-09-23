@@ -193,9 +193,13 @@ export default {
             return !isAuthentic
           },
           render: (h, params) => {
-            const switchAddressIcon = params.row.is_authentic ? 'toggle-filled' : 'toggle'
-            let switchAddressButton = <i-button size="small" title={this.$t('p.detail.action[5]')} class="switch-address" onClick={this.switchAuthentic.bind(this, params.row)}><icon type={switchAddressIcon}></icon></i-button>
-            switchAddressButton = this.project.address ? switchAddressButton : null
+            let switchAddressButton = null
+            if (this.project.address) {
+              const switchAddressIcon = params.row.is_authentic ? 'toggle-filled' : 'toggle'
+              switchAddressButton = (
+                <i-button size="small" title={this.$t('p.detail.action[5]')} class="switch-address" onClick={this.switchAuthentic.bind(this, params.row)}><icon type={switchAddressIcon}></icon></i-button>
+              )
+            }
             return (
               <div>
                 <Button-group>

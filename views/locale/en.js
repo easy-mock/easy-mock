@@ -95,6 +95,7 @@ export default {
         url: 'Base URL | Make it shot and expressive, e.g.：/nba',
         description: 'Description | Will be project name if null',
         swagger: 'Swagger Docs API | Optional | If backend provides Swagger Doc (without authentication error), Easy Mock will create Mock based on Swagger API address you provide.',
+        address: 'API Address | Optional | If backend provides API address, Easy Mock will provide a switcher to take over switching from mock to API.',
         member: ['Ask people join for collaboration', 'Optional | Lose effectiveness under team project', 'Support fuzzy search, user nickname, username'],
         confirm: 'Please type in the name of the project to confirm. | Project name | This action <strong>CANNOT<strong> be undone. This will permanently delete project:',
         button: {
