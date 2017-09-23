@@ -339,7 +339,7 @@ exports.getMock = function * () {
     return options.template.call(options.context.currentContext, options)
   }.bind(this)
 
-  if (project.address && mock.is_authentic) {
+  if (config.fe && config.fe.canSwitchAddress && project.address && mock.is_authentic) {
     const mode = project.address + mock.url
     const proxy = mode.split('?')
     const url = new URL(proxy[0])

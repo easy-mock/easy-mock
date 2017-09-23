@@ -53,7 +53,7 @@
             {{$tc('p.new.form.swagger', 2)}} <router-link to="/docs#swagger"><Icon type="help-circled"></Icon></router-link>
             </p>
           </Form-item>
-          <Form-item :label="$tc('p.new.form.address', 0)">
+          <Form-item v-if="canSwitchAddress" :label="$tc('p.new.form.address', 0)">
             <template slot="label">
               {{$tc('p.new.form.address', 0)}}
               <span>({{$tc('p.new.form.address', 1)}})</span>
@@ -108,6 +108,7 @@
 
 <script>
 import * as api from '../../api'
+import config from 'config'
 
 export default {
   name: 'newProject',
@@ -172,6 +173,9 @@ export default {
     },
     isEdit () {
       return !!this.projectData
+    },
+    canSwitchAddress () {
+      return config.canSwitchAddress
     },
     isGroup () {
       if (this.projectData) {
