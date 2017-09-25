@@ -13,12 +13,67 @@ Vue.use(Vuex)
 export function createStore () {
   return new Vuex.Store({
     modules: {
-      mock,
-      user,
-      group,
-      project,
-      dashboard,
-      wallpaper
+      mock: {
+        state: {
+          list: [],
+          project: {},
+          keywords: '',
+          pageIndex: 1
+        },
+        ...mock
+      },
+      user: {
+        state: {
+          id: '',
+          name: '',
+          nickName: '',
+          headImg: '',
+          token: ''
+        },
+        ...user
+      },
+      group: {
+        state: {
+          list: []
+        },
+        ...group
+      },
+      project: {
+        state: {
+          list: [],
+          keywords: '',
+          pageIndex: 1,
+          projectType: '',
+          groupId: '',
+          filterByAuthor: 0
+        },
+        ...project
+      },
+      dashboard: {
+        state: {
+          total: {
+            userCount: 0,
+            mockCount: 0,
+            projectCount: 0,
+            mockUseCount: 0
+          },
+          today: {
+            userCount: 0,
+            mockCount: 0,
+            projectCount: 0,
+            mockUseCount: 0
+          },
+          users: []
+        },
+        ...dashboard
+      },
+      wallpaper: {
+        state: {
+          copyright: null,
+          url: ''
+        },
+        ...wallpaper
+      }
     }
   })
 }

@@ -1,12 +1,5 @@
 export default {
   namespaced: true,
-  state: {
-    id: '',
-    name: '',
-    nickName: '',
-    headImg: '',
-    token: ''
-  },
   mutations: {
     SET_VALUE (state, payload) {
       state.id = payload._id

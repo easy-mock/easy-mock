@@ -2,10 +2,6 @@ import * as api from '../../api'
 
 export default {
   namespaced: true,
-  state: {
-    copyright: null,
-    url: ''
-  },
   mutations: {
     SET_VALUE (state, payload) {
       state.url = payload.url

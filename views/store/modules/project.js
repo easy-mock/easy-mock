@@ -2,14 +2,6 @@ import * as api from '../../api'
 
 export default {
   namespaced: true,
-  state: {
-    list: [],
-    keywords: '',
-    pageIndex: 1,
-    projectType: '',
-    groupId: '',
-    filterByAuthor: 0
-  },
   mutations: {
     SET_LIST (state, payload) {
       state.list = state.pageIndex === 1

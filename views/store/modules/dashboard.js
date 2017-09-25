@@ -2,21 +2,6 @@ import * as api from '../../api'
 
 export default {
   namespaced: true,
-  state: {
-    total: {
-      userCount: 0,
-      mockCount: 0,
-      projectCount: 0,
-      mockUseCount: 0
-    },
-    today: {
-      userCount: 0,
-      mockCount: 0,
-      projectCount: 0,
-      mockUseCount: 0
-    },
-    users: []
-  },
   mutations: {
     SET_VALUE (state, { total, today, users }) {
       state.total = total

@@ -2,9 +2,6 @@ import * as api from '../../api'
 
 export default {
   namespaced: true,
-  state: {
-    list: []
-  },
   mutations: {
     SET_VALUE (state, payload) {
       state.list = payload

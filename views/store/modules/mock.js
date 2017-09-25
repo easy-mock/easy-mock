@@ -2,12 +2,6 @@ import * as api from '../../api'
 
 export default {
   namespaced: true,
-  state: {
-    list: [],
-    project: {},
-    keywords: '',
-    pageIndex: 1
-  },
   mutations: {
     SET_VALUE (state, payload) {
       state.list = state.pageIndex === 1
