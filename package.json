@@ -1,6 +1,6 @@
 {
   "name": "easy-mock",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "description": "可视化模拟数据生成服务",
   "main": "app.js",
   "scripts": {
