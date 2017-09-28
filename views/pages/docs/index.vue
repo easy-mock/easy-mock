@@ -69,7 +69,20 @@ import changelog from '../../../CHANGELOG'
 export default {
   name: 'document',
   components: {
-    changelog,
+    changelog: {
+      components: {
+        changelog
+      },
+      render () {
+        return <changelog ref="changeLog"></changelog>
+      },
+      mounted () {
+        const lis = this.$refs.changeLog.$el.querySelectorAll('li')
+        for (let len = lis.length, i = 0; i < len; i += 1) {
+          lis[i].innerHTML = lis[i].innerHTML.replace(/#(\d+)/g, '<a href="https://github.com/easy-mock/easy-mock/issues/$1" target="_blank">#$1</a>')
+        }
+      }
+    },
     docs: {
       components: {
         docs,
