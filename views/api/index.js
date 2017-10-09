@@ -13,7 +13,7 @@ const instance = axios.create({
 const loading = {
   count: 0,
   isLoading: false,
-  satrt () {
+  start () {
     this.count += 1
     if (!this.isLoading) {
       setTimeout(() => {
@@ -44,7 +44,7 @@ const loading = {
 }
 
 instance.interceptors.request.use((config) => {
-  if (isClient) loading.satrt()
+  if (isClient) loading.start()
   config.headers.Authorization = `Bearer ${cookie.load(conf.storageNamespace + 'token')}`
   return config
 }, error => Promise.reject(error))
