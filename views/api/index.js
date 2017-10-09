@@ -13,7 +13,7 @@ const instance = axios.create({
 const loading = {
   count: 0,
   isLoading: false,
-  satrt () {
+  start () {
     this.count += 1
     if (!this.isLoading) {
       setTimeout(() => {
