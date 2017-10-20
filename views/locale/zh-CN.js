@@ -160,8 +160,7 @@ export default {
       member: '项目成员',
       keyboards: [
         { category: '导航' },
-        { category: '操作', list: ['创建接口', '添加 / 移除工作台', '同步 Swagger'] },
-        { category: '编辑界面（非编辑状态有效）', list: ['关闭', '格式化', '预览（只在更新时生效）'] }
+        { category: '操作', list: ['创建接口', '添加 / 移除工作台', '同步 Swagger'] }
       ],
       columns: ['描述', '操作'],
       action: ['预览接口', '编辑接口', '复制接口地址', '克隆', '删除'],

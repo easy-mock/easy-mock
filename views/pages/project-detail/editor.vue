@@ -34,9 +34,9 @@
           <div class="em-editor__control">
             <div class="em-proj-detail__switcher">
               <ul>
-                <li @click="format" v-shortkey="['ctrl', 'f']" @shortkey="format">{{$t('p.detail.editor.control[0]')}}</li>
-                <li @click="preview" v-if="isEdit" v-shortkey="['ctrl', 'v']" @shortkey="preview">{{$t('p.detail.editor.control[1]')}}</li>
-                <li @click="close" v-shortkey="['ctrl', 'x']" @shortkey="close">{{$t('p.detail.editor.control[2]')}}</li>
+                <li @click="format">{{$t('p.detail.editor.control[0]')}}</li>
+                <li @click="preview" v-if="isEdit">{{$t('p.detail.editor.control[1]')}}</li>
+                <li @click="close">{{$t('p.detail.editor.control[2]')}}</li>
               </ul>
             </div>
           </div>

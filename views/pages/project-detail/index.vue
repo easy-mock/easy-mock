@@ -43,7 +43,7 @@
         </div>
         <div class="em-proj-detail__switcher">
           <ul>
-            <li @click="openEditor()" v-shortkey="['ctrl', 'c']" @shortkey="openEditor()">
+            <li @click="openEditor()" v-shortkey="['ctrl', 'n']" @shortkey="openEditor()">
               <Icon type="plus-round"></Icon> {{$t('p.detail.create.action')}}
             </li>
             <li @click="handleWorkbench" v-shortkey="['ctrl', 'w']" @shortkey="handleWorkbench">
@@ -120,17 +120,9 @@ export default {
         {
           category: this.$t('p.detail.keyboards[1].category'),
           list: [
-            { description: this.$t('p.detail.keyboards[1].list[0]'), shorts: ['ctrl', 'c'] },
+            { description: this.$t('p.detail.keyboards[1].list[0]'), shorts: ['ctrl', 'n'] },
             { description: this.$t('p.detail.keyboards[1].list[1]'), shorts: ['ctrl', 'w'] },
             { description: this.$t('p.detail.keyboards[1].list[2]'), shorts: ['ctrl', 's'] }
-          ]
-        },
-        {
-          category: this.$t('p.detail.keyboards[2].category'),
-          list: [
-            { description: this.$t('p.detail.keyboards[2].list[0]'), shorts: ['ctrl', 'x'] },
-            { description: this.$t('p.detail.keyboards[2].list[1]'), shorts: ['ctrl', 'f'] },
-            { description: this.$t('p.detail.keyboards[2].list[2]'), shorts: ['ctrl', 'v'] }
           ]
         }
       ],

@@ -160,8 +160,7 @@ export default {
       member: 'Member List',
       keyboards: [
         { category: 'Navigation' },
-        { category: 'Action', list: ['Create new Mock', 'Add / Remove Work Station', 'Sync with Swagger'] },
-        { category: 'Edit（for not editmode）', list: ['Close', 'Formating', 'Preview'] }
+        { category: 'Action', list: ['Create new Mock', 'Add / Remove Work Station', 'Sync with Swagger'] }
       ],
       columns: ['Description', 'Action'],
       action: ['Preview Mock', 'Edit Mock', 'Copy Mock Address', 'Copy', 'Delete'],
