@@ -28,7 +28,6 @@
     "/api/u/register",
     "/api/mock/by_projects",
     "/api/mock/export",
-    "/api/project/create/:groupId/by_swagger",
     "/api/wallpaper"
   ],
   "mockExample": {
