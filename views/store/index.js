@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import { version } from '../../package.json'
 import user from './modules/user'
+import app from './modules/app'
 import mock from './modules/mock'
 import group from './modules/group'
 import project from './modules/project'
@@ -13,6 +15,13 @@ Vue.use(Vuex)
 export function createStore () {
   return new Vuex.Store({
     modules: {
+      app: {
+        state: {
+          version: version,
+          readChangelog: false
+        },
+        ...app
+      },
       mock: {
         state: {
           list: [],

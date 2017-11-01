@@ -30,7 +30,11 @@
                 </Submenu>
                 <Menu-item
                   name="101"
-                  @click.native="$router.push('/changelog')">{{$tc('p.docs.header.title', 2)}}</Menu-item>
+                  @click.native="toChangelog">
+                  <Badge dot :count="readChangelog ? '0' : '1'">
+                    {{$tc('p.docs.header.title', 2)}}
+                  </Badge>
+                </Menu-item>
               </Menu>
             </Affix>
           </transition>
@@ -111,6 +115,12 @@ export default {
     },
     isChangelog () {
       return this.$route.path === '/changelog'
+    },
+    readChangelog () {
+      return this.$store.state.app.readChangelog
+    },
+    appVersion () {
+      return this.$store.state.app.version
     }
   },
   mounted () {
@@ -150,6 +160,11 @@ export default {
     },
     changeFixed (isFixed) {
       this.isFixed = isFixed
+    },
+    toChangelog () {
+      this.$store.commit('app/SET_READ_CHANGELOG', true)
+      this.$ls.set('version', this.appVersion)
+      this.$router.push('/changelog')
     },
     changeRoute () {
       this.isFixed = false

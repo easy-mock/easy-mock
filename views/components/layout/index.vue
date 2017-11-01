@@ -45,7 +45,9 @@
           <Menu-item
             name="/docs"
             @click.native="$router.push('/docs')">
-            <Icon type="ios-book"></Icon> {{$t('c.layout.menu[3]')}}
+            <Badge dot :count="readChangelog ? '0' : '1'">
+              <Icon type="ios-book"></Icon> {{$t('c.layout.menu[3]')}}
+            </Badge>
           </Menu-item>
           <Submenu name="100">
             <template slot="title">
@@ -120,6 +122,9 @@ export default {
   computed: {
     userHeadImg () {
       return this.$store.state.user.headImg
+    },
+    readChangelog () {
+      return this.$store.state.app.readChangelog
     }
   },
   mounted () {

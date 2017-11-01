@@ -29,9 +29,15 @@ export default {
   computed: {
     locale () {
       return this.$ls.get('locale')
+    },
+    appVersion () {
+      return this.$store.state.app.version
     }
   },
   mounted () {
+    if (this.appVersion === this.$ls.get('version')) {
+      this.$store.commit('app/SET_READ_CHANGELOG', true)
+    }
     if (this.locale) return
     this.visible = true
   },
