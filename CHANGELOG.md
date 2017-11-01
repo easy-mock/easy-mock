@@ -1,5 +1,19 @@
 ## 更新日志
 
+### 1.3.2
+*2017-11-02*
+
+> 注意：该版本更新后，之前的请求参数，响应参数等信息会异常显示（再次同步 Swagger 即可解决）。
+
+**New Features**
+- 版本更新时，文档与更新日志会添加徽标提醒
+
+**Bug Fixes**
+- 修复由快捷键引起的无法复制的问题，#32
+
+**Refactorings**
+- Swagger 相关代码已迁移至 [Swagger Parser Mock](https://github.com/easy-mock/swagger-parser-mock) 模块，#48 #71 #109
+
 ### 1.3.1
 *2017-10-17*
 
