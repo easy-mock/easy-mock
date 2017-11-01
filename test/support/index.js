@@ -2,19 +2,17 @@
 
 /* eslint prefer-rest-params: 0 */
 const cofnig = require('config')
-const path = require('path')
-const fs = require('fs')
 const koa = require('koa')
 
 const m = require('../../models')
 const app = require('../../app')
 const routerPrefix = cofnig.get('routerPrefix')
 const request = require('supertest').agent(app.listen())
-const swaggerJSON = fs.readFileSync(path.join(__dirname, './swagger.json'), 'utf-8')
+const swaggerJSON = require('./swagger.json')
 
 // 代理 Swagger
 koa().use(function * () {
-  this.body = JSON.parse(swaggerJSON)
+  this.body = swaggerJSON
 }).listen(7400)
 
 function createRequest (prefix) {
