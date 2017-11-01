@@ -298,6 +298,7 @@ exports.updateSwagger = function * () {
 
   try {
     yield swagger.create(project)
+    this.body = this.util.resuccess()
   } catch (err) {
     this.log.error(
       { req: this.req, err },
@@ -305,9 +306,8 @@ exports.updateSwagger = function * () {
       this.request.method,
       this.request.originalUrl
     )
+    this.body = this.util.refail('同步失败，' + err)
   }
-
-  this.body = this.util.resuccess()
 }
 
 exports.updateWorkbench = function * () {

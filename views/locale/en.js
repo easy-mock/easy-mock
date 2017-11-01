@@ -183,7 +183,7 @@ export default {
         description: 'Description',
         tab: ['Request Parameters', 'Response Parameters'],
         columnsRequest: ['Parameter', 'Description', 'Parameter Type', 'Data Type'],
-        columnsResponse: ['Status Code', 'Description', 'Response Type'],
+        columnsResponse: ['Status Code', 'Description'],
         defaultDescription: 'Too layz to inlude a description'
       },
       editor: {

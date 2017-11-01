@@ -159,7 +159,7 @@ export default {
               post: 'green',
               delete: 'red',
               put: 'yellow',
-              patch: ''
+              patch: 'yellow'
             }
             return <tag class="method-tag" color={color[params.row.method]}>
               {params.row.method.toUpperCase()}
