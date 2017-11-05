@@ -374,7 +374,7 @@ exports.getMock = function * () {
     sandbox: {
       Mock: Mock,
       mode: mock.mode,
-      template: new Function("return " + mock.mode)() // eslint-disable-line
+      template: new Function(`return ${mock.mode}`) // eslint-disable-line
     }
   })
 
@@ -382,7 +382,7 @@ exports.getMock = function * () {
     // 只负责数据验证，检测 setTimeout 等方法
     vm.run('Mock.mock(new Function("return " + mode)())')
     // 解决正则表达式失效的问题
-    data = vm.run('Mock.mock(template)')
+    data = vm.run('Mock.mock(template())')
 
     yield mockCountProxy.newAndSave(mock.id)
     // 开始处理自定义响应

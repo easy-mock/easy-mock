@@ -6391,9 +6391,9 @@ swagger-converter@^0.1.7:
   dependencies:
     lodash.clonedeep "^2.4.1"
 
-swagger-parser-mock@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/swagger-parser-mock/-/swagger-parser-mock-1.0.0.tgz#c91c0af4eb57907b9822ad324d805794247f6f3c"
+swagger-parser-mock@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/swagger-parser-mock/-/swagger-parser-mock-1.0.2.tgz#0f2d9d8a781c6f90bf379504942cb7beaa879f46"
   dependencies:
     memoizee "^0.4.11"
     swagger-client "^3.1.2"
@@ -6762,9 +6762,9 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vm2@^3.4.6:
-  version "3.4.6"
-  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.4.6.tgz#9f952e4083e3af8398291a40e802854fed6a7673"
+vm2@^3.5.2:
+  version "3.5.2"
+  resolved "https://registry.yarnpkg.com/vm2/-/vm2-3.5.2.tgz#6ae7c75a867775946e1d4a66623374e0245150e0"
 
 vue-hot-reload-api@^2.1.0:
   version "2.1.0"
