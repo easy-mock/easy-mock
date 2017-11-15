@@ -199,6 +199,10 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
 * [Digital Union | 数字联盟](https://www.shuzilm.cn/)
 * [CityTogo | 兔狗家装](http://tugou.com/)
 * [Mistong | 铭师堂](http://www.mistong.com/)
+* [Tuotuo Internet | 妥妥网络](https://www.finger66.com/web)
+* [Straight flush | 同花顺](http://www.10jqka.com.cn/)
+* [360 Enterprise Security | 360企业安全集团](http://www.360.net/)
+* [MeiTuan | 美团网](http://www.meituan.com)
 
 ## Core Contributors
 
