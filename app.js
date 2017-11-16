@@ -43,7 +43,10 @@ app
   .use(koaBunyanLogger(logger))
   .use(koaBunyanLogger.requestIdContext())
   .use(requestLogger)
-  .use(cors())
+  .use(cors({
+    credentials: true,
+    maxAge: 2592000
+  }))
   .use(error())
   .use(bodyParser())
   .use(middleware.common)
