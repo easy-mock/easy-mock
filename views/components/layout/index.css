@@ -1,6 +1,10 @@
 @import '../../styles/base/var.css';
 
 @c layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
   @d nav {
     background: #495060;
     img {
@@ -62,5 +66,16 @@
       border: none;
       box-shadow: none;
     }
+  }
+
+  @d content {
+    flex: 1;
+  }
+
+  @d copyright {
+    text-align: center;
+    color: #c5c5c5;
+    margin: 16px 0;
+    flex: 0;
   }
 }

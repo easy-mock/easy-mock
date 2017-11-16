@@ -99,6 +99,7 @@
         <router-view></router-view>
       </transition>
     </div>
+    <p class="em-layout__copyright" v-if="copyright && pageAnimated">{{copyright}}</p>
   </div>
 </template>
 
@@ -107,6 +108,7 @@
 </style>
 
 <script>
+import config from 'config'
 import * as api from '../../api'
 import Emitter from '../../mixins/emitter'
 
@@ -116,7 +118,8 @@ export default {
   data () {
     return {
       searchValue: '',
-      pageKey: ''
+      pageKey: '',
+      copyright: config.copyright
     }
   },
   computed: {
