@@ -1,5 +1,12 @@
 ## 更新日志
 
+### 1.3.4
+*2017-11-17*
+
+**New Features**
+- 支持配置并显示版权信息
+- 支持 `Access-Control-Allow-Credentials` 配置
+
 ### 1.3.3
 *2017-11-06*
 
