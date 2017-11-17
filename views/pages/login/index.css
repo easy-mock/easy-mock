@@ -143,6 +143,7 @@
         line-height: 25px;
         z-index: 90210;
         transition: opacity 0.2s linear;
+        text-align: left;
       }
 
       .fullscreen-by {
