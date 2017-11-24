@@ -1604,6 +1604,13 @@ cross-env@^5.0.1:
     cross-spawn "^5.1.0"
     is-windows "^1.0.0"
 
+cross-fetch@0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-0.0.8.tgz#01ed94dc407df2c00f1807fde700a7cfa48a205c"
+  dependencies:
+    node-fetch "1.7.3"
+    whatwg-fetch "2.0.3"
+
 cross-spawn@^5.0.1, cross-spawn@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
@@ -2030,6 +2037,10 @@ elliptic@^6.0.0:
 emojis-list@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/emojis-list/-/emojis-list-2.1.0.tgz#4daa4d9db00f9819880c79fa457ae5b09a1fd389"
+
+encode-3986@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/encode-3986/-/encode-3986-1.0.0.tgz#940d51498f8741ade184b75ad1439b317c0c7a60"
 
 encodeurl@~1.0.1:
   version "1.0.1"
@@ -3239,13 +3250,6 @@ isobject@^2.0.0:
   dependencies:
     isarray "1.0.0"
 
-isomorphic-fetch@2.2.1:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/isomorphic-fetch/-/isomorphic-fetch-2.2.1.tgz#611ae1acf14f5e81f729507472819fe9733558a9"
-  dependencies:
-    node-fetch "^1.0.1"
-    whatwg-fetch ">=0.10.0"
-
 isomorphic-form-data@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/isomorphic-form-data/-/isomorphic-form-data-0.0.1.tgz#026f627e032b0cd8413ecc8755928b94a468b062"
@@ -3982,13 +3986,9 @@ lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash@4, lodash@^4.0.0, lodash@^4.1.0, lodash@^4.11.1, lodash@^4.14.0, lodash@^4.16.6, lodash@^4.17.4, lodash@^4.3.0:
+lodash@4, lodash@^4.0.0, lodash@^4.1.0, lodash@^4.11.1, lodash@^4.14.0, lodash@^4.16.2, lodash@^4.16.6, lodash@^4.17.4, lodash@^4.3.0:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
-
-lodash@4.16.2:
-  version "4.16.2"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.16.2.tgz#3e626db827048a699281a8a125226326cfc0e652"
 
 longest@^1.0.1:
   version "1.0.1"
@@ -4386,7 +4386,7 @@ next-tick@1:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
 
-node-fetch@^1.0.1:
+node-fetch@1.7.3:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
   dependencies:
@@ -6369,19 +6369,20 @@ svgo@^0.7.0:
     sax "~1.2.1"
     whet.extend "~0.9.9"
 
-swagger-client@^3.1.2:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/swagger-client/-/swagger-client-3.3.1.tgz#5c28b4296a83605be2e191d8ebecd02b84a69f0c"
+swagger-client@^3.3.3:
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/swagger-client/-/swagger-client-3.3.5.tgz#6d1e90c5ddbf5d9a1431b4662dfc316fbb1ed99e"
   dependencies:
     babel-runtime "^6.23.0"
     btoa "1.1.2"
     cookie "^0.3.1"
+    cross-fetch "0.0.8"
     deep-extend "^0.4.1"
+    encode-3986 "^1.0.0"
     fast-json-patch "1.1.8"
-    isomorphic-fetch "2.2.1"
     isomorphic-form-data "0.0.1"
     js-yaml "^3.8.1"
-    lodash "4.16.2"
+    lodash "^4.16.2"
     qs "^6.3.0"
     url "^0.11.0"
 
@@ -6391,12 +6392,12 @@ swagger-converter@^0.1.7:
   dependencies:
     lodash.clonedeep "^2.4.1"
 
-swagger-parser-mock@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/swagger-parser-mock/-/swagger-parser-mock-1.0.2.tgz#0f2d9d8a781c6f90bf379504942cb7beaa879f46"
+swagger-parser-mock@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/swagger-parser-mock/-/swagger-parser-mock-1.0.5.tgz#9a15a90aa7a793123de4ea21c419179a49fa2e19"
   dependencies:
     memoizee "^0.4.11"
-    swagger-client "^3.1.2"
+    swagger-client "^3.3.3"
     swagger-tools "^0.10.3"
     url "^0.11.0"
 
@@ -6937,7 +6938,7 @@ webpack@^3.4.1:
     webpack-sources "^1.0.1"
     yargs "^8.0.2"
 
-whatwg-fetch@>=0.10.0:
+whatwg-fetch@2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.3.tgz#9c84ec2dcf68187ff00bc64e1274b442176e1c84"
 

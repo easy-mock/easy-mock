@@ -80,7 +80,7 @@ export default {
         name: parameter.name,
         description: parameter.description || this.$t('p.detail.expand.defaultDescription'),
         paramType: parameter.in,
-        dataType: parameter.type,
+        dataType: this.getParamDataType(parameter),
         parameter: parameter
       }))
     },
@@ -105,6 +105,15 @@ export default {
       return {
         js: getJavaScriptEntities(response).map(o => jsBeautify.js_beautify(o, { indent_size: 2 })),
         oc: getObjectiveCEntities(response)
+      }
+    }
+  },
+  methods: {
+    getParamDataType (parameter) {
+      const { type, schema } = parameter
+      if (type) return type
+      if (schema && schema.type) {
+        return schema.type === 'array' ? schema.items.type : schema.type
       }
     }
   }
