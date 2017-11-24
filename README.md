@@ -46,7 +46,7 @@ visualization view.
 - Support Collaborative editing
 - Support team project
 - Support RESTful
-- Support [Swagger](https://swagger.io) [1.2](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/1.2.md) & [2.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md)
+- Support [Swagger](https://swagger.io) | OpenAPI Specification ([1.2](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/1.2.md) & [2.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md) & [3.0](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md))
   - Create project quickly based on Swagger
   - Support displaying parameters and the return value
   - Support displaying class model
