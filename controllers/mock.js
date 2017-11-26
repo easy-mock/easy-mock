@@ -179,6 +179,7 @@ exports.update = function * () {
   const id = this.checkBody('id').notEmpty().value
   const mode = this.checkBody('mode').value
   const description = this.checkBody('description').value
+  const isAuthentic = this.checkBody('is_authentic').value
   const url = this.checkBody('url').empty()
     .match(/^\/.*$/i, 'URL 必须以 / 开头').value
   const method = this.checkBody('method').empty().toLow().in([
@@ -212,6 +213,7 @@ exports.update = function * () {
   mock.mode = mode || mock.mode
   mock.method = method || mock.method
   mock.description = description || mock.description
+  mock.is_authentic = isAuthentic
 
   // 更新属性后查重
   const existMock = yield mockProxy.findOne({
@@ -274,6 +276,7 @@ exports.delete = function * () {
 exports.getMock = function * () {
   const query = this.query || {}
   const body = this.request.body || {}
+  const header = this.request.header || {}
   const method = this.method.toLowerCase()
   const urlArr = _.filter(this.path.split('/')) // filter empty
   const userName = urlArr[1]
@@ -288,9 +291,8 @@ exports.getMock = function * () {
     this.throw(404)
   }
 
+  let project
   try {
-    let project
-
     if (userName.length === 24) {
       // 现以 项目id 作为起始路径
       project = yield projectProxy.findOne({ _id: userName })
@@ -336,6 +338,45 @@ exports.getMock = function * () {
     options._req.cookies = this.cookies.get.bind(this)
     return options.template.call(options.context.currentContext, options)
   }.bind(this)
+
+  if (config.fe && config.fe.canSwitchAddress && project.address && mock.is_authentic) {
+    const mode = project.address + mock.url
+    const proxy = mode.split('?')
+    const url = new URL(proxy[0])
+    const queryString = _.assign({}, qs.parse(proxy[1]), query)
+    const params = getParams(mock.url, reqUrl)
+    const pathname = pathToRegexp.compile(url.pathname)(params)
+    try {
+      data = yield axios({
+        method: method,
+        url: url.origin + pathname,
+        params: queryString,
+        data: body,
+        headers: {
+          'content-type': header['content-type'] || 'application/json',
+          'x-authorization': header['x-authorization'] || '',
+          'client-key': header['client-key'] || '',
+          'accept': header['accept'] || 'application/json'
+        },
+        timeout: 10000
+      }).then(res => res.data)
+    } catch (error) {
+      this.body = this.util.refail(error.message || '无法完成代理请求')
+      return
+    }
+    yield mockCountProxy.newAndSave(mock.id)
+    if (callbackName) {
+      this.type = 'text/javascript'
+      this.body = `${callbackName}(${JSON.stringify(data, null, 2)})`
+      // JSON parse vs eval fix. https://github.com/rack/rack-contrib/pull/37
+      this.body = this.body
+        .replace(/\u2028/g, '\\u2028')
+        .replace(/\u2029/g, '\\u2029')
+    } else {
+      this.body = data
+    }
+    return
+  }
 
   if (/^http(s)?/.test(mock.mode)) {
     const proxy = mock.mode.split('?')

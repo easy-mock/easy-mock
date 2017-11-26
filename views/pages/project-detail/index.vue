@@ -171,15 +171,23 @@ export default {
         {
           title: this.$t('p.detail.columns[1]'),
           key: 'action',
-          width: 160,
+          width: 180,
           align: 'center',
           render: (h, params) => {
+            let switchAddressButton = null
+            if (config.canSwitchAddress && this.project.address) {
+              const switchAddressIcon = params.row.is_authentic ? 'toggle-filled' : 'toggle'
+              switchAddressButton = (
+                <i-button size="small" title={this.$t('p.detail.action[5]')} class="switch-address" onClick={this.switchAuthentic.bind(this, params.row)}><icon type={switchAddressIcon}></icon></i-button>
+              )
+            }
             return (
               <div>
                 <Button-group>
                   <i-button size="small" title={this.$t('p.detail.action[0]')} onClick={this.preview.bind(this, params.row)}><icon type="eye"></icon></i-button>
                   <i-button size="small" title={this.$t('p.detail.action[1]')} onClick={this.openEditor.bind(this, params.row)}><icon type="edit"></icon></i-button>
                   <i-button size="small" title={this.$t('p.detail.action[2]')} class="copy-url" onClick={this.clip.bind(this, params.row.url)}><icon type="link"></icon></i-button>
+                  {switchAddressButton}
                 </Button-group>
                 <dropdown>
                   <i-button size="small"><icon type="more"></icon></i-button>
@@ -286,6 +294,26 @@ export default {
             }
             return res
           })
+        }
+      })
+    },
+    switchAuthentic (mock) {
+      const isAuthentic = mock.is_authentic
+      api.mock.update({
+        data: {
+          ...mock,
+          id: mock._id,
+          is_authentic: !isAuthentic
+        }
+      }).then((res) => {
+        if (res.data.success) {
+          if (isAuthentic) {
+            this.$Message.success('已使用mock')
+          } else {
+            this.$Message.success('已使用API')
+          }
+          this.$store.commit('mock/SET_REQUEST_PARAMS', { pageIndex: 1 })
+          this.$store.dispatch('mock/FETCH', this.$route)
         }
       })
     },

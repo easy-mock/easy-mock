@@ -68,6 +68,7 @@
     "timeout": 25000,
     "publicPath": "/dist/",
     "mockPrefix": "/mock/",
-    "APIPrefix": "http://127.0.0.1:7300/api"
+    "APIPrefix": "http://127.0.0.1:7300/api",
+    "canSwitchAddress": false
   }
 }

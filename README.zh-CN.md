@@ -79,7 +79,8 @@ $ cd easy-mock && npm install
     "publicPath": "/dist/",
     "APIPrefix": "http://127.0.0.1:7300/api",
     "uploadAPI": "你的上传接口地址，头像上传需要。",
-    "storageNamespace": "cookies & localStorage 的命名空间。"
+    "storageNamespace": "cookies & localStorage 的命名空间。",
+    "canSwitchAddress": false // 开启此功能允许你填写 API 测试地址并进行切换
   }
 }
 ```

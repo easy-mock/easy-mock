@@ -53,6 +53,16 @@
             {{$tc('p.new.form.swagger', 2)}} <router-link to="/docs#swagger"><Icon type="help-circled"></Icon></router-link>
             </p>
           </Form-item>
+          <Form-item v-if="canSwitchAddress" :label="$tc('p.new.form.address', 0)">
+            <template slot="label">
+              {{$tc('p.new.form.address', 0)}}
+              <span>({{$tc('p.new.form.address', 1)}})</span>
+            </template>
+            <i-input v-model="form.projectAddress" placeholder="http://example.com"></i-input>
+            <p class="em-new__form-description">
+              {{$tc('p.new.form.address', 2)}}
+            </p>
+          </Form-item>
           <Form-item :label="$t('p.new.form.member[0]')" class="em-new__form-hr">
             <template slot="label">
               {{$t('p.new.form.member[0]')}}
@@ -98,6 +108,7 @@
 
 <script>
 import * as api from '../../api'
+import config from 'config'
 
 export default {
   name: 'newProject',
@@ -115,6 +126,7 @@ export default {
         projectUrl: '',
         projectDesc: '',
         projectSwagger: '',
+        projectAddress: '',
         projectMembers: []
       }
     }
@@ -137,6 +149,7 @@ export default {
       this.form.projectName = proj.name
       this.form.projectDesc = proj.description
       this.form.projectSwagger = proj.swagger_url
+      this.form.projectAddress = proj.address
       this.projectUrl = proj.url.slice(1) // remove /
       this.$nextTick(() => {
         this.remoteLoading = false
@@ -160,6 +173,9 @@ export default {
     },
     isEdit () {
       return !!this.projectData
+    },
+    canSwitchAddress () {
+      return config.canSwitchAddress
     },
     isGroup () {
       if (this.projectData) {
@@ -194,6 +210,7 @@ export default {
         name: this.form.projectName,
         group: this.form.groupId,
         swagger_url: this.form.projectSwagger,
+        address: this.form.projectAddress,
         description: this.form.projectDesc,
         url: this.convertUrl(this.projectUrl),
         members: this.isGroup ? [] : this.form.projectMembers

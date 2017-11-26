@@ -23,6 +23,10 @@ const schema = new Schema({
     type: String,
     default: ''
   },
+  address: {
+    type: String,
+    default: ''
+  },
   members: [{
     type: Schema.Types.ObjectId,
     ref: 'User',

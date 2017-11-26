@@ -95,6 +95,7 @@ export default {
         url: '项目基础 URL | 尽量简短表意。例：/nba',
         description: '项目描述 | 不填默认为项目名',
         swagger: 'Swagger Docs API | 可选 | 如果后台有提供 Swagger 文档（并且没有验证授权的问题）, 于是我们可以在此处填写 Swagger 的接口地址, Easy Mock 会自动基于此接口创建 Mock 接口.',
+        address: 'API 服务地址 | 可选 | 我们可以填写 api 的测试环境的地址，Easy Mock 可以接管切换 mock 与测试环境的操作，来实现测试环境的对接和集成.',
         member: ['邀请成员 协同编辑', '可选 | 团队项目下，该配置不生效', '用户昵称、用户名，支持模糊匹配'],
         confirm: '请输入项目名称以进行确认 | 项目名确认 | 出于某些原因，删除也许会失败。但如果你执意删除，必须知道此操作无法撤消，这将永久删除',
         button: {
@@ -163,7 +164,7 @@ export default {
         { category: '操作', list: ['创建接口', '添加 / 移除工作台', '同步 Swagger'] }
       ],
       columns: ['描述', '操作'],
-      action: ['预览接口', '编辑接口', '复制接口地址', '克隆', '删除'],
+      action: ['预览接口', '编辑接口', '复制接口地址', '克隆', '删除', '切换数据源'],
       copySuccess: '接口地址已复制到剪贴板',
       syncSwagger: {
         action: '同步 Swagger',
