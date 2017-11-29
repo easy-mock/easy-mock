@@ -78,7 +78,6 @@ $ cd easy-mock && npm install
   "fe": {
     "publicPath": "/dist/",
     "APIPrefix": "http://127.0.0.1:7300/api",
-    "uploadAPI": "你的上传接口地址，头像上传需要。",
     "storageNamespace": "cookies & localStorage 的命名空间。"
   }
 }

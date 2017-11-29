@@ -88,7 +88,6 @@ configuration.
   "fe": {
     "publicPath": "/dist/",
     "APIPrefix": "http://127.0.0.1:7300/api",
-    "uploadAPI": "Your own avatar uploading API uri",
     "storageNamespace": "cookies & localStorage namespace"
   }
 }
