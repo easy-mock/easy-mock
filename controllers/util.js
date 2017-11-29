@@ -94,7 +94,7 @@ exports.upload = function * () {
         } else {
           fs.writeFileSync(filePath, fileContent)
           body = this.util.resuccess({
-            path: new URL(path.join('upload', day, fileName), origin)
+            path: new URL(path.join('upload', day, fileName), origin).href
           })
         }
       }))
