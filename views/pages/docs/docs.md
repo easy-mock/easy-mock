@@ -427,7 +427,7 @@ Easy Mock 并没有强制要求使用 Swagger，所以即使没有 Swagger 我�
 如果 Swagger 文档只能内网访问，那么外网 Easy Mock 将无法为其创建项目。
 
 **解决方案**
-> 只适用于 Swagger 2.0
+> 不适用于 OAS 1.2
 
 - 复制文档接口的 JSON 数据，以 [Petstore](http://petstore.swagger.io/v2/swagger.json) 为例
 - 在 Easy Mock 中新建一个接口，`数据编辑器` 中粘贴刚刚复制的接口数据（可能有点大）并完成创建
