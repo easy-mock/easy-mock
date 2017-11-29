@@ -107,7 +107,9 @@ export default {
           update: 'Update Success',
           delete: '{name} is deleted'
         }
-      }
+      },
+      formatError: 'File only supports JSON/YML format',
+      uploadSuccess: 'Upload Success'
     },
     profile: {
       header: {

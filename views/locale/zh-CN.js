@@ -107,7 +107,9 @@ export default {
           update: '更新成功',
           delete: '{name} 已删除'
         }
-      }
+      },
+      formatError: '文件仅支持 JSON/YML 格式',
+      uploadSuccess: '上传成功'
     },
     profile: {
       header: {

@@ -48,7 +48,25 @@
               {{$tc('p.new.form.swagger', 0)}}
               <span>({{$tc('p.new.form.swagger', 1)}})</span>
             </template>
-            <i-input v-model="form.projectSwagger" placeholder="http://example.com/swagger.json"></i-input>
+            <i-select v-model="swaggerType" class="em-new__swagger-type">
+              <Option value="URL">URL</Option>
+              <Option value="Upload">Upload</Option>
+            </i-select>
+            <i-input v-if="swaggerType === 'URL'" v-model="form.projectSwagger" placeholder="http://example.com/swagger.json"></i-input>
+            <Upload
+              type="drag"
+              :headers="uploadHeaders"
+              :show-upload-list="false"
+              :format="['json','yml']"
+              :action="uploadAPI"
+              :on-success="handleSwaggerUploadSuccess"
+              :on-format-error="handleSwaggerUploadError"
+              v-if="swaggerType === 'Upload'">
+              <div style="padding: 20px 0">
+                <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                <p>JSON / YML</p>
+              </div>
+            </Upload>
             <p class="em-new__form-description">
             {{$tc('p.new.form.swagger', 2)}} <router-link to="/docs#swagger"><Icon type="help-circled"></Icon></router-link>
             </p>
@@ -97,12 +115,15 @@
 </style>
 
 <script>
+import conf from 'config'
 import * as api from '../../api'
 
 export default {
   name: 'newProject',
   data () {
     return {
+      uploadAPI: conf.APIPrefix + '/upload',
+      swaggerType: 'URL',
       remoteLoading: false,
       users: [],
       groups: [],
@@ -167,9 +188,22 @@ export default {
       } else {
         return this.form.groupId !== this.user.id
       }
+    },
+    uploadHeaders () {
+      return {
+        Authorization: 'Bearer ' + this.user.token
+      }
     }
   },
   methods: {
+    handleSwaggerUploadSuccess (response) {
+      this.form.projectSwagger = response.data.path
+      this.swaggerType = 'URL'
+      this.$Message.success(this.$t('p.new.uploadSuccess'))
+    },
+    handleSwaggerUploadError () {
+      this.$Message.error(this.$t('p.new.formatError'))
+    },
     convertUrl (url) {
       const newUrl = '/' + url
       return newUrl === '/'
