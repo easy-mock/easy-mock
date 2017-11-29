@@ -25,6 +25,7 @@ const isProd = process.env.NODE_ENV === 'production'
 const serve = (pf, filePath, cache) => staticCache(resolve(filePath), {
   prefix: pf,
   gzip: true,
+  dynamic: true,
   maxAge: cache && isProd ? 60 * 60 * 24 * 30 : 0
 })
 
@@ -40,6 +41,7 @@ app
   .use(favicon(path.join(__dirname, '/public/images/icon.png')))
   .use(serve('/dist', './dist'))
   .use(serve('/public', './public'))
+  .use(serve('/upload', path.resolve(__dirname, 'config', config.get('upload').dir)))
   .use(koaBunyanLogger(logger))
   .use(koaBunyanLogger.requestIdContext())
   .use(requestLogger)

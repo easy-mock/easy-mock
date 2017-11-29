@@ -24,7 +24,8 @@
   },
   "upload": {
     "types": [".jpg", ".jpeg", ".png", ".gif", ".json", ".yml"],
-    "size": 5242880
+    "size": 5242880,
+    "dir": "../public/upload"
   },
   "publicAPIs": [
     "/api/proxy",

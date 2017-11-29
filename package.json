@@ -6,7 +6,7 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test istanbul cover _mocha test/*",
     "lint": "eslint --ignore-path .gitignore . --quiet --ext .vue,.js",
-    "dev": "nodemon --ignore views/ app",
+    "dev": "nodemon --ignore views/ --ignore public/ app",
     "dev:client": "node app | bunyan -o short",
     "dev:server": "cross-env NODE_ENV=production npm run dev",
     "start": "cross-env NODE_ENV=production node app | bunyan -o short",

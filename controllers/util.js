@@ -62,7 +62,7 @@ exports.upload = function * () {
   const conf = config.get('upload')
   const hash = crypto.createHash('md5')
   const day = moment().format('YYYY/MM/DD')
-  const uploadDir = path.join(__dirname, '../public/upload', day)
+  const uploadDir = path.resolve(__dirname, conf.dir, day)
   const handleLimit = function () {
     limitError = new Error('上传失败，超过限定大小')
     part && part.removeListener('limit', handleLimit)
@@ -94,7 +94,7 @@ exports.upload = function * () {
         } else {
           fs.writeFileSync(filePath, fileContent)
           body = this.util.resuccess({
-            path: new URL(filePath.replace(path.join(__dirname, '..'), ''), origin)
+            path: new URL(path.join('upload', day, fileName), origin)
           })
         }
       }))
