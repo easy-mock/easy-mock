@@ -27,6 +27,7 @@ function createRequest (prefix) {
   }
 }
 
+exports.request = request
 exports.r = createRequest(routerPrefix.api)
 exports.m = createRequest(routerPrefix.mock)
 

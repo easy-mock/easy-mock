@@ -1,8 +1,16 @@
 'use strict'
 
+const fs = require('fs')
+const path = require('path')
+const { URL } = require('url')
 const axios = require('axios')
+const moment = require('moment')
+const mkdirp = require('mkdirp')
+const crypto = require('crypto')
 const LRU = require('lru-cache')
 const config = require('config')
+const parse = require('co-busboy')
+const concat = require('concat-stream')
 const unsplashClientId = config.get('unsplashClientId')
 const unsplashCache = LRU({
   max: 1,
@@ -47,4 +55,53 @@ exports.wallpaper = function * () {
     }
   }
   unsplashCache.set('one', this.body)
+}
+
+exports.upload = function * () {
+  const origin = this.request.origin
+  const conf = config.get('upload')
+  const hash = crypto.createHash('md5')
+  const day = moment().format('YYYY/MM/DD')
+  const uploadDir = path.join(__dirname, '../public/upload', day)
+  const handleLimit = function () {
+    limitError = new Error('上传失败，超过限定大小')
+    part && part.removeListener('limit', handleLimit)
+  }
+  const parts = parse(this, {
+    limits: {
+      fileSize: conf.size
+    },
+    checkFile: function (fieldname, file, filename) {
+      const suffix = path.extname(filename).toLowerCase()
+      file.on('limit', handleLimit)
+      if (conf.types.indexOf(suffix) === -1) {
+        return new Error(`上传失败，仅支持 ${conf.types.join('/').replace(/\./g, '')} 文件类型`)
+      }
+    }
+  })
+  let part, limitError, body
+
+  if (!fs.existsSync(uploadDir)) mkdirp.sync(uploadDir)
+
+  try {
+    while ((part = yield parts)) {
+      part.pipe(concat((fileContent) => {
+        const suffix = path.extname(part.filename).toLowerCase()
+        const fileName = hash.update(fileContent).digest('hex') + suffix
+        const filePath = path.join(uploadDir, fileName)
+        if (limitError) {
+          body = this.util.refail(limitError.message)
+        } else {
+          fs.writeFileSync(filePath, fileContent)
+          body = this.util.resuccess({
+            path: new URL(filePath.replace(path.join(__dirname, '..'), ''), origin)
+          })
+        }
+      }))
+    }
+  } catch (error) {
+    body = this.util.refail(error && error.message)
+  }
+
+  this.body = body || this.util.refail('无文件上传')
 }

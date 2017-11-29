@@ -22,6 +22,10 @@
     "collection": "tokens",
     "secret": "shared-secret"
   },
+  "upload": {
+    "types": [".jpg", ".jpeg", ".png", ".gif", ".json", ".yml"],
+    "size": 5242880
+  },
   "publicAPIs": [
     "/api/proxy",
     "/api/u/login",

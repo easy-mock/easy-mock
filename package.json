@@ -29,6 +29,8 @@
     "bunyan": "^1.8.5",
     "clipboard": "^1.7.1",
     "co": "^4.6.0",
+    "co-busboy": "^1.4.0",
+    "concat-stream": "^1.6.0",
     "config": "^1.26.1",
     "cross-env": "^5.0.1",
     "iview": "^2.3.2",

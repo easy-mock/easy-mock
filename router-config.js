@@ -19,6 +19,7 @@ exports.mock = router({ prefix: routerPrefix.mock })
 exports.api = router({ prefix: routerPrefix.api })
   .get('/proxy', util.proxy)
   .get('/wallpaper', util.wallpaper)
+  .post('/upload', util.upload)
 
   .get('/realtime', realtime.list)
   .get('/realtime/top/project', realtime.topProject)
