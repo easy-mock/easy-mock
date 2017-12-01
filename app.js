@@ -39,6 +39,7 @@ const requestLogger = isProd
     yield next
   }
 
+app.proxy = config.get('proxy')
 app
   .use(favicon(path.join(__dirname, '/public/images/icon.png')))
   .use(serve('/dist', './dist'))
