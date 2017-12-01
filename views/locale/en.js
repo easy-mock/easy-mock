@@ -109,7 +109,7 @@ export default {
         }
       },
       formatError: 'File only supports JSON/YML format',
-      uploadSuccess: 'Upload Success'
+      uploadSuccess: 'Upload Success | Upload Success, The file will expire at {date}'
     },
     profile: {
       header: {

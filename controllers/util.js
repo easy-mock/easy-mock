@@ -60,9 +60,10 @@ exports.wallpaper = function * () {
 exports.upload = function * () {
   const origin = this.request.origin
   const conf = config.get('upload')
+  const expireDay = conf.expire.day
   const hash = crypto.createHash('md5')
-  const day = moment().format('YYYY/MM/DD')
-  const uploadDir = path.resolve(__dirname, conf.dir, day)
+  const date = moment().format('YYYY/MM/DD')
+  const uploadDir = path.resolve(__dirname, conf.dir, date)
   const handleLimit = function () {
     limitError = new Error('上传失败，超过限定大小')
     part && part.removeListener('limit', handleLimit)
@@ -93,9 +94,11 @@ exports.upload = function * () {
           body = this.util.refail(limitError.message)
         } else {
           fs.writeFileSync(filePath, fileContent)
-          body = this.util.resuccess({
-            path: new URL(path.join('upload', day, fileName), origin).href
-          })
+          body = { path: new URL(path.join('upload', date, fileName), origin).href }
+          if (typeof expireDay === 'number' && expireDay > 0) {
+            body.expire = moment().add(expireDay, 'days').format('YYYY-MM-DD 00:00:00')
+          }
+          body = this.util.resuccess(body)
         }
       }))
     }

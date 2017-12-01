@@ -1,7 +1,29 @@
 'use strict'
 
-const cp = require('./cp')
+const path = require('path')
+const config = require('config')
+const rimraf = require('rimraf')
+const moment = require('moment')
 const bcrypt = require('bcryptjs')
+const cp = require('./cp')
+
+/**
+ * 定时删除已经上传的过期文件
+ */
+exports.dropFileSchedule = function () {
+  const conf = config.get('upload')
+  const expireDay = conf.expire.day
+
+  if (typeof expireDay === 'number' && expireDay > 0) {
+    const expireTypes = conf.expire.types.map(type => `*${type}`).join(',')
+    const date = moment().subtract(expireDay, 'days').format('YYYY/MM/DD')
+    const uploadDir = path.resolve(__dirname, conf.dir, date)
+    const commandPath = `${uploadDir}/{${expireTypes}}`
+
+    rimraf(commandPath, () => {})
+    setInterval(() => rimraf(commandPath, () => {}), 1000 * 60 * 60)
+  }
+}
 
 /**
  * 加密字符串

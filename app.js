@@ -14,6 +14,7 @@ const pathToRegexp = require('path-to-regexp')
 const staticCache = require('koa-static-cache')
 const koaBunyanLogger = require('koa-bunyan-logger')
 
+const util = require('./util')
 const logger = require('./util/log')
 const middleware = require('./middlewares')
 const routerConfig = require('./router-config')
@@ -29,6 +30,7 @@ const serve = (pf, filePath, cache) => staticCache(resolve(filePath), {
   maxAge: cache && isProd ? 60 * 60 * 24 * 30 : 0
 })
 
+util.dropFileSchedule()
 validate(app)
 
 const requestLogger = isProd

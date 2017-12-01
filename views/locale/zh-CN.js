@@ -109,7 +109,7 @@ export default {
         }
       },
       formatError: '文件仅支持 JSON/YML 格式',
-      uploadSuccess: '上传成功'
+      uploadSuccess: '上传成功 | 上传成功，该文件将在 {date} 失效'
     },
     profile: {
       header: {

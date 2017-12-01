@@ -197,9 +197,17 @@ export default {
   },
   methods: {
     handleSwaggerUploadSuccess (response) {
-      this.form.projectSwagger = response.data.path
+      const data = response.data
+      this.form.projectSwagger = data.path
       this.swaggerType = 'URL'
-      this.$Message.success(this.$t('p.new.uploadSuccess'))
+      if (data.expire) {
+        this.$Message.success({
+          content: this.$tc('p.new.uploadSuccess', 2, {date: data.expire}),
+          duration: 5
+        })
+      } else {
+        this.$Message.success(this.$tc('p.new.uploadSuccess', 1))
+      }
     },
     handleSwaggerUploadError () {
       this.$Message.error(this.$t('p.new.formatError'))
