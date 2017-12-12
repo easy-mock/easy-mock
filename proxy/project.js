@@ -2,34 +2,14 @@
 
 const _ = require('lodash')
 
-const m = require('../models')
-const mock = require('./mock')
-const userProject = require('./user_project')
-const userGroup = require('./user_group')
-
-const ProjectModel = m.Project
-
-exports.newAndSave = function (docs) {
-  return ProjectModel.insertMany(docs)
-    .then(data => Promise.all(data.map((item) => {
-      const projectId = item.id
-      const userIds = _.uniq([item.user].concat(item.members))
-      // 区分 个人项目 or 团队项目
-      // 获取团队下所有的用户，创建关联表
-      return item.user
-        ? userIds.map(id => ({ user: id, project: projectId }))
-        : userGroup.find({ group: item.group }).then(data => data.map(o => ({
-          user: o.user.id,
-          project: projectId
-        })))
-    }))
-      .then(docs => userProject.newAndSave(_.flattenDeep(docs)))
-      .then(() => data))
-}
+const MockProxy = require('./mock')
+const { Project } = require('../models')
+const UserGroupProxy = require('./user_group')
+const UserProjectProxy = require('./user_project')
 
 exports.getById = function (projectId) {
-  return ProjectModel.findById(projectId).populate('user members group')
-    .then(project => userProject
+  return Project.findById(projectId).populate('user members group')
+    .then(project => UserProjectProxy
       .findOne({ project: project.id })
       .then(data => {
         project.extend = data
@@ -39,13 +19,13 @@ exports.getById = function (projectId) {
 }
 
 exports.findByIds = function (ids) {
-  return ProjectModel.find({ _id: { $in: ids } })
+  return Project.find({ _id: { $in: ids } })
     .populate('user members group')
 }
 
 exports.find = function (sessionUId, query, opt) {
-  return ProjectModel.find(query, {}, opt).populate('user members group')
-    .then(projects => userProject.find({
+  return Project.find(query, {}, opt).populate('user members group')
+    .then(projects => UserProjectProxy.find({
       project: { $in: projects.map(item => item.id) },
       user: sessionUId
     })
@@ -57,12 +37,8 @@ exports.find = function (sessionUId, query, opt) {
       })))
 }
 
-exports.findOne = function (query, opt) {
-  return ProjectModel.findOne(query, {}, opt).populate('user members group')
-}
-
 exports.updateById = function (project) {
-  return ProjectModel.update({
+  return Project.update({
     _id: project.id
   }, {
     $set: {
@@ -76,7 +52,54 @@ exports.updateById = function (project) {
 }
 
 exports.delById = function (projectId) {
-  return mock.del({ project: projectId })
-    .then(() => userProject.delByProjectId(projectId))
-    .then(() => ProjectModel.remove({ _id: projectId }))
+  return MockProxy
+    .del({ project: projectId })
+    .then(() => UserProjectProxy.delByProjectId(projectId))
+    .then(() => Project.remove({ _id: projectId }))
+}
+
+module.exports = class ProjectProxy {
+  static newAndSave2 (projects) {
+    return Project
+      .insertMany(projects)
+      .then(projects => {
+        const userProjectDocs = projects.map((project) => {
+          const projectId = project.id
+          const userId = project.user
+          if (userId) {
+            return project.members.concat(userId).map(id => ({ user: id, project: projectId }))
+          } else {
+            return UserGroupProxy
+              .find({ group: project.group })
+              .then(docs => docs.map(doc => ({ user: doc.user.id, project: projectId })))
+          }
+        })
+        return Promise.all(userProjectDocs)
+          .then(result => UserProjectProxy.newAndSave(_.flattenDeep(result)))
+          .then(() => projects)
+      })
+  }
+
+  static async newAndSave (docs) {
+    const projects = await Project.insertMany(docs)
+    const userProjectDocs = projects.map((project) => {
+      const projectId = project.id
+      const userId = project.user
+      if (userId) {
+        return project.members.concat(userId).map(id => ({ user: id, project: projectId }))
+      } else {
+        return UserGroupProxy
+          .find({ group: project.group })
+          .then(docs => docs.map(doc => ({ user: doc.user.id, project: projectId })))
+      }
+    })
+    const result = await Promise.all(userProjectDocs)
+    await UserProjectProxy.newAndSave(_.flattenDeep(result))
+
+    return projects
+  }
+
+  static findOne (query, opt) {
+    return Project.findOne(query, {}, opt).populate('user members group')
+  }
 }

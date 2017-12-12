@@ -3,14 +3,15 @@
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
+const ObjectId = Schema.Types.ObjectId
 
 const schema = new Schema({
   user: {
-    type: Schema.Types.ObjectId,
+    type: ObjectId,
     ref: 'User'
   },
   group: {
-    type: Schema.Types.ObjectId,
+    type: ObjectId,
     ref: 'Group'
   },
   name: String,
@@ -24,7 +25,7 @@ const schema = new Schema({
     default: ''
   },
   members: [{
-    type: Schema.Types.ObjectId,
+    type: ObjectId,
     ref: 'User',
     default: []
   }],

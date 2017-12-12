@@ -167,8 +167,7 @@ const group = {
 }
 
 const realtime = {
-  getList: config => createAPI('/realtime', 'get', config),
-  getProjectTop: config => createAPI('/realtime/top/project', 'get', config)
+  getList: config => createAPI('/realtime', 'get', config)
 }
 
 export {

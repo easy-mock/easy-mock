@@ -1,34 +1,32 @@
 'use strict'
 
-const m = require('../models')
-const userGroup = require('./user_group')
+const { Group } = require('../models')
+const UserGroupProxy = require('./user_group')
 
-const GroupModel = m.Group
+module.exports = class GroupProxy {
+  static async newAndSave (docs) {
+    const group = new Group(docs)
+    const result = await group.save()
+    return UserGroupProxy.newAndSave({ user: result.user, group: result.id })
+  }
 
-exports.newAndSave = function (docs) {
-  const group = new GroupModel(docs)
-  return group.save().then(data => userGroup.newAndSave({
-    user: data.user,
-    group: data.id
-  }))
-}
+  static findByName (name) {
+    return Group.findOne({ name })
+  }
 
-exports.findByName = function (name) {
-  return GroupModel.findOne({ name })
-}
+  static findOne (query) {
+    return Group.findOne(query)
+  }
 
-exports.findOne = function (query) {
-  return GroupModel.findOne(query)
-}
+  static find (query) {
+    return Group.find(query, {})
+  }
 
-exports.find = function (query) {
-  return GroupModel.find(query, {})
-}
+  static updateById (id, doc) {
+    return Group.update({ _id: id }, { $set: doc })
+  }
 
-exports.updateById = function (id, doc) {
-  return GroupModel.update({ _id: id }, { $set: doc })
-}
-
-exports.del = function (query) {
-  return GroupModel.remove(query)
+  static del (query) {
+    return Group.remove(query)
+  }
 }

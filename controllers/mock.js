@@ -2,22 +2,20 @@
 
 const _ = require('lodash')
 const { VM } = require('vm2')
-const { URL } = require('url')
+const nodeURL = require('url')
 const JSZip = require('jszip')
 const Mock = require('mockjs')
 const axios = require('axios')
 const config = require('config')
-const qs = require('querystring')
 const pathToRegexp = require('path-to-regexp')
 
 const p = require('../proxy')
-const { getParams } = require('../util/mock')
+const util = require('../util')
 const ft = require('../models/fields_table')
 
 const projectProxy = p.Project
 const mockProxy = p.Mock
 const mockCountProxy = p.MockCount
-const userProxy = p.User
 
 function projectExistCheck (id, uid) {
   return projectProxy.findOne({ _id: id }).then((project) => {
@@ -271,159 +269,6 @@ exports.delete = function * () {
   this.body = this.util.resuccess()
 }
 
-exports.getMock = function * () {
-  const query = this.query || {}
-  const body = this.request.body || {}
-  const method = this.method.toLowerCase()
-  const urlArr = _.filter(this.path.split('/')) // filter empty
-  const userName = urlArr[1]
-  const projectUrl = `/${urlArr[2]}`
-  const callbackName = query.jsonp_param_name && (query[query.jsonp_param_name] || 'callback')
-
-  let data
-  let mocks
-  let reqUrl = `/${urlArr.slice(3).join('/')}`
-
-  if (urlArr.length < 2) {
-    this.throw(404)
-  }
-
-  try {
-    let project
-
-    if (userName.length === 24) {
-      // 现以 项目id 作为起始路径
-      project = yield projectProxy.findOne({ _id: userName })
-      reqUrl = project.url === '/'
-        ? `/${urlArr.slice(2).join('/')}`
-        : `/${urlArr.slice(2).join('/')}`.replace(project.url, '')
-    } else {
-      // 兼容以前以用户名开头的路径
-      const user = yield userProxy.getByName(userName)
-      project = yield projectProxy.findOne({
-        user: user.id,
-        url: projectUrl
-      })
-    }
-
-    mocks = yield mockProxy.find({
-      project: project.id,
-      method
-    })
-  } catch (e) {
-    this.throw(404)
-  }
-
-  mocks = mocks.filter((item) => {
-    // /api/{user}/{id} => /api/:user/:id
-    const url = item.url.replace(/{/g, ':').replace(/}/g, '')
-    return pathToRegexp(url).test(reqUrl)
-  })
-
-  if (_.isEmpty(mocks)) {
-    this.throw(404)
-  }
-
-  const mock = mocks[0]
-
-  Mock.Handler.function = function (options) {
-    // /api/{user}/{id} => /api/:user/:id
-    const mockUrl = mock.url.replace(/{/g, ':').replace(/}/g, '')
-    options.Mock = Mock
-    // 传入 request cookies，方便使用
-    options._req = this.request
-    options._req.params = getParams(mockUrl, reqUrl)
-    options._req.cookies = this.cookies.get.bind(this)
-    return options.template.call(options.context.currentContext, options)
-  }.bind(this)
-
-  if (/^http(s)?/.test(mock.mode)) {
-    const proxy = mock.mode.split('?')
-    const url = new URL(proxy[0])
-    const queryString = _.assign({}, qs.parse(proxy[1]), query)
-    const params = getParams(mock.url, reqUrl)
-    const pathname = pathToRegexp.compile(url.pathname)(params)
-    try {
-      data = yield axios({
-        method: method,
-        url: url.origin + pathname,
-        params: queryString,
-        data: body,
-        timeout: 10000
-      }).then(res => res.data)
-    } catch (error) {
-      this.body = this.util.refail(error.message || '无法完成代理请求')
-      return
-    }
-    yield mockCountProxy.newAndSave(mock.id)
-    if (callbackName) {
-      this.type = 'text/javascript'
-      this.body = `${callbackName}(${JSON.stringify(data, null, 2)})`
-      // JSON parse vs eval fix. https://github.com/rack/rack-contrib/pull/37
-      this.body = this.body
-        .replace(/\u2028/g, '\\u2028')
-        .replace(/\u2029/g, '\\u2029')
-    } else {
-      this.body = data
-    }
-    return
-  }
-
-  const vm = new VM({
-    timeout: 2000,
-    sandbox: {
-      Mock: Mock,
-      mode: mock.mode,
-      template: new Function(`return ${mock.mode}`) // eslint-disable-line
-    }
-  })
-
-  try {
-    // 只负责数据验证，检测 setTimeout 等方法
-    vm.run('Mock.mock(new Function("return " + mode)())')
-    // 解决正则表达式失效的问题
-    data = vm.run('Mock.mock(template())')
-
-    yield mockCountProxy.newAndSave(mock.id)
-    // 开始处理自定义响应
-    if (data._res) {
-      let _res = data._res
-      if (_res.cookies) {
-        for (let i in _res.cookies) {
-          if (_res.cookies.hasOwnProperty(i)) {
-            this.cookies.set(i, _res.cookies[i])
-          }
-        }
-      }
-      if (_res.status) {
-        this.status = _res.status
-      }
-      if (_res.headers) {
-        for (let i in _res.headers) {
-          if (_res.headers.hasOwnProperty(i)) {
-            this.set(i, _res.headers[i])
-          }
-        }
-      }
-      if (_res.status && parseInt(_res.status) !== 200 && _res.data) {
-        data = _res.data
-      }
-      delete data['_res']
-    }
-    if (callbackName) {
-      this.type = 'text/javascript'
-      // JSON parse vs eval fix. https://github.com/rack/rack-contrib/pull/37
-      this.body = (callbackName + '(' + JSON.stringify(data, null, 2) + ')')
-        .replace(/\u2028/g, '\\u2028')
-        .replace(/\u2029/g, '\\u2029')
-    } else {
-      this.body = data
-    }
-  } catch (err) {
-    this.body = this.util.refail(err.message || '请检查 Mode 格式是否正确')
-  }
-}
-
 exports.exportMock = function * () {
   const ids = this.checkBody('ids').empty().type('array').value
   const projectId = this.checkBody('project_id').empty().value
@@ -476,4 +321,106 @@ exports.exportMock = function * () {
   const content = yield zip.generateAsync({ type: 'nodebuffer' })
 
   this.body = content
+}
+
+module.exports = class MockController {
+  /**
+   * 获取 Mock 接口
+   * @param {*} ctx
+   * @param {*} next
+   */
+
+  static async getAPI (ctx, next) {
+    const { query, body } = ctx.request
+    const method = ctx.method.toLowerCase()
+    const pathNode = ctx.path.split('/').filter(o => o) // ['', 'mock'] => ['mock']
+    const projectId = pathNode[1]
+    const jsonpCallback = query.jsonp_param_name && (query[query.jsonp_param_name] || 'callback')
+    let apiPath = `/${pathNode.slice(2).join('/')}`
+    let apiData, apis, api
+
+    if (!projectId) ctx.throw(404)
+    if (projectId && projectId.length !== 24) ctx.throw(404)
+
+    apis = await mockProxy.find({ project: projectId, method })
+
+    if (apis.length === 0) ctx.throw(404)
+
+    apiPath = apis[0].project.url === '/'
+      ? apiPath : apiPath.replace(apis[0].project.url, '')
+
+    apis = apis.filter((item) => {
+      const url = item.url.replace(/{/g, ':').replace(/}/g, '') // /api/{user}/{id} => /api/:user/:id
+      return pathToRegexp(url).test(apiPath)
+    })
+
+    if (apis.length === 0) ctx.throw(404)
+
+    api = apis[0]
+    Mock.Handler.function = function (options) {
+      const mockUrl = api.url.replace(/{/g, ':').replace(/}/g, '') // /api/{user}/{id} => /api/:user/:id
+      options.Mock = Mock
+      options._req = ctx.request
+      options._req.params = util.params(mockUrl, apiPath)
+      options._req.cookies = ctx.cookies.get.bind(ctx)
+      return options.template.call(options.context.currentContext, options)
+    }
+
+    if (/^http(s)?/.test(api.mode)) { // 代理模式
+      const url = nodeURL.parse(api.mode, true)
+      const params = util.params(api.url, apiPath)
+      const pathname = pathToRegexp.compile(url.pathname)(params)
+      try {
+        apiData = await axios({
+          method: method,
+          url: url.protocol + '//' + url.host + pathname,
+          params: _.assign({}, url.query, query),
+          data: body,
+          timeout: 3000
+        }).then(res => res.data)
+      } catch (error) {
+        ctx.body = ctx.util.refail(error.message || '接口请求失败')
+        return
+      }
+    } else {
+      const vm = new VM({
+        timeout: 1000,
+        sandbox: {
+          Mock: Mock,
+          mode: api.mode,
+          template: new Function(`return ${api.mode}`) // eslint-disable-line
+        }
+      })
+
+      vm.run('Mock.mock(new Function("return " + mode)())') // 数据验证，检测 setTimeout 等方法
+      apiData = vm.run('Mock.mock(template())') // 解决正则表达式失效的问题
+
+      if (apiData._res) { // 开始处理自定义响应
+        let _res = apiData._res
+        if (_res.cookies) {
+          for (let i in _res.cookies) {
+            if (_res.cookies.hasOwnProperty(i)) ctx.cookies.set(i, _res.cookies[i])
+          }
+        }
+        if (_res.status) ctx.status = _res.status
+        if (_res.headers) {
+          for (let i in _res.headers) {
+            if (_res.headers.hasOwnProperty(i)) ctx.set(i, _res.headers[i])
+          }
+        }
+        if (_res.status && parseInt(_res.status) !== 200 && _res.data) apiData = _res.data
+        delete apiData['_res']
+      }
+    }
+
+    await mockCountProxy.newAndSave(api.id)
+    if (jsonpCallback) {
+      ctx.type = 'text/javascript'
+      ctx.body = `${jsonpCallback}(${JSON.stringify(apiData, null, 2)})`
+        .replace(/\u2028/g, '\\u2028')
+        .replace(/\u2029/g, '\\u2029') // JSON parse vs eval fix. https://github.com/rack/rack-contrib/pull/37
+    } else {
+      ctx.body = apiData
+    }
+  }
 }

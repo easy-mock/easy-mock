@@ -1,41 +1,41 @@
 'use strict'
 
-const m = require('../models')
+const { UserProject } = require('../models')
 
-const UserProjectModel = m.UserProject
+module.exports = class UserProjectProxy {
+  static newAndSave (docs) {
+    return UserProject.insertMany(docs)
+  }
 
-exports.newAndSave = function (docs) {
-  return UserProjectModel.insertMany(docs)
-}
+  static getById (docId) {
+    return UserProject.findById(docId)
+  }
 
-exports.getById = function (docId) {
-  return UserProjectModel.findById(docId)
-}
+  static find (query, opt) {
+    return UserProject.find(query, {}, opt)
+  }
 
-exports.find = function (query, opt) {
-  return UserProjectModel.find(query, {}, opt)
-}
+  static finfindOned (query, opt) {
+    return UserProject.findOne(query, {}, opt)
+  }
 
-exports.findOne = function (query, opt) {
-  return UserProjectModel.findOne(query, {}, opt)
-}
+  static updateWorkbench (doc) {
+    return UserProject.update({
+      _id: doc.id
+    }, {
+      $set: {
+        is_workbench: doc.is_workbench
+      }
+    })
+  }
 
-exports.updateWorkbench = function (doc) {
-  return UserProjectModel.update({
-    _id: doc.id
-  }, {
-    $set: {
-      is_workbench: doc.is_workbench
-    }
-  })
-}
+  static delByProjectId (projectId) {
+    return UserProject.remove({
+      project: projectId
+    })
+  }
 
-exports.delByProjectId = function (projectId) {
-  return UserProjectModel.remove({
-    project: projectId
-  })
-}
-
-exports.del = function (query) {
-  return UserProjectModel.remove(query)
+  static del (query) {
+    return UserProject.remove(query)
+  }
 }

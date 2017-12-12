@@ -3,16 +3,12 @@
 const _ = require('lodash')
 const config = require('config')
 
-const p = require('../proxy')
-const swagger = require('../util/swagger')
+const SwaggerUtil = require('../util/swagger')
 const ft = require('../models/fields_table')
-
-const projectProxy = p.Project
-const mockProxy = p.Mock
-const userProjectProxy = p.UserProject
+const { MockProxy, ProjectProxy, UserProjectProxy } = require('../proxy')
 
 function projectExistCheck (id, uid) {
-  return projectProxy.findOne({ _id: id }).then((project) => {
+  return ProjectProxy.findOne({ _id: id }).then((project) => {
     const members = project.members.map(member => member.id)
     if (project.user &&
       (project.user.id === uid || members.indexOf(uid) > -1)
@@ -91,17 +87,17 @@ exports.list = function * () {
   switch (type) {
     case 'workbench':
       // 获取该用户下所有在工作台中的项目
-      projects = yield userProjectProxy.find({
+      projects = yield UserProjectProxy.find({
         user: uid,
         is_workbench: true
       })
       projects = projects.map(item => item.project)
-      projects = yield projectProxy.find(uid, {
+      projects = yield ProjectProxy.find(uid, {
         _id: { $in: projects }
       })
       break
     default:
-      projects = yield projectProxy.find(uid, where, opt)
+      projects = yield ProjectProxy.find(uid, where, opt)
   }
 
   projects = _.map(projects, (item) => {
@@ -112,77 +108,6 @@ exports.list = function * () {
   })
 
   this.body = this.util.resuccess(projects)
-}
-
-exports.create = function * () {
-  const uid = this.state.user.id
-  const group = this.checkBody('group').value
-  const name = this.checkBody('name').notEmpty().value
-  const description = this.checkBody('description').value
-  const swaggerUrl = this.checkBody('swagger_url').empty().isUrl(null, {
-    allow_underscores: true
-  }).value
-  const memberIds = this.checkBody('members').empty()
-    .type('array').value
-  const url = this.checkBody('url').notEmpty()
-    .match(/^\/.*$/i, 'URL 必须以 / 开头').value
-
-  const findQuery = {
-    $or: [{ name }, { url }]
-  }
-  const saveQuery = {
-    name,
-    url,
-    swagger_url: swaggerUrl,
-    description: description || name
-  }
-
-  if (this.errors) {
-    this.body = this.util.refail(null, 10001, this.errors)
-    return
-  }
-
-  if (_.includes(memberIds, uid)) {
-    this.body = this.util.refail('创建失败，不能邀请自己哦')
-    return
-  }
-
-  if (group) {
-    findQuery.group = group
-    saveQuery.group = group
-  } else {
-    findQuery.user = uid
-    saveQuery.user = uid
-    saveQuery.members = memberIds
-  }
-
-  const project = yield projectProxy.findOne(findQuery)
-
-  if (project) {
-    this.body = project.name === name
-      ? this.util.refail('创建失败，与现有项目同名')
-      : this.util.refail('创建失败，与现有项目的 URL 相同')
-    return
-  }
-
-  const newProjects = yield projectProxy.newAndSave(saveQuery)
-
-  // 基于 swagger 创建 mock
-  if (swaggerUrl) {
-    // 防止在依赖 swagger 创建 mock 的时候返回失败
-    try {
-      yield swagger.create(newProjects[0])
-    } catch (err) {
-      this.log.error(
-        { req: this.req, err },
-        '  --> %s %s, 基于 Swagger 创建 Mock 发生异常',
-        this.request.method,
-        this.request.originalUrl
-      )
-    }
-  }
-
-  this.body = this.util.resuccess()
 }
 
 exports.update = function * () {
@@ -224,12 +149,12 @@ exports.update = function * () {
     const diff = _.xor(memberIds, project.members.map(o => o.id))
 
     if (isAddMember) {
-      yield userProjectProxy.newAndSave(diff.map(userId => ({
+      yield UserProjectProxy.newAndSave(diff.map(userId => ({
         user: userId,
         project: project.id
       })))
     } else {
-      yield userProjectProxy.del({
+      yield UserProjectProxy.del({
         project: project.id,
         user: { $in: diff }
       })
@@ -259,7 +184,7 @@ exports.update = function * () {
   }
 
   // 查重
-  const existProject = yield projectProxy.findOne(existQuery)
+  const existProject = yield ProjectProxy.findOne(existQuery)
 
   if (existProject) {
     if (existProject.name === project.name) {
@@ -270,7 +195,7 @@ exports.update = function * () {
     return
   }
 
-  yield projectProxy.updateById(project)
+  yield ProjectProxy.updateById(project)
   this.body = this.util.resuccess()
 }
 
@@ -297,7 +222,7 @@ exports.updateSwagger = function * () {
   }
 
   try {
-    yield swagger.create(project)
+    yield SwaggerUtil.create(project)
     this.body = this.util.resuccess()
   } catch (err) {
     this.log.error(
@@ -319,7 +244,7 @@ exports.updateWorkbench = function * () {
     return
   }
 
-  const doc = yield userProjectProxy.findOne({
+  const doc = yield UserProjectProxy.findOne({
     _id: id,
     user: this.state.user.id
   })
@@ -331,7 +256,7 @@ exports.updateWorkbench = function * () {
 
   doc.is_workbench = status
 
-  yield userProjectProxy.updateWorkbench(doc)
+  yield ProjectProxy.updateWorkbench(doc)
 
   this.body = this.util.resuccess()
 }
@@ -356,7 +281,7 @@ exports.delete = function * () {
     return
   }
 
-  yield projectProxy.delById(id)
+  yield ProjectProxy.delById(id)
 
   this.body = this.util.resuccess()
 }
@@ -371,7 +296,7 @@ exports.copy = function * () {
   }
 
   // 获取待复制项目下所有 mock
-  const mocks = yield mockProxy.find({ project: id })
+  const mocks = yield MockProxy.find({ project: id })
 
   if (mocks.length === 0) {
     this.body = this.util.refail('创建失败，该项目下无 Mock 数据')
@@ -384,13 +309,13 @@ exports.copy = function * () {
 
   // 创建项目，只创建已有 mock。
   // 此时 swagger_url 无效
-  yield projectProxy.newAndSave({
+  yield ProjectProxy.newAndSave({
     user: uid,
     name: newName,
     url: newUrl,
     description: project.description,
     swagger_url: project.swagger_url
-  }).then(projects => mockProxy.newAndSave(mocks.map(item => ({
+  }).then(projects => MockProxy.newAndSave(mocks.map(item => ({
     project: projects[0].id,
     description: item.description,
     method: item.method,
@@ -399,4 +324,69 @@ exports.copy = function * () {
   }))))
 
   this.body = this.util.resuccess()
+}
+
+module.exports = class ProjectController {
+  /**
+   * 创建项目
+   * @param Object ctx
+   */
+
+  static async create (ctx) {
+    const uid = ctx.state.user.id
+
+    const group = ctx.request.body.group
+    const description = ctx.request.body.description
+    const name = ctx.checkBody('name').notEmpty().value
+    const swaggerUrl = ctx.checkBody('swagger_url')
+      .empty().isUrl(null, { allow_underscores: true }).value
+    const memberIds = ctx.checkBody('members')
+      .empty().type('array').value
+    const url = ctx.checkBody('url')
+      .notEmpty().match(/^\/.*$/i, 'URL 必须以 / 开头').value
+
+    const findQuery = { $or: [{ name }, { url }] }
+    const saveQuery = {
+      name,
+      url,
+      swagger_url: swaggerUrl,
+      description: description || name
+    }
+
+    if (ctx.errors) {
+      ctx.body = ctx.util.refail(null, 10001, ctx.errors)
+      return
+    }
+
+    if (_.includes(memberIds, uid)) {
+      ctx.body = ctx.util.refail('项目成员不能包含自己')
+      return
+    }
+
+    if (group) {
+      findQuery.group = group
+      saveQuery.group = group
+    } else {
+      findQuery.user = uid
+      saveQuery.user = uid
+      saveQuery.members = memberIds
+    }
+
+    const project = await ProjectProxy.findOne(findQuery)
+
+    if (project) {
+      ctx.body = project.name === name
+        ? ctx.util.refail(`项目 ${name} 已存在`)
+        : ctx.util.refail('请检查 URL 是否已经存在')
+      return
+    }
+
+    const projects = await ProjectProxy.newAndSave(saveQuery)
+
+    if (swaggerUrl) {
+      await SwaggerUtil.create(projects[0])
+    }
+
+    ctx.body = ctx.util.resuccess()
+  }
 }

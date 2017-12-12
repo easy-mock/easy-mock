@@ -1,44 +1,52 @@
 'use strict'
 
 const _ = require('lodash')
-const config = require('config')
+const { User } = require('../models')
 
-const m = require('../models')
+const gravatar = [
+  '//img.souche.com/20161230/png/58f22ad636a0f33bad8762688f78d425.png',
+  '//img.souche.com/20161230/png/6cdcda90c2f86ba1f45393cf5b26e324.png',
+  '//img.souche.com/20161230/png/f9d10bb683d940dd14dc1b1344e89568.png',
+  '//img.souche.com/20161230/png/8bb4f0fd45ed6ae26533eadd85f0f7ea.png',
+  '//img.souche.com/20161230/png/0795744371fd5869af6cab796bdacb95.png',
+  '//img.souche.com/20161230/png/bc836261fbb654dda6b653e428014279.png',
+  '//img.souche.com/20161230/png/fd9f8aecab317e177655049a49b64d02.png'
+]
 
-const UserModel = m.User
+module.exports = class UserProxy {
+  static newAndSave (name, password, nickName, headImg) {
+    const user = new User()
+    const len = gravatar.length
 
-exports.newAndSave = function (name, password, nickName, headImg) {
-  const user = new UserModel()
-  const len = config.get('gravatar').length
+    user.name = name
+    user.password = password
+    user.nick_name = nickName || _.now()
+    user.head_img = headImg || gravatar[_.random(0, len - 1)]
 
-  user.name = name
-  user.password = password
-  user.nick_name = nickName || _.now()
-  user.head_img = headImg || config.get('gravatar')[_.random(0, len - 1)]
+    return user.save()
+  }
 
-  return user.save()
-}
+  static update (user) {
+    return User.update({
+      _id: user.id
+    }, {
+      $set: {
+        nick_name: user.nick_name,
+        head_img: user.head_img,
+        password: user.password
+      }
+    })
+  }
 
-exports.update = function (user) {
-  return UserModel.update({
-    _id: user.id
-  }, {
-    $set: {
-      nick_name: user.nick_name,
-      head_img: user.head_img,
-      password: user.password
-    }
-  })
-}
+  static getByName (userName) {
+    return User.findOne({ name: userName })
+  }
 
-exports.getByName = function (userName) {
-  return UserModel.findOne({ name: userName })
-}
+  static getById (userId) {
+    return User.findById(userId)
+  }
 
-exports.getById = function (userId) {
-  return UserModel.findById(userId)
-}
-
-exports.find = function (query, opt) {
-  return UserModel.find(query, {}, opt)
+  static find (query, opt) {
+    return User.find(query, {}, opt)
+  }
 }

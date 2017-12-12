@@ -1,7 +1,7 @@
 <p align="center"><a href="https://easy-mock.com" target="_blank"><img width="100"src="http://img.souche.com/20170509/png/fff9d8506199c4bf8cc53bad9d849215.png"></a></p>
 
 <p align="center">
-  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D7.4.0-green.svg?style=flat" alt="Node.js Version"></a>
+  <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D8.9.1-green.svg?style=flat" alt="Node.js Version"></a>
   <a href="https://www.mongodb.com"><img src="https://img.shields.io/badge/mongo-%3E%3D3.4.1-green.svg?style=flat" alt="MongoDB Version"></a>
   <a href="https://circleci.com/gh/easy-mock/easy-mock/tree/dev"><img src="https://img.shields.io/circleci/project/easy-mock/easy-mock/dev.svg" alt="Build Status"></a>
   <a href="https://codecov.io/github/easy-mock/easy-mock?branch=dev"><img src="https://img.shields.io/codecov/c/github/easy-mock/easy-mock/dev.svg" alt="Coverage Status"></a>
@@ -53,7 +53,7 @@ Easy Mock 是一个可视化，并且能快速生成**模拟数据**的持久化
 
 ## 快速开始
 
-> 在开始之前，假设你已经成功安装了 [Node.js](https://nodejs.org)（**v7.4** 以上）和 [MongoDB](https://www.mongodb.com)（**v3.4** 以上）。
+> 在开始之前，假设你已经成功安装了 [Node.js](https://nodejs.org)（**v8.9** 以上）和 [MongoDB](https://www.mongodb.com)（**v3.4** 以上）。
 
 ### 安装
 
