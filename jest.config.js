@@ -1,5 +1,5 @@
 module.exports = {
   bail: true,
-  verbose: true,
+  verbose: false,
   testEnvironment: 'node'
 }

@@ -42,6 +42,7 @@ async function createMock (projectId, swaggerDocs) {
         })
       )
 
+      /* istanbul ignore else */
       if (!api) {
         newAPIs.push({
           mode,
@@ -73,7 +74,10 @@ async function createMock (projectId, swaggerDocs) {
     }
   }
 
+  /* istanbul ignore else */
   if (newAPIs.length > 0) promises.push(MockProxy.newAndSave(newAPIs))
+
+  /* istanbul ignore else */
   if (oldAPIs.length > 0) promises.push(MockProxy.updateMany(oldAPIs))
 
   return Promise.all(promises)
