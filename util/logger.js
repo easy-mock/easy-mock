@@ -16,6 +16,7 @@ let streams = [
   {level: 'error', stream: process.stderr}
 ]
 
+/* istanbul ignore if */
 if (process.env.NODE_ENV === 'production') {
   if (!fs.existsSync(logDir)) mkdirp.sync(logDir)
 
@@ -27,6 +28,6 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = koaPinoLogger({
   name: 'Easy Mock',
-  level: isTest ? 'error' : 'info',
+  level: isTest ? 'error' : /* istanbul ignore next */ 'info',
   genReqId: req => req.headers['x-request-id'] || uuid.v4()
 }, multistream(streams))

@@ -11,6 +11,7 @@ const util = require('./')
 const { MockProxy } = require('../proxy')
 
 async function createMock (projectId, swaggerDocs) {
+  /* istanbul ignore next */
   const { basePath = '/', paths } = swaggerDocs
 
   const apis = await MockProxy.find({ project: projectId })
@@ -25,7 +26,7 @@ async function createMock (projectId, swaggerDocs) {
       method = method.toLowerCase()
 
       const operation = paths[url][method]
-      const desc = operation.summary || operation.description
+      const desc = operation.summary || /* istanbul ignore next */ operation.description
       const api = _.find(apis, { method, url: fullAPIPath })
       const mode = _.get(operation, 'responses["200"].example') || _.get(operation, 'responses["default"].example') || '{}'
       let responseModel, parameters
@@ -36,7 +37,7 @@ async function createMock (projectId, swaggerDocs) {
       }
       responseModel = JSON.stringify(operation.responses)
       parameters = JSON.stringify(
-        (operation.parameters || []).map(parameter => {
+        _.map(operation.parameters, parameter => {
           parameter.example = parameter.example ? Mock.mock(JSON.parse(parameter.example)) : ''
           return parameter
         })
@@ -60,15 +61,15 @@ async function createMock (projectId, swaggerDocs) {
       let newKeys = Object.keys(util.flatten(JSON.parse(mode)))
       let oldKeys = Object.keys(util.flatten(JSON.parse(api.mode)))
 
+      api.method = method
+      api.url = fullAPIPath
+      api.description = desc
       api.parameters = parameters
-      api.url = fullAPIPath || api.url
-      api.method = method || api.method
       api.response_model = responseModel
-      api.description = desc || api.description
       newKeys = newKeys.filter(key => !/\[[1-9]\d*\]/.test(key))
       oldKeys = oldKeys.filter(key => !/\[[1-9]\d*\]/.test(key)) // [ 'data[0].item', 'data[1].item', 'data[2].item' ] => [ 'data[0]____item' ]
         .map(o => o.replace(/\|[^_\[]*(__)?/g, '$1')) // 'data|1-10.item' => 'data____item' 'data|1-10[0].item' => 'data[0]____item'
-      api.mode = _.xor(newKeys, oldKeys).length > 0 ? mode : api.mode
+      api.mode = _.xor(newKeys, oldKeys).length > 0 ? /* istanbul ignore next */ mode : api.mode
 
       oldAPIs.push(api)
     }

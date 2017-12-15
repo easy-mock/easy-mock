@@ -15,7 +15,7 @@ module.exports = class UserProjectProxy {
     return UserProject.find(query, {}, opt)
   }
 
-  static finfindOned (query, opt) {
+  static findOne (query, opt) {
     return UserProject.findOne(query, {}, opt)
   }
 
