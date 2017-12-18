@@ -1,7 +1,7 @@
 'use strict'
 
 const example = {
-  common: JSON.stringify({
+  base: JSON.stringify({
     'success': true,
     'data': [{
       'user': {
@@ -29,7 +29,8 @@ const example = {
     }
   }),
   get: '{ success :true, data: { default: "hah", _req: function({ _req }) { return _req }, name: function({ _req }) { return _req.query.name || this.default }}}',
-  post: '{ data: { img: function({ _req, Mock }) { return _req.body.fileName + "_" + Mock.mock("@image") }}}'
+  post: '{ data: { img: function({ _req, Mock }) { return _req.body.fileName + "_" + Mock.mock("@image") }}}',
+  res: '{success: true, data: {name: "hh"}, _res: {status: 400, data: {success: false}, cookies: {test: "true"}, headers: {Power: "easy-mock"}}}'
 }
 
 module.exports = {
@@ -65,10 +66,10 @@ module.exports = {
       mode: example.random
     },
     {
-      desc: '普通的 mock',
+      desc: '自定义响应的 mock',
       method: 'get',
-      url: '/user',
-      mode: example.base
+      url: '/',
+      mode: example.res
     }
   ]
 }

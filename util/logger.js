@@ -10,11 +10,11 @@ const multistream = require('pino-multi-stream').multistream
 
 const date = moment().format('YYYY-MM-DD')
 const logDir = path.join(__dirname, '../logs')
-const isTest = process.env.NODE_ENV === 'test'
 let streams = [
   {level: 'info', stream: process.stdout},
   {level: 'error', stream: process.stderr}
 ]
+let logger
 
 /* istanbul ignore if */
 if (process.env.NODE_ENV === 'production') {
@@ -26,8 +26,16 @@ if (process.env.NODE_ENV === 'production') {
   ]
 }
 
-module.exports = koaPinoLogger({
-  name: 'Easy Mock',
-  level: isTest ? 'error' : /* istanbul ignore next */ 'info',
-  genReqId: req => req.headers['x-request-id'] || uuid.v4()
-}, multistream(streams))
+/* istanbul ignore else */
+if (process.env.NODE_ENV === 'test') {
+  logger = async (ctx, next) => {
+    await next()
+  }
+} else {
+  logger = koaPinoLogger({
+    name: 'Easy Mock',
+    genReqId: req => req.headers['x-request-id'] || uuid.v4()
+  }, multistream(streams))
+}
+
+module.exports = logger

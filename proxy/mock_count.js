@@ -1,26 +1,26 @@
 'use strict'
 
-const _ = require('lodash')
 const moment = require('moment')
 
-const m = require('../models')
+const { MockCount } = require('../models')
 
-const MockCountModel = m.MockCount
+module.exports = class MockCountProxy {
+  static async newAndSave (mockId) {
+    let mockCount = await MockCount.findOne({
+      mock: mockId,
+      create_at: {
+        '$gte': moment().format('YYYY-MM-DD')
+      }
+    })
 
-exports.newAndSave = function (mockId) {
-  const mockCount = new MockCountModel()
-  return MockCountModel.findOne({
-    mock: mockId,
-    create_at: {
-      '$gte': moment().format('YYYY-MM-DD')
-    }
-  }).then((data) => {
-    if (_.isEmpty(data)) {
+    if (!mockCount) {
+      mockCount = new MockCount()
       mockCount.mock = mockId
       mockCount.count = 1
       return mockCount.save()
     }
-    data.count += 1
-    return data.save()
-  })
+
+    mockCount.count += 1
+    return mockCount.save()
+  }
 }

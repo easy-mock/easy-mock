@@ -7,6 +7,7 @@ module.exports = class UserGroupProxy {
   static async newAndSave (doc) {
     let userGroup = await UserGroup.findOne(doc)
 
+    /* istanbul ignore else */
     if (!userGroup) {
       userGroup = new UserGroup(doc)
       await userGroup.save()
@@ -14,6 +15,7 @@ module.exports = class UserGroupProxy {
 
     const projects = await Project.find({ group: doc.group })
 
+    /* istanbul ignore else */
     if (projects.length === 0) return []
 
     const userProjectDocs = projects.map(project => {

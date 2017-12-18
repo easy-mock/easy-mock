@@ -15,7 +15,7 @@ const apiRouter = new Router({ prefix: '/api' })
 const mockRouter = new Router({ prefix: '/mock' })
 
 exports.mock = mockRouter
-  .all('*', restc, mock.getAPI)
+  .all('*', restc, mock.getMockAPI)
 
 exports.api = apiRouter
   .get('/wallpaper', util.wallpaper)
@@ -42,9 +42,9 @@ exports.api = apiRouter
   .post('/project/sync/swagger', project.syncSwagger)
   .post('/project/update_workbench', project.updateWorkbench)
 
-//   .get('/mock', mock.list)
-//   .get('/mock/by_projects', mock.byProjects)
-//   .post('/mock/create', mock.create)
-//   .post('/mock/update', mock.update)
-//   .post('/mock/delete', mock.delete)
-//   .post('/mock/export', mock.exportMock)
+  .get('/mock', mock.list)
+  .get('/mock/by_projects', mock.getAPIByProjectIds)
+  .post('/mock/create', mock.create)
+  .post('/mock/update', mock.update)
+  .post('/mock/delete', mock.delete)
+  .post('/mock/export', mock.exportAPI)

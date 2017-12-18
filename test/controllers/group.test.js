@@ -45,9 +45,23 @@ describe('test/controllers/group.test.js', () => {
     test('加入团队', async () => {
       await request('/api/group/create', 'post', soucheUser.token).send({ name: 'souche' })
 
-      let res = await request('/api/group').query({ keywords: 'souche' })
+      const groupId = await request('/api/group')
+        .query({ keywords: 'souche' })
+        .then(res => res.body.data[0]._id)
 
-      res = await request('/api/group/join', 'post').send({ id: res.body.data[0]._id })
+      await request('/api/project/create', 'post', soucheUser.token)
+        .send({
+          group: groupId,
+          name: 'user',
+          url: '/user'
+        })
+
+      let res = await request('/api/group/join', 'post').send({ id: groupId })
+      expect(res.body.success).toBe(true)
+
+      res = await request('/api/project').query({ group: groupId })
+      res = await request('/api/project/update_workbench', 'post')
+        .send({ id: res.body.data[0].extend._id, status: true })
 
       expect(res.body.success).toBe(true)
     })

@@ -1,5 +1,6 @@
 'use strict'
 
+const _ = require('lodash')
 const path = require('path')
 const config = require('config')
 const rimraf = require('rimraf')
@@ -53,14 +54,14 @@ module.exports = class BaseUtil {
     const params = {}
     const paramNames = []
     const api = pathToRegexp(restURL, paramNames)
-    const captures = fullURL.match(api).slice(1)
+    const captures = fullURL.match(api)
 
     if (!captures) return {}
-    if (captures.length === 0) return {}
 
-    captures.forEach((value, i) => {
+    captures.slice(1).forEach((value, i) => {
+      /* istanbul ignore else */
       if (paramNames[i]) {
-        params[paramNames[i].name] = value ? this.safeDecodeURIComponent(value) : value
+        params[paramNames[i].name] = this.safeDecodeURIComponent(value)
       }
     })
 
@@ -78,20 +79,22 @@ module.exports = class BaseUtil {
     if (typeof expireDay === 'number' && expireDay > 0) {
       const expireTypes = conf.expire.types.map(type => `*${type}`).join(',')
       const date = moment().subtract(expireDay, 'days').format('YYYY/MM/DD')
-      const uploadDir = path.resolve(__dirname, conf.dir, date)
+      const uploadDir = path.resolve(__dirname, '../config', conf.dir, date)
       const commandPath = `${uploadDir}/{${expireTypes}}`
 
-      rimraf(commandPath, () => {})
-      setInterval(() => rimraf(commandPath, () => {}), 1000 * 60 * 60)
+      rimraf(commandPath, _.noop)
+      setInterval(() => rimraf(commandPath, _.noop), 1000 * 60 * 60)
     }
   }
 
   /**
    * Flatten/Nest Javascript objects
+   * https://github.com/brycebaril/node-flatnest/blob/master/flatten.js
    * @param Object obj
    */
 
-  static flatten (obj) { // https://github.com/brycebaril/node-flatnest/blob/master/flatten.js
+  /* istanbul ignore next */
+  static flatten (obj) {
     const flattened = {}
     const circlular = []
     const circLoc = []

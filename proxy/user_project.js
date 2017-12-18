@@ -7,10 +7,6 @@ module.exports = class UserProjectProxy {
     return UserProject.insertMany(docs)
   }
 
-  static getById (docId) {
-    return UserProject.findById(docId)
-  }
-
   static find (query, opt) {
     return UserProject.find(query, {}, opt)
   }
