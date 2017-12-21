@@ -200,7 +200,7 @@ export default {
       const data = response.data
       this.form.projectSwagger = data.path
       this.swaggerType = 'URL'
-      if (data.expire) {
+      if (data.expire && data.expire !== -1) {
         this.$Message.success({
           content: this.$tc('p.new.uploadSuccess', 2, {date: data.expire}),
           duration: 5

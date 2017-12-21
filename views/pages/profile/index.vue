@@ -118,7 +118,7 @@ export default {
     update () {
       const data = {
         nick_name: this.form.nickName,
-        head_img: this.form.headImg.replace(/http(s)?:/, '')
+        head_img: this.form.headImg
       }
 
       if (this.form.password) {

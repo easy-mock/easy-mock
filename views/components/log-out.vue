@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import cookie from 'react-cookie'
+import Cookies from 'universal-cookie'
 import config from 'config'
 
 export default {
@@ -14,8 +14,9 @@ export default {
   },
   methods: {
     logOut () {
+      const cookies = new Cookies()
       this.$ls.remove('user')
-      cookie.remove(config.storageNamespace + 'token')
+      cookies.remove(config.storageNamespace + 'token')
       this.$store.commit('user/SET_VALUE', {})
       this.$router.push('/login')
     }

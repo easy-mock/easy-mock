@@ -298,7 +298,7 @@ export default {
         content: ids.length > 1 ? this.$t('p.detail.remove.confirm[0]') : this.$t('p.detail.remove.confirm[1]'),
         onOk: () => {
           api.mock.delete({
-            data: { ids }
+            data: { project_id: this.project._id, ids }
           }).then((res) => {
             if (res.data.success) {
               this.$Message.success(this.$t('p.detail.remove.success'))

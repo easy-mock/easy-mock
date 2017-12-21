@@ -109,7 +109,6 @@
 
 <script>
 import config from 'config'
-import * as api from '../../api'
 import Emitter from '../../mixins/emitter'
 
 export default {
@@ -149,11 +148,7 @@ export default {
       window.open(url)
     },
     logOut () {
-      api.u.logout().then((res) => {
-        if (res.data.success) {
-          this.$router.push('/log-out')
-        }
-      })
+      this.$router.push('/log-out')
     },
     onSearch () {
       this.$refs.search.focus()

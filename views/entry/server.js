@@ -1,8 +1,10 @@
 /* eslint prefer-promise-reject-errors: 0 */
 import { createApp } from './main'
 
+let serverCookies
 const isDev = process.env.NODE_ENV !== 'production'
 
+export { serverCookies }
 export default context => {
   return new Promise((resolve, reject) => {
     const s = isDev && Date.now()
@@ -14,6 +16,7 @@ export default context => {
       return reject({ url: fullPath })
     }
 
+    serverCookies = context.cookies
     router.push(url)
     router.onReady(() => {
       const matchedComponents = router.getMatchedComponents()

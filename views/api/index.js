@@ -1,9 +1,11 @@
 import axios from 'axios'
 import iView from 'iview'
 import conf from 'config'
-import cookie from 'react-cookie'
+import Cookies from 'universal-cookie'
+import { serverCookies } from '../entry/server'
 
 let router
+const cookies = new Cookies()
 const isClient = process.env.VUE_ENV === 'client'
 const instance = axios.create({
   baseURL: conf.APIPrefix,
@@ -44,8 +46,14 @@ const loading = {
 }
 
 instance.interceptors.request.use((config) => {
-  if (isClient) loading.start()
-  config.headers.Authorization = `Bearer ${cookie.load(conf.storageNamespace + 'token')}`
+  let token
+  if (isClient) {
+    loading.start()
+    token = cookies.get(conf.storageNamespace + 'token')
+  } else {
+    token = serverCookies.get(conf.storageNamespace + 'token')
+  }
+  config.headers.Authorization = `Bearer ${token}`
   return config
 }, error => Promise.reject(error))
 
@@ -75,22 +83,23 @@ instance.interceptors.response.use((res) => {
   const res = error.response
   if (isClient) loading.cancel()
   if (res) {
-    const msg = res.data.message
-    if (res.status === 401 && /token|expired/.test(msg)) {
+    if (res.status === 401 && /authentication/i.test(res.data.error)) {
       if (isClient) {
         router.push('/log-out')
       } else {
         return Promise.reject({ code: 401 }) // eslint-disable-line
       }
+    } else if (isClient && res.data && res.data.error) {
+      iView.Notice.error({
+        title: 'Error',
+        desc: res.data.error
+      })
     }
   }
   Promise.reject(error)
 })
 
-const initAPI = (_router) => {
-  router = _router
-}
-
+const initAPI = _router => (router = _router)
 const createAPI = (url, method, config) => {
   config = config || {}
   return instance({
@@ -128,14 +137,12 @@ const createExportForm = (url, data) => {
 }
 
 const util = {
-  proxy: config => createAPI('/proxy', 'get', config),
   wallpaper: config => createAPI('/wallpaper', 'get', config)
 }
 
 const u = {
   getList: config => createAPI('/u', 'get', config),
   login: config => createAPI('/u/login', 'post', config),
-  logout: config => createAPI('/u/logout', 'post', config),
   register: config => createAPI('/u/register', 'post', config),
   update: config => createAPI('/u/update', 'post', config)
 }
@@ -145,7 +152,7 @@ const project = {
   copy: config => createAPI('/project/copy', 'post', config),
   create: config => createAPI('/project/create', 'post', config),
   update: config => createAPI('/project/update', 'post', config),
-  updateSwagger: config => createAPI('/project/update_swagger', 'post', config),
+  updateSwagger: config => createAPI('/project/sync/swagger', 'post', config),
   updateWorkbench: config => createAPI('/project/update_workbench', 'post', config),
   delete: config => createAPI('/project/delete', 'post', config)
 }
@@ -166,8 +173,8 @@ const group = {
   delete: config => createAPI('/group/delete', 'post', config)
 }
 
-const realtime = {
-  getList: config => createAPI('/realtime', 'get', config)
+const dashboard = {
+  getList: config => createAPI('/dashboard', 'get', config)
 }
 
 export {
@@ -176,6 +183,6 @@ export {
   mock,
   util,
   group,
-  realtime,
+  dashboard,
   initAPI
 }

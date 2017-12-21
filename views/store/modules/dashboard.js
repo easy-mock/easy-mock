@@ -12,7 +12,7 @@ export default {
   actions: {
     FETCH ({ commit }) {
       return Promise.all([
-        api.realtime.getList(),
+        api.dashboard.getList(),
         api.u.getList({
           params: {
             page_size: 36
