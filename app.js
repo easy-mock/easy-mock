@@ -9,6 +9,7 @@ const koaBody = require('koa-body')
 const onerror = require('koa-onerror')
 const favicon = require('koa-favicon')
 const validate = require('koa-validate')
+const pathToRegexp = require('path-to-regexp')
 const staticCache = require('koa-static-cache')
 
 const util = require('./util')
@@ -30,29 +31,35 @@ app
   .use(serve('/public', './public'))
   .use(serve('/upload', path.resolve(__dirname, 'config', uploadConf.dir)))
   .use(logger)
-  .use(koaJwt({ secret: jwtSecret }).unless({
-    path: [
-      /^\/(public|dist|upload|mock)\//,
-      '/api/u/login',
-      '/api/u/register',
-      '/api/mock/by_projects',
-      '/api/mock/export',
-      '/api/wallpaper'
-    ]
-  }))
   .use(cors({ credentials: true, maxAge: 2592000 }))
+  .use(koaJwt({ secret: jwtSecret }).unless((ctx) => {
+    if (/^\/api/.test(ctx.path)) {
+      return pathToRegexp([
+        '/api/u/login',
+        '/api/u/register',
+        '/api/mock/by_projects',
+        '/api/mock/export',
+        '/api/wallpaper'
+      ]).test(ctx.path)
+    }
+    return true
+  }))
   .use(koaBody({ multipart: true }))
   .use(middleware.util)
   .use(routerConfig.mock.routes())
   .use(routerConfig.mock.allowedMethods())
   .use(routerConfig.api.routes())
   .use(routerConfig.api.allowedMethods())
-  // .use(middleware.view(app))
 
 app.proxy = config.get('proxy')
 
 /* istanbul ignore if */
-if (!module.parent) app.listen(config.get('port'))
+if (!module.parent) {
+  const port = config.get('port')
+  app.use(require('./middlewares/view').render(app))
+  app.listen(port)
+  console.log(`server started at localhost:${port}`)
+}
 
 function serve (prefix, filePath) {
   return staticCache(path.resolve(__dirname, filePath), {

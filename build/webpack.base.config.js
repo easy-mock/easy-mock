@@ -2,19 +2,16 @@
 
 const fs = require('fs')
 const path = require('path')
-const chalk = require('chalk')
 const config = require('config')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
-const util = require('./util')
 const vueConfig = require('./vue-loader.config')
 
 const isProd = process.env.NODE_ENV === 'production'
 const resolve = dir => path.resolve(__dirname, dir)
 
-chalk.enabled = true
 fs.writeFileSync(resolve('../views/config.json'), JSON.stringify(config.fe))
 module.exports = {
   devtool: isProd ? false : '#cheap-module-source-map',
@@ -81,7 +78,19 @@ module.exports = {
       {
         test: /\.md/,
         loader: 'vue-markdown-loader',
-        options: util.markdown
+        options: {
+          breaks: false,
+          use: [
+            require('markdown-it-attrs'),
+            [require('markdown-it-anchor'), {
+              level: 3,
+              slugify: require('transliteration').slugify,
+              permalinkSymbol: '#',
+              permalink: true,
+              permalinkBefore: true
+            }]
+          ]
+        }
       }
     ]
   },
@@ -94,6 +103,7 @@ module.exports = {
       new webpack.optimize.UglifyJsPlugin({
         compress: { warnings: false }
       }),
+      new webpack.optimize.ModuleConcatenationPlugin(),
       new ExtractTextPlugin({
         filename: 'common.[chunkhash].css'
       })

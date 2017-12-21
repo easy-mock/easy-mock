@@ -8,17 +8,7 @@ const base = require('./webpack.base.config')
 
 const config = merge(base, {
   entry: {
-    app: './views/entry/client.js',
-    vendor: [
-      'brace',
-      'brace/ext/searchbox',
-      'brace/ext/language_tools',
-      'brace/mode/javascript',
-      'js-beautify',
-      'lodash/debounce',
-      'clipboard',
-      'react-cookie'
-    ]
+    app: './views/entry/client.js'
   },
   plugins: [
     // strip comments in Vue code
@@ -38,6 +28,9 @@ const config = merge(base, {
           !/\.css$/.test(module.request)
         )
       }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest'
     }),
     new VueSSRClientPlugin()
   ]
