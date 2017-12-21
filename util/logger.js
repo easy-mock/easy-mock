@@ -14,7 +14,6 @@ let streams = [
   {level: 'info', stream: process.stdout},
   {level: 'error', stream: process.stderr}
 ]
-let logger
 
 /* istanbul ignore if */
 if (process.env.NODE_ENV === 'production') {
@@ -26,16 +25,8 @@ if (process.env.NODE_ENV === 'production') {
   ]
 }
 
-/* istanbul ignore else */
-if (process.env.NODE_ENV === 'test') {
-  logger = async (ctx, next) => {
-    await next()
-  }
-} else {
-  logger = koaPinoLogger({
-    name: 'Easy Mock',
-    genReqId: req => req.headers['x-request-id'] || uuid.v4()
-  }, multistream(streams))
-}
-
-module.exports = logger
+module.exports = koaPinoLogger({
+  name: 'Easy Mock',
+  level: process.env.NODE_ENV === 'test' ? 'silent' : /* istanbul ignore next */ 'info',
+  genReqId: req => req.headers['x-request-id'] || uuid.v4()
+}, multistream(streams))
