@@ -29,6 +29,10 @@ module.exports = class UserGroupProxy {
     return UserGroup.find(query, {}).populate('user group')
   }
 
+  static findOne (query) {
+    return UserGroup.findOne(query)
+  }
+
   static del (query) {
     return UserGroup.remove(query)
   }

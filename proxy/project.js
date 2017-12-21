@@ -12,10 +12,10 @@ module.exports = class ProjectProxy {
     return Project.find({ _id: { $in: ids } }).populate('user members group')
   }
 
-  static async getById (projectId) {
+  static async getById (uid, projectId) {
     const project = await Project.findById(projectId).populate('user members group')
-    const data = await UserProjectProxy.findOne({ project: project.id })
-    project.extend = data
+    const data = await UserProjectProxy.findOne({ project: projectId, user: uid })
+    if (project) project.extend = data
     return project
   }
 
@@ -42,11 +42,11 @@ module.exports = class ProjectProxy {
     return Project.findOne(query, {}, opt).populate('user members group')
   }
 
-  static async find (sessionUId, query, opt) {
+  static async find (uid, query, opt) {
     const projects = await Project.find(query, {}, opt).populate('user members group')
     const userProjectDocs = await UserProjectProxy.find({
       project: { $in: projects.map(item => item.id) },
-      user: sessionUId
+      user: uid
     })
     return projects.map(project => {
       project.extend = userProjectDocs.filter(item =>

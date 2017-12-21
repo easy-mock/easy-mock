@@ -56,7 +56,7 @@ describe('test/controllers/user.test.js', () => {
       const res = await request('/api/u/login', 'post')
         .send({ name: 'te2st', password: '123456' })
 
-      expect(res.body.message).toBe('用户名或密码错误')
+      expect(res.body.message).toBe('用户不存在')
     })
 
     test('密码错误', async () => {

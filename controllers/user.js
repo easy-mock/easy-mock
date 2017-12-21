@@ -77,7 +77,7 @@ module.exports = class UserController {
     const user = await UserProxy.getByName(name)
 
     if (!user) {
-      ctx.body = ctx.util.refail('用户名或密码错误')
+      ctx.body = ctx.util.refail('用户不存在')
       return
     }
 
@@ -101,9 +101,7 @@ module.exports = class UserController {
   static async update (ctx) {
     const password = ctx.checkBody('password').empty().len(6, 20).value
     const nickName = ctx.checkBody('nick_name').empty().len(2, 20).value
-    const headImg = ctx.checkBody('head_img').empty().isUrl(null, {
-      allow_underscores: true
-    }).value
+    const headImg = ctx.checkBody('head_img').empty().isUrl(null, { allow_underscores: true, allow_protocol_relative_urls: true }).value
 
     if (ctx.errors) {
       ctx.body = ctx.util.refail(null, 10001, ctx.errors)

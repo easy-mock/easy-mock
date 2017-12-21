@@ -11,26 +11,37 @@ const pathToRegexp = require('path-to-regexp')
 
 const util = require('../util')
 const ft = require('../models/fields_table')
-const { MockProxy, ProjectProxy, MockCountProxy } = require('../proxy')
+const { MockProxy, ProjectProxy, MockCountProxy, UserGroupProxy } = require('../proxy')
 
 const defPageSize = config.get('pageSize')
 
-async function projectExistCheck (projectId, uid) {
+async function checkByMockId (mockId, uid) {
+  const api = await MockProxy.getById(mockId)
+
+  if (!api) return '接口不存在'
+
+  const project = await checkByProjectId(api.project.id, uid)
+
+  if (typeof project === 'string') return project
+  return { api, project }
+}
+
+async function checkByProjectId (projectId, uid) {
   const project = await ProjectProxy.findOne({ _id: projectId })
-  const members = project.members.map(member => member.id)
 
-  /* istanbul ignore else */
-  if (project.user) {
-    if (project.user.id === uid || members.indexOf(uid) > -1) {
-      return project
+  if (project) {
+    const group = project.group
+    if (group) {
+      const userGroup = await UserGroupProxy.findOne({ user: uid, group: group })
+      if (!userGroup) return '无权限操作'
+    } else if (project.user.id !== uid) {
+      /* istanbul ignore else */
+      if (!_.find(project.members, ['id', uid])) return '无权限操作'
     }
-  }
-
-  if (project.group) {
     return project
   }
 
-  return null
+  return '项目不存在'
 }
 
 module.exports = class MockController {
@@ -52,10 +63,10 @@ module.exports = class MockController {
       return
     }
 
-    const project = await projectExistCheck(projectId, uid)
+    const project = await checkByProjectId(projectId, uid)
 
-    if (!project) {
-      ctx.body = ctx.util.refail('无权限操作')
+    if (typeof project === 'string') {
+      ctx.body = ctx.util.refail(project)
       return
     }
 
@@ -87,6 +98,7 @@ module.exports = class MockController {
    */
 
   static async list (ctx) {
+    const uid = ctx.state.user.id
     const keywords = ctx.query.keywords
     const projectId = ctx.checkQuery('project_id').notEmpty().value
     const pageSize = ctx.checkQuery('page_size').empty().toInt().gt(0).default(defPageSize).value
@@ -119,16 +131,20 @@ module.exports = class MockController {
     }
 
     let mocks = await MockProxy.find(where, opt)
-    let project = await ProjectProxy.getById(projectId)
+    let project = await ProjectProxy.getById(uid, projectId)
 
-    project.members = project.members.map(o => _.pick(o, ft.user))
-    project.extend = _.pick(project.extend, ft.projectExtend)
-    project.group = _.pick(project.group, ft.group)
-    project.user = _.pick(project.user, ft.user)
-    project = _.pick(project, ['user'].concat(ft.project))
+    /* istanbul ignore else */
+    if (project) {
+      project.members = project.members.map(o => _.pick(o, ft.user))
+      project.extend = _.pick(project.extend, ft.projectExtend)
+      project.group = _.pick(project.group, ft.group)
+      project.user = _.pick(project.user, ft.user)
+      project = _.pick(project, ['user'].concat(ft.project))
+    }
+
     mocks = mocks.map(o => _.pick(o, ft.mock))
 
-    ctx.body = ctx.util.resuccess({ project, mocks })
+    ctx.body = ctx.util.resuccess({ project: project || {}, mocks })
   }
 
   /**
@@ -149,21 +165,14 @@ module.exports = class MockController {
       return
     }
 
-    const api = await MockProxy.getById(id)
+    const result = await checkByMockId(id, uid)
 
-    if (!api) {
-      ctx.body = ctx.util.refail('接口不存在')
+    if (typeof result === 'string') {
+      ctx.body = ctx.util.refail(result)
       return
     }
 
-    const project = api.project
-
-    if (project.user &&
-        project.user.toString() !== uid &&
-        project.members.indexOf(uid) === -1) {
-      ctx.body = ctx.util.refail('无权限操作')
-      return
-    }
+    const { api, project } = result
 
     api.url = url
     api.mode = mode
@@ -195,42 +204,42 @@ module.exports = class MockController {
   static async getMockAPI (ctx) {
     const { query, body } = ctx.request
     const method = ctx.method.toLowerCase()
-    const pathNode = ctx.path.split('/').filter(o => o) // ['', 'mock'] => ['mock']
-    const projectId = pathNode[1]
+    const pathNode = pathToRegexp('/mock/:projectId(.{24})/:projectURL?/:mockURL*').exec(ctx.path)
     const jsonpCallback = query.jsonp_param_name && (query[query.jsonp_param_name] || 'callback')
-    let apiPath = `/${pathNode.slice(2).join('/')}`
-    let apiData, apis, api
+    let apiData, apis, api, projectId, projectURL, mockURL
 
-    if (!projectId) ctx.throw(404)
-    if (projectId && projectId.length !== 24) ctx.throw(404)
+    if (!pathNode) ctx.throw(404)
 
+    projectId = pathNode[1]
+    projectURL = '/' + (pathNode[2] || '')
+    mockURL = '/' + (pathNode[3] || '')
     apis = await MockProxy.find({ project: projectId, method })
 
-    if (apis.length === 0) ctx.throw(404)
+    if (apis[0] && apis[0].project.url === '/') {
+      mockURL = projectURL
+      projectURL = '/'
+    }
 
-    apiPath = apis[0].project.url === '/'
-      ? apiPath : apiPath.replace(apis[0].project.url, '')
-
-    apis = apis.filter((item) => {
+    api = apis.filter((item) => {
       const url = item.url.replace(/{/g, ':').replace(/}/g, '') // /api/{user}/{id} => /api/:user/:id
-      return pathToRegexp(url).test(apiPath)
-    })
+      return pathToRegexp(url).test(mockURL)
+    })[0]
 
-    if (apis.length === 0) ctx.throw(404)
+    if (!api) ctx.throw(404)
+    if (api.project.url !== projectURL) ctx.throw(404)
 
-    api = apis[0]
     Mock.Handler.function = function (options) {
       const mockUrl = api.url.replace(/{/g, ':').replace(/}/g, '') // /api/{user}/{id} => /api/:user/:id
       options.Mock = Mock
       options._req = ctx.request
-      options._req.params = util.params(mockUrl, apiPath)
+      options._req.params = util.params(mockUrl, mockURL)
       options._req.cookies = ctx.cookies.get.bind(ctx)
       return options.template.call(options.context.currentContext, options)
     }
 
     if (/^http(s)?/.test(api.mode)) { // 代理模式
       const url = nodeURL.parse(api.mode, true)
-      const params = util.params(api.url, apiPath)
+      const params = util.params(api.url, mockURL)
       const pathname = pathToRegexp.compile(url.pathname)(params)
       try {
         apiData = await axios({
@@ -387,6 +396,7 @@ module.exports = class MockController {
 
   static async delete (ctx) {
     const uid = ctx.state.user.id
+    const projectId = ctx.checkBody('project_id').notEmpty().value
     const ids = ctx.checkBody('ids').notEmpty().type('array').value
 
     if (ctx.errors) {
@@ -394,28 +404,19 @@ module.exports = class MockController {
       return
     }
 
-    const apis = await MockProxy.find({
-      _id: {
-        $in: ids
-      }
-    })
+    const project = await checkByProjectId(projectId, uid)
 
-    const unMatchMock = apis.filter((api) => {
-      const project = api.project
-
-      /* istanbul ignore if */
-      if (project.group) return false // 允许删除团队项目下的 mock
-
-      const members = project.members
-      const mockUId = project.user.toString()
-
-      return mockUId !== uid && members.indexOf(uid) === -1
-    })
-
-    if (!_.isEmpty(unMatchMock) || (apis.length < ids.length)) {
-      ctx.body = ctx.util.refail('无权限操作')
+    if (typeof project === 'string') {
+      ctx.body = ctx.util.refail(project)
       return
     }
+
+    await MockProxy.find({
+      _id: {
+        $in: ids
+      },
+      project: projectId
+    })
 
     await MockProxy.delByIds(ids)
 

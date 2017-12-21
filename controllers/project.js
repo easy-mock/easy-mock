@@ -5,25 +5,28 @@ const config = require('config')
 
 const ft = require('../models/fields_table')
 const SwaggerUtil = require('../util/swagger')
-const { MockProxy, ProjectProxy, UserProjectProxy } = require('../proxy')
+const { MockProxy, ProjectProxy, UserProjectProxy, UserGroupProxy } = require('../proxy')
 
 const defPageSize = config.get('pageSize')
 
-async function projectExistCheck (projectId, uid) {
+async function checkByProjectId (projectId, uid, creater) {
   const project = await ProjectProxy.findOne({ _id: projectId })
-  const members = project.members.map(member => member.id)
 
-  if (project.user) {
-    if (project.user.id === uid || members.indexOf(uid) > -1) {
-      return project
+  if (project) {
+    const group = project.group
+    if (group) {
+      if (creater && group.user.toString() !== uid) return '无权限操作'
+      const userGroup = await UserGroupProxy.findOne({ user: uid, group: group })
+      if (!userGroup) return '无权限操作'
+    } else if (project.user.id !== uid) {
+      if (creater) return '无权限操作'
+      /* istanbul ignore else */
+      if (!_.find(project.members, ['id', uid])) return '无权限操作'
     }
-  }
-
-  if (project.group) {
     return project
   }
 
-  return null
+  return '项目不存在'
 }
 
 module.exports = class ProjectController {
@@ -34,17 +37,12 @@ module.exports = class ProjectController {
 
   static async create (ctx) {
     const uid = ctx.state.user.id
-
     const group = ctx.request.body.group
     const description = ctx.request.body.description
     const name = ctx.checkBody('name').notEmpty().value
-    const swaggerUrl = ctx.checkBody('swagger_url')
-      .empty().isUrl(null, { allow_underscores: true }).value
-    const memberIds = ctx.checkBody('members')
-      .empty().type('array').value
-    const url = ctx.checkBody('url')
-      .notEmpty().match(/^\/.*$/i, 'URL 必须以 / 开头').value
-
+    const memberIds = ctx.checkBody('members').empty().type('array').value
+    const url = ctx.checkBody('url').notEmpty().match(/^\/.*$/i, 'URL 必须以 / 开头').value
+    const swaggerUrl = ctx.checkBody('swagger_url').empty().isUrl(null, { allow_underscores: true, require_protocol: true }).value
     const findQuery = { $or: [{ name }, { url }] }
     const saveQuery = {
       name,
@@ -66,6 +64,13 @@ module.exports = class ProjectController {
     if (group) {
       findQuery.group = group
       saveQuery.group = group
+
+      const userGroup = await UserGroupProxy.findOne({ user: uid, group: group })
+
+      if (!userGroup) {
+        ctx.body = ctx.util.refail('无权限操作')
+        return
+      }
     } else {
       findQuery.user = uid
       saveQuery.user = uid
@@ -104,6 +109,13 @@ module.exports = class ProjectController {
       return
     }
 
+    const project = await checkByProjectId(id, uid)
+
+    if (typeof project === 'string') {
+      ctx.body = ctx.util.refail(project)
+      return
+    }
+
     const apis = await MockProxy.find({ project: id })
 
     if (apis.length === 0) {
@@ -111,9 +123,17 @@ module.exports = class ProjectController {
       return
     }
 
-    const project = apis[0].project
     const newUrl = project.url + '_copy'
     const newName = project.name + '_copy'
+    const query = { user: uid, $or: [{ name: newName }, { url: newUrl }] }
+    const checkProject = await ProjectProxy.findOne(query)
+
+    if (checkProject) {
+      ctx.body = checkProject.name === newName
+        ? ctx.util.refail(`项目 ${newName} 已存在`)
+        : ctx.util.refail('请检查 URL 是否已经存在')
+      return
+    }
 
     const projects = await ProjectProxy.newAndSave({
       user: uid,
@@ -145,14 +165,10 @@ module.exports = class ProjectController {
     const uid = ctx.state.user.id
     const group = ctx.query.group
     const keywords = ctx.query.keywords
-    const pageSize = ctx.checkQuery('page_size')
-      .empty().toInt().gt(0).default(defPageSize).value
-    const pageIndex = ctx.checkQuery('page_index')
-      .empty().toInt().gt(0).default(1).value
-    const type = ctx.checkQuery('type')
-      .empty().toLow().in([ 'workbench' ]).value
-    const filterByAuthor = ctx.checkQuery('filter_by_author') // 0：全部、1：我创建的、2：我加入的
-      .empty().toInt().default(0).value
+    const type = ctx.checkQuery('type').empty().toLow().in([ 'workbench' ]).value
+    const pageIndex = ctx.checkQuery('page_index').empty().toInt().gt(0).default(1).value
+    const pageSize = ctx.checkQuery('page_size').empty().toInt().gt(0).default(defPageSize).value
+    const filterByAuthor = ctx.checkQuery('filter_by_author').empty().toInt().default(0).value // 0：全部、1：我创建的、2：我加入的
 
     let projects, baseWhere
 
@@ -168,6 +184,11 @@ module.exports = class ProjectController {
     }
 
     if (group) {
+      const userGroup = await UserGroupProxy.findOne({ user: uid, group: group })
+      if (!userGroup) {
+        ctx.body = ctx.util.resuccess([])
+        return
+      }
       baseWhere = [{ group }]
     } else {
       if (filterByAuthor === 0) {
@@ -265,22 +286,19 @@ module.exports = class ProjectController {
     const id = ctx.checkBody('id').notEmpty().value
     const name = ctx.checkBody('name').notEmpty().value
     const description = ctx.request.body.description || ''
-    const swaggerUrl = ctx.checkBody('swagger_url')
-      .empty().isUrl(null, { allow_underscores: true }).value
-    const memberIds = ctx.checkBody('members')
-      .empty().type('array').value
-    const url = ctx.checkBody('url')
-      .notEmpty().match(/^\/.*$/i, 'URL 必须以 / 开头').value
+    const memberIds = ctx.checkBody('members').empty().type('array').value
+    const url = ctx.checkBody('url').notEmpty().match(/^\/.*$/i, 'URL 必须以 / 开头').value
+    const swaggerUrl = ctx.checkBody('swagger_url').empty().isUrl(null, { allow_underscores: true, require_protocol: true }).value
 
     if (ctx.errors) {
       ctx.body = ctx.util.refail(null, 10001, ctx.errors)
       return
     }
 
-    const project = await projectExistCheck(id, uid)
+    const project = await checkByProjectId(id, uid)
 
-    if (!project) {
-      ctx.body = ctx.util.refail('无权限操作')
+    if (typeof project === 'string') {
+      ctx.body = ctx.util.refail(project)
       return
     }
 
@@ -355,14 +373,14 @@ module.exports = class ProjectController {
       return
     }
 
-    const project = await projectExistCheck(id, uid)
+    const project = await checkByProjectId(id, uid)
 
-    if (!project) {
-      ctx.body = ctx.util.refail('无权限操作')
+    if (typeof project === 'string') {
+      ctx.body = ctx.util.refail(project)
       return
     }
 
-    if (!/http(s)?:\/\//.test(project.swagger_url)) {
+    if (!project.swagger_url) {
       ctx.body = ctx.util.refail('请先设置 Swagger 文档地址')
       return
     }
@@ -385,15 +403,14 @@ module.exports = class ProjectController {
       return
     }
 
-    const project = await projectExistCheck(id, uid)
+    const project = await checkByProjectId(id, uid, true)
 
-    if (!project) {
-      ctx.body = ctx.util.refail('无权限操作')
-    } else if (project.group && project.group.user.toString() !== uid) {
-      ctx.body = ctx.util.refail('非团队创建者无法删除项目')
-    } else {
-      await ProjectProxy.delById(id)
-      ctx.body = ctx.util.resuccess()
+    if (typeof project === 'string') {
+      ctx.body = ctx.util.refail(project)
+      return
     }
+
+    await ProjectProxy.delById(id)
+    ctx.body = ctx.util.resuccess()
   }
 }

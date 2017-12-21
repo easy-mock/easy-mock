@@ -100,6 +100,22 @@ describe('test/controllers/mock.test.js', () => {
 
       expect(res.body.success).toBe(true)
     })
+
+    test('非团队成员无法创建团队项目接口', async () => {
+      const group = await request('/api/group').then(res => res.body.data[0])
+      const newProject = await request('/api/project')
+        .query({ group: group._id })
+        .then(res => res.body.data[0])
+      const res = await request('/api/mock/create', 'post', soucheUser.token)
+        .send({
+          project_id: newProject._id,
+          url: '/new',
+          mode: '{}',
+          method: 'get',
+          description: 'new api'
+        })
+      expect(res.body.message).toBe('无权限操作')
+    })
   })
 
   describe('update', () => {
@@ -209,6 +225,14 @@ describe('test/controllers/mock.test.js', () => {
       expect(data.mocks).toHaveLength(1)
       expect(data.mocks[0].url).toBe('/mock')
     })
+
+    test('项目不存在', async () => {
+      const res = await request('/api/mock').query({ project_id: '111111111111111111111111' })
+
+      const data = res.body.data
+      expect(data.project).toEqual({})
+      expect(data.mocks).toHaveLength(0)
+    })
   })
 
   describe('getAPIByProjectIds', () => {
@@ -307,6 +331,7 @@ describe('test/controllers/mock.test.js', () => {
     test('404', async () => {
       await request('/mock').expect(404)
       await request('/mock/api/user').expect(404)
+      await request('/mock/111111111111111111111111/').expect(404)
       await request('/mock/111111111111111111111111/user').expect(404)
       await request(`/mock/${project._id}/ttest`).expect(404)
     })
@@ -373,12 +398,12 @@ describe('test/controllers/mock.test.js', () => {
         .then(res => res.body.data.mocks)
 
       let res = await request('/api/mock/delete', 'post')
-        .send({ ids: ['111111111111111111111111'] })
+        .send({ project_id: '111111111111111111111111', ids: ['111111111111111111111111'] })
 
-      expect(res.body.message).toBe('无权限操作')
+      expect(res.body.message).toBe('项目不存在')
 
       res = await request('/api/mock/delete', 'post', soucheUser.token)
-        .send({ ids: apis.map(api => api._id) })
+        .send({ project_id: project._id, ids: apis.map(api => api._id) })
 
       expect(res.body.message).toBe('无权限操作')
     })
@@ -389,7 +414,7 @@ describe('test/controllers/mock.test.js', () => {
         .then(res => res.body.data.mocks)
 
       const res = await request('/api/mock/delete', 'post')
-        .send({ ids: apis.map(api => api._id) })
+        .send({ project_id: project._id, ids: apis.map(api => api._id) })
 
       expect(res.body.success).toBe(true)
     })

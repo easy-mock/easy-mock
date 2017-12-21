@@ -42,6 +42,17 @@ describe('test/controllers/project.test.js', () => {
       expect(res.body.message).toBe('项目成员不能包含自己')
     })
 
+    test('无权限操作', async () => {
+      const res = await request('/api/project/create', 'post')
+        .send({
+          name: 'example',
+          url: '/example',
+          group: '111111111111111111111111'
+        })
+
+      expect(res.body.message).toBe('无权限操作')
+    })
+
     test('项目已存在', async () => {
       const res = await request('/api/project/create', 'post')
         .send({
@@ -85,13 +96,11 @@ describe('test/controllers/project.test.js', () => {
       expect(res.body.message).toBe('params error')
     })
 
-    test('该项目无接口可复制', async () => {
+    test('项目不存在', async () => {
       const res = await request('/api/project/copy', 'post')
-        .send({
-          id: '111111111111111111111111'
-        })
+        .send({ id: '111111111111111111111111' })
 
-      expect(res.body.message).toBe('该项目无接口可复制')
+      expect(res.body.message).toBe('项目不存在')
     })
 
     test('复制项目', async () => {
@@ -106,6 +115,51 @@ describe('test/controllers/project.test.js', () => {
       expect(data).toHaveLength(3)
       expect(data[0].url).toBe('/example_copy')
       expect(data[0].name).toBe('演示项目_copy')
+    })
+
+    test('项目已存在', async () => {
+      let res = await request('/api/project')
+      res = await request('/api/project/copy', 'post')
+        .send({ id: res.body.data[2]._id })
+
+      expect(res.body.message).toBe('项目 演示项目_copy 已存在')
+    })
+
+    test('URL 已存在', async () => {
+      const projects = await request('/api/project').then(res => res.body.data)
+      await request('/api/project/update', 'post')
+        .send({
+          id: projects[0]._id,
+          name: 'copy_演示项目',
+          url: projects[0].url
+        })
+      const res = await request('/api/project/copy', 'post')
+        .send({ id: projects[2]._id })
+
+      await request('/api/project/update', 'post')
+        .send({
+          id: projects[0]._id,
+          name: '演示项目_copy',
+          url: projects[0].url
+        })
+
+      expect(res.body.message).toBe('请检查 URL 是否已经存在')
+    })
+
+    test('该项目无接口可复制', async () => {
+      let res = await request('/api/project/create', 'post')
+        .send({
+          name: 'empty',
+          url: '/empty',
+          description: 'empty'
+        })
+
+      const projects = await request('/api/project').then(res => res.body.data)
+
+      res = await request('/api/project/copy', 'post')
+        .send({ id: projects[0]._id })
+      await request('/api/project/delete', 'post').send({ id: projects[0]._id })
+      expect(res.body.message).toBe('该项目无接口可复制')
     })
   })
 
@@ -204,6 +258,16 @@ describe('test/controllers/project.test.js', () => {
       expect(data).toHaveLength(1)
       expect(data[0].url).toBe('/group')
       expect(data[0].name).toBe('group')
+    })
+
+    test('获取未加入团队的项目', async () => {
+      let res = await request('/api/group')
+      res = await request('/api/project', 'get', soucheUser.token)
+        .query({ group: res.body.data[0]._id })
+
+      const data = res.body.data
+
+      expect(data).toHaveLength(0)
     })
   })
 
@@ -306,6 +370,19 @@ describe('test/controllers/project.test.js', () => {
 
       expect(res.body.success).toBe(true)
     })
+
+    test('非团队成员无法更新项目', async () => {
+      let res = await request('/api/group')
+      res = await request('/api/project')
+        .query({ group: res.body.data[0]._id })
+      res = await request('/api/project/update', 'post', soucheUser.token)
+        .send({
+          id: res.body.data[0]._id,
+          name: '演示项目',
+          url: '/example'
+        })
+      expect(res.body.message).toBe('无权限操作')
+    })
   })
 
   describe('syncSwagger', () => {
@@ -362,7 +439,7 @@ describe('test/controllers/project.test.js', () => {
       res = await request('/api/project/delete', 'post', soucheUser.token)
         .send({ id: res.body.data[0]._id })
 
-      expect(res.body.message).toBe('非团队创建者无法删除项目')
+      expect(res.body.message).toBe('无权限操作')
     })
 
     test('删除项目', async () => {
