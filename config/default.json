@@ -1,7 +1,19 @@
 {
   "port": 7300,
   "pageSize": 30,
-  "db": "",
+  "db": "mongodb://localhost/easy-mock",
+  "redis": {
+    "port": 6379,
+    "host": "127.0.0.1"
+  },
+  "blackList": {
+    "projects": [],
+    "ips": []
+  },
+  "rateLimit": {
+    "max": 1000,
+    "duration": 1000
+  },
   "unsplashClientId": "",
   "jwt": {
     "expire": "14 days",

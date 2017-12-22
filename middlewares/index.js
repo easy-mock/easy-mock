@@ -1,7 +1,14 @@
 'use strict'
 
+const config = require('config')
+const ipFilter = require('ip-filter')
+const pathToRegexp = require('path-to-regexp')
+
+const blackProjects = config.get('blackList.projects')
+const blackIPs = config.get('blackList.ips')
+
 module.exports = class Middleware {
-  static async util (ctx, next) {
+  static util (ctx, next) {
     const codeMap = {
       '-1': 'fail',
       '200': 'success',
@@ -31,6 +38,32 @@ module.exports = class Middleware {
       }
     }
 
-    await next()
+    return next()
+  }
+
+  static ipFilter (ctx, next) {
+    if (ipFilter(ctx.ip, blackIPs, {strict: false})) {
+      ctx.body = ctx.util.refail('请求频率太快，已被限制访问')
+      return
+    }
+    return next()
+  }
+
+  static mockFilter (ctx, next) {
+    const pathNode = pathToRegexp('/mock/:projectId(.{24})/:projectURL?/:mockURL*').exec(ctx.path)
+
+    if (!pathNode) ctx.throw(404)
+    if (blackProjects.indexOf(pathNode[1]) !== -1) {
+      ctx.body = ctx.util.refail('接口请求频率太快，已被限制访问')
+      return
+    }
+
+    ctx.pathNode = {
+      projectId: pathNode[1],
+      projectURL: '/' + (pathNode[2] || ''),
+      mockURL: '/' + (pathNode[3] || '')
+    }
+
+    return next()
   }
 }

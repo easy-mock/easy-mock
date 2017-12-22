@@ -204,15 +204,10 @@ module.exports = class MockController {
   static async getMockAPI (ctx) {
     const { query, body } = ctx.request
     const method = ctx.method.toLowerCase()
-    const pathNode = pathToRegexp('/mock/:projectId(.{24})/:projectURL?/:mockURL*').exec(ctx.path)
     const jsonpCallback = query.jsonp_param_name && (query[query.jsonp_param_name] || 'callback')
-    let apiData, apis, api, projectId, projectURL, mockURL
+    let { projectId, projectURL, mockURL } = ctx.pathNode
+    let apiData, apis, api
 
-    if (!pathNode) ctx.throw(404)
-
-    projectId = pathNode[1]
-    projectURL = '/' + (pathNode[2] || '')
-    mockURL = '/' + (pathNode[3] || '')
     apis = await MockProxy.find({ project: projectId, method })
 
     if (apis[0] && apis[0].project.url === '/') {

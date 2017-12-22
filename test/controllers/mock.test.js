@@ -336,6 +336,11 @@ describe('test/controllers/mock.test.js', () => {
       await request(`/mock/${project._id}/ttest`).expect(404)
     })
 
+    test('接口请求频率太快，已被限制访问', async () => {
+      const res = await request('/mock/222222222233333333331212/user')
+      expect(res.body.message).toBe('接口请求频率太快，已被限制访问')
+    })
+
     test('/', async () => {
       const res = await request(getMockURL('/'))
         .expect(400)

@@ -26,6 +26,8 @@ onerror(app)
 validate(app)
 
 app
+  .use(middleware.util)
+  .use(middleware.ipFilter)
   .use(favicon(path.join(__dirname, '/public/images/icon.png')))
   .use(serve('/dist', './dist'))
   .use(serve('/public', './public'))
@@ -45,7 +47,6 @@ app
     return true
   }))
   .use(koaBody({ multipart: true }))
-  .use(middleware.util)
   .use(routerConfig.mock.routes())
   .use(routerConfig.mock.allowedMethods())
   .use(routerConfig.api.routes())
