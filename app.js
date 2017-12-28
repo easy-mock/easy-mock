@@ -21,18 +21,18 @@ const app = module.exports = new Koa()
 const uploadConf = config.get('upload')
 const jwtSecret = config.get('jwt.secret')
 
-util.dropFileSchedule()
+util.init()
 onerror(app)
 validate(app)
 
 app
-  .use(middleware.util)
   .use(middleware.ipFilter)
   .use(favicon(path.join(__dirname, '/public/images/icon.png')))
   .use(serve('/dist', './dist'))
   .use(serve('/public', './public'))
   .use(serve('/upload', path.resolve(__dirname, 'config', uploadConf.dir)))
   .use(logger)
+  .use(middleware.util)
   .use(cors({ credentials: true, maxAge: 2592000 }))
   .use(koaJwt({ secret: jwtSecret }).unless((ctx) => {
     if (/^\/api/.test(ctx.path)) {

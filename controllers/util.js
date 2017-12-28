@@ -85,9 +85,9 @@ module.exports = class UtilController {
 
     ctx.body = ctx.util.resuccess({
       path: new URL(path.join('upload', date, fileName), origin).href,
-      expire: expireDay > 0 /* istanbul ignore next */
+      expire: expireDay > 0
         ? moment().add(expireDay, 'days').format('YYYY-MM-DD 00:00:00')
-        : -1
+        : /* istanbul ignore next */ -1
     })
   }
 }

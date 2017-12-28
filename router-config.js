@@ -1,7 +1,6 @@
 'use strict'
 
 const config = require('config')
-const Redis = require('ioredis')
 const Router = require('koa-router')
 const restc = require('restc').koa2()
 const ratelimit = require('koa-ratelimit')
@@ -13,14 +12,14 @@ const {
   project,
   dashboard
 } = require('./controllers')
+const baseUtil = require('./util')
 const middleware = require('./middlewares')
 
-const redisConf = config.get('redis')
 const rateLimitConf = config.get('rateLimit')
 const apiRouter = new Router({ prefix: '/api' })
 const mockRouter = new Router({ prefix: '/mock' })
 const rate = ratelimit({
-  db: new Redis(redisConf.port, redisConf.host),
+  db: baseUtil.getRedis(),
   id: ctx => ctx.url,
   max: rateLimitConf.max,
   duration: rateLimitConf.duration,

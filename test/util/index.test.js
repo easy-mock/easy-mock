@@ -4,17 +4,6 @@ const util = require('../../util')
 const rimraf = require('rimraf')
 
 jest.useFakeTimers()
-jest.mock('config', () => ({
-  get: jest.fn()
-    .mockImplementationOnce(() => ({
-      dir: '../public/upload/test',
-      expire: {
-        types: ['.json'],
-        day: 1
-      }
-    }))
-}))
-
 jest.mock('rimraf', () => jest.fn())
 
 describe('test/util/index.test.js', () => {

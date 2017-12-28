@@ -8,6 +8,7 @@ const moment = require('moment')
 const koaPinoLogger = require('koa-pino-logger')
 const multistream = require('pino-multi-stream').multistream
 
+const streamOpt = {flags: 'a', encoding: 'utf8'}
 const date = moment().format('YYYY-MM-DD')
 const logDir = path.join(__dirname, '../logs')
 let streams = [
@@ -20,8 +21,8 @@ if (process.env.NODE_ENV === 'production') {
   if (!fs.existsSync(logDir)) mkdirp.sync(logDir)
 
   streams = [
-    {level: 'info', stream: fs.createWriteStream(`logs/${date}-info.log`)},
-    {level: 'error', stream: fs.createWriteStream(`logs/${date}-error.log`)}
+    {level: 'info', stream: fs.createWriteStream(`logs/${date}-info.log`, streamOpt)},
+    {level: 'error', stream: fs.createWriteStream(`logs/${date}-error.log`, streamOpt)}
   ]
 }
 

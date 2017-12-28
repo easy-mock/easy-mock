@@ -3,10 +3,12 @@
 const _ = require('lodash')
 const config = require('config')
 
+const util = require('../util')
 const ft = require('../models/fields_table')
 const SwaggerUtil = require('../util/swagger')
 const { MockProxy, ProjectProxy, UserProjectProxy, UserGroupProxy } = require('../proxy')
 
+const redis = util.getRedis()
 const defPageSize = config.get('pageSize')
 
 async function checkByProjectId (projectId, uid, creater) {
@@ -356,6 +358,7 @@ module.exports = class ProjectController {
     }
 
     await ProjectProxy.updateById(project)
+    await redis.del('project:' + id)
     ctx.body = ctx.util.resuccess()
   }
 
@@ -386,6 +389,7 @@ module.exports = class ProjectController {
     }
 
     await SwaggerUtil.create(project)
+    await redis.del('project:' + id)
     ctx.body = ctx.util.resuccess()
   }
 
@@ -411,6 +415,7 @@ module.exports = class ProjectController {
     }
 
     await ProjectProxy.delById(id)
+    await redis.del('project:' + id)
     ctx.body = ctx.util.resuccess()
   }
 }

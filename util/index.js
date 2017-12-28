@@ -4,11 +4,35 @@ const _ = require('lodash')
 const path = require('path')
 const config = require('config')
 const rimraf = require('rimraf')
+const Redis = require('ioredis')
 const moment = require('moment')
 const bcrypt = require('bcryptjs')
 const pathToRegexp = require('path-to-regexp')
+const { MockCountProxy } = require('../proxy')
+
+const redisConf = config.get('redis')
+const redis = new Redis(redisConf.port, redisConf.host, {
+  keyPrefix: '[Easy Mock]'
+})
 
 module.exports = class BaseUtil {
+  /**
+   * 初始化操作
+   */
+
+  static async init () {
+    this.dropFileSchedule()
+    this.mockUseCountSchedule()
+  }
+
+  /**
+   * 获取 redis 实例
+   */
+
+  static getRedis () {
+    return redis
+  }
+
   /**
    * 加密字符串
    * @param String str
@@ -76,6 +100,7 @@ module.exports = class BaseUtil {
     const conf = config.get('upload')
     const expireDay = conf.expire.day
 
+    /* istanbul ignore else */
     if (typeof expireDay === 'number' && expireDay > 0) {
       const expireTypes = conf.expire.types.map(type => `*${type}`).join(',')
       const date = moment().subtract(expireDay, 'days').format('YYYY/MM/DD')
@@ -85,6 +110,19 @@ module.exports = class BaseUtil {
       rimraf(commandPath, _.noop)
       setInterval(() => rimraf(commandPath, _.noop), 1000 * 60 * 60)
     }
+  }
+
+  static mockUseCountSchedule () {
+    async function run () {
+      const len = await redis.llen('mock.count')
+      if (len === 0) return
+      const mockIds = await redis.lrange('mock.count', -len, len)
+      await redis.ltrim('mock.count', 0, -(len + 1))
+      await MockCountProxy.newAndSave(mockIds)
+    }
+
+    run()
+    setInterval(run, 1000 * 10)
   }
 
   /**

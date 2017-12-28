@@ -11,8 +11,9 @@ const pathToRegexp = require('path-to-regexp')
 
 const util = require('../util')
 const ft = require('../models/fields_table')
-const { MockProxy, ProjectProxy, MockCountProxy, UserGroupProxy } = require('../proxy')
+const { MockProxy, ProjectProxy, UserGroupProxy } = require('../proxy')
 
+const redis = util.getRedis()
 const defPageSize = config.get('pageSize')
 
 async function checkByMockId (mockId, uid) {
@@ -89,6 +90,7 @@ module.exports = class MockController {
       mode
     })
 
+    await redis.del('project:' + projectId)
     ctx.body = ctx.util.resuccess()
   }
 
@@ -192,7 +194,7 @@ module.exports = class MockController {
     }
 
     await MockProxy.updateById(api)
-
+    await redis.del('project:' + project.id)
     ctx.body = ctx.util.resuccess()
   }
 
@@ -206,9 +208,17 @@ module.exports = class MockController {
     const method = ctx.method.toLowerCase()
     const jsonpCallback = query.jsonp_param_name && (query[query.jsonp_param_name] || 'callback')
     let { projectId, projectURL, mockURL } = ctx.pathNode
+    const redisKey = 'project:' + projectId
     let apiData, apis, api
 
-    apis = await MockProxy.find({ project: projectId, method })
+    apis = await redis.get(redisKey)
+
+    if (apis) {
+      apis = JSON.parse(apis)
+    } else {
+      apis = await MockProxy.find({ project: projectId })
+      if (apis[0]) await redis.set(redisKey, JSON.stringify(apis), 'EX', 60 * 30)
+    }
 
     if (apis[0] && apis[0].project.url === '/') {
       mockURL = projectURL
@@ -217,7 +227,7 @@ module.exports = class MockController {
 
     api = apis.filter((item) => {
       const url = item.url.replace(/{/g, ':').replace(/}/g, '') // /api/{user}/{id} => /api/:user/:id
-      return pathToRegexp(url).test(mockURL)
+      return item.method === method && pathToRegexp(url).test(mockURL)
     })[0]
 
     if (!api) ctx.throw(404)
@@ -285,7 +295,7 @@ module.exports = class MockController {
       }
     }
 
-    await MockCountProxy.newAndSave(api.id)
+    await redis.lpush('mock.count', api._id)
     if (jsonpCallback) {
       ctx.type = 'text/javascript'
       ctx.body = `${jsonpCallback}(${JSON.stringify(apiData, null, 2)})`
@@ -414,7 +424,7 @@ module.exports = class MockController {
     })
 
     await MockProxy.delByIds(ids)
-
+    await redis.del('project:' + projectId)
     ctx.body = ctx.util.resuccess()
   }
 }
