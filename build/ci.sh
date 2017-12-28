@@ -1,6 +1,6 @@
 set -e
 npm run lint
-npm test
+npm run test-cov
 
 # report coverage stats for non-PRs
 if [[ -z $CI_PULL_REQUEST ]]; then
