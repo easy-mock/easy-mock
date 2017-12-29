@@ -22,11 +22,11 @@
     "secret": "shared-secret"
   },
   "upload": {
-    "types": [".jpg", ".jpeg", ".png", ".gif", ".json", ".yml"],
+    "types": [".jpg", ".jpeg", ".png", ".gif", ".json", ".yml", ".yaml"],
     "size": 5242880,
     "dir": "../public/upload",
     "expire": {
-      "types": [".json", ".yml"],
+      "types": [".json", ".yml", ".yaml"],
       "day": -1
     }
   },
