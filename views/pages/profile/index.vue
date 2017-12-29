@@ -65,7 +65,6 @@
 </style>
 
 <script>
-import config from 'config'
 import * as api from '../../api'
 import languageMap from '../../locale/map'
 
@@ -84,7 +83,7 @@ export default {
       visible: false,
       language: this.$ls.get('locale') || 'zh-CN',
       languageList: languageMap.list,
-      uploadAPI: config.APIPrefix + '/upload',
+      uploadAPI: '/api/upload',
       form: {
         headImg: this.$store.state.user.headImg,
         nickName: this.$store.state.user.nickName,

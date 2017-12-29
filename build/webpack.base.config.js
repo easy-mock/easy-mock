@@ -12,7 +12,10 @@ const vueConfig = require('./vue-loader.config')
 const isProd = process.env.NODE_ENV === 'production'
 const resolve = dir => path.resolve(__dirname, dir)
 
+config.fe.host = config.host
+config.fe.port = config.port
 fs.writeFileSync(resolve('../views/config.json'), JSON.stringify(config.fe))
+
 module.exports = {
   devtool: isProd ? false : '#cheap-module-source-map',
   output: {

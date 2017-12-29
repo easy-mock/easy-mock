@@ -8,7 +8,7 @@ let router
 const cookies = new Cookies()
 const isClient = process.env.VUE_ENV === 'client'
 const instance = axios.create({
-  baseURL: conf.APIPrefix,
+  baseURL: isClient ? '/api' : `http://${conf.host}:${conf.port}/api`,
   timeout: conf.timeout
 })
 
@@ -113,7 +113,6 @@ const createAPI = (url, method, config) => {
 const createExportForm = (url, data) => {
   const form = document.createElement('form')
 
-  url = `${conf.APIPrefix}${url}`
   form.method = 'POST'
   form.action = url
 

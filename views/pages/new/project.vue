@@ -115,14 +115,13 @@
 </style>
 
 <script>
-import conf from 'config'
 import * as api from '../../api'
 
 export default {
   name: 'newProject',
   data () {
     return {
-      uploadAPI: conf.APIPrefix + '/upload',
+      uploadAPI: '/api/upload',
       swaggerType: 'URL',
       remoteLoading: false,
       users: [],

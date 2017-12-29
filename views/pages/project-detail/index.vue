@@ -84,7 +84,6 @@
 </style>
 
 <script>
-import config from 'config'
 import Clipboard from 'clipboard'
 import debounce from 'lodash/debounce'
 
@@ -226,7 +225,7 @@ export default {
       }
     },
     baseUrl () {
-      const baseUrl = location.origin + config.mockPrefix + this.project._id
+      const baseUrl = location.origin + '/mock/' + this.project._id
       return this.project.url === '/' ? baseUrl : baseUrl + this.project.url
     },
     group () {

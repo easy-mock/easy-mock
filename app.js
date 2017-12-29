@@ -57,9 +57,10 @@ app.proxy = config.get('proxy')
 /* istanbul ignore if */
 if (!module.parent) {
   const port = config.get('port')
+  const host = config.get('host')
   app.use(require('./middlewares/view').render(app))
-  app.listen(port)
-  console.log(`server started at localhost:${port}`)
+  app.listen(port, host)
+  console.log(`server started at http://${host}:${port}`)
 }
 
 function serve (prefix, filePath) {

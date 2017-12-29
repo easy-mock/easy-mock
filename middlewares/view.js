@@ -64,7 +64,6 @@ module.exports = class ViewMiddleware {
           ctx.status = 302
           ctx.redirect('/login')
         } else {
-          console.log(ctx.url)
           ctx.throw(error)
         }
       }
