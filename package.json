@@ -5,8 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "node test/gen && cross-env NODE_ENV=test jest --runInBand --forceExit",
-    "test-watch": "npm run test -- --watch",
-    "test-cov": "npm run test -- --coverage",
+    "test:watch": "npm run test -- --watch",
+    "test:cover": "npm run test -- --coverage",
     "lint": "eslint --ignore-path .gitignore . --quiet --ext .vue,.js",
     "dev": "nodemon --ignore views/ --ignore public/ app",
     "dev:client": "node app",

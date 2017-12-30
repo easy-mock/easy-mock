@@ -1,0 +1,60 @@
+version: 2
+
+defaults: &defaults
+  working_directory: ~/project/easy-mock
+  docker:
+    - image: circleci/node:8.9.1
+    - image: circleci/mongo:3.4
+    - image: redis:4.0.1
+
+jobs:
+  install:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-easy-mock-{{ .Branch }}-{{ checksum "package-lock.json" }}
+            - v1-easy-mock-{{ .Branch }}-
+            - v1-easy-mock-
+      - run: npm install
+      - save_cache:
+          key: v1-easy-mock-{{ .Branch }}-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules/
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - easy-mock
+
+  lint:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: npm run lint
+
+  test-cover:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: ~/project
+      - run: npm run test:cover
+      - run:
+         name: report coverage stats for non-PRs
+         command: |
+           if [[ -z $CI_PULL_REQUEST ]]; then
+             cat ./coverage/lcov.info | ./node_modules/.bin/codecov
+           fi
+
+workflows:
+  version: 2
+  install-and-test:
+    jobs:
+      - install
+      - lint:
+          requires:
+            - install
+      - test-cover:
+          requires:
+            - install
