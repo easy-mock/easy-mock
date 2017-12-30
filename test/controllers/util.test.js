@@ -96,7 +96,7 @@ describe('test/controllers/util.test.js', () => {
       const res = await request('/api/upload', 'post')
         .attach('file', Buffer.from('upload'), 'upload.js')
 
-      expect(res.body.message).toBe('上传失败，仅支持 jpg/jpeg/png/gif/json/yml 文件类型')
+      expect(res.body.message).toBe(`上传失败，仅支持 ${uploadConf.types.join('/').replace(/\./g, '')} 文件类型`)
     })
 
     test('大小限制', async () => {
