@@ -86,9 +86,9 @@ module.exports = {
           use: [
             require('markdown-it-attrs'),
             [require('markdown-it-anchor'), {
-              level: 3,
+              permalinkClass: 'anchor',
               slugify: require('transliteration').slugify,
-              permalinkSymbol: '#',
+              permalinkSymbol: '<i class="ivu-icon ivu-icon-link octicon-link"></i>',
               permalink: true,
               permalinkBefore: true
             }]

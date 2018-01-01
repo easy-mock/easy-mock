@@ -99,7 +99,6 @@
     "markdown-it-attrs": "^1.2.0",
     "nodemon": "^1.14.3",
     "postcss": "^6.0.14",
-    "postcss-css-reset": "^1.0.2",
     "postcss-cssnext": "^3.0.2",
     "postcss-loader": "^2.0.9",
     "postcss-partial-import": "^4.1.0",

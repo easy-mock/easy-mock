@@ -1,6 +1,5 @@
-@import "./base/reset.css";
-@import "./base/base.css";
+@import "iview/dist/styles/iview.css";
 @import "./base/transition.css";
 @import "./lib/markdown.css";
 @import "./lib/highlight.css";
-@import "iview/dist/styles/iview.css";
+@import "./base/base.css";
