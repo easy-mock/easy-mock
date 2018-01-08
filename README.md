@@ -202,6 +202,11 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
 * [Straight flush | 同花顺](http://www.10jqka.com.cn/)
 * [360 Enterprise Security | 360企业安全集团](http://www.360.net/)
 * [MeiTuan | 美团网](http://www.meituan.com)
+* [Wenba. Inc | 上海谦问万答吧云计算科技有限公司 AI学部门](http://www.ailearn100.com/)
+* [PPMoney | 万惠集团](https://www.ppmoney.com/)
+* [Mysoft Yunke | 明源云客](http://www.myunke.com/)
+* [GeekPark | 极客公园](http://geekpark.net/)
+* [Enation Soft Co., Ltd | 易族智汇（北京）科技有限公司](http://www.javamall.com.cn/)
 
 ## Core Contributors
 
