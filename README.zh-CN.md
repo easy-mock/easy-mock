@@ -179,6 +179,7 @@ Easy Mock 目前由[大搜车无线架构团队](http://f2e.souche.com/blog/)进
 * [Mysoft Yunke | 明源云客](http://www.myunke.com/)
 * [GeekPark | 极客公园](http://geekpark.net/)
 * [Enation Soft Co., Ltd | 易族智汇（北京）科技有限公司](http://www.javamall.com.cn/)
+* [Harmony Cloud | 杭州谐云科技有限公司](http://harmonycloud.cn/)
 
 ## Core Contributors
 
