@@ -106,6 +106,9 @@ export default {
           create: 'Create Success',
           update: 'Update Success',
           delete: '{name} is deleted'
+        },
+        error: {
+          groupIsNull: 'Please select the project belongs to'
         }
       },
       formatError: 'File only supports JSON/YML format',

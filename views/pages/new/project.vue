@@ -170,8 +170,11 @@ export default {
         this.form.groupId = proj.user._id
       }
     } else {
-      this.fetchGroup()
-      this.form.groupId = this.user.id
+      this.fetchGroup().then(groups => {
+        if (groups.length < 2) {
+          this.form.groupId = this.user.id
+        }
+      })
     }
   },
   computed: {
@@ -218,7 +221,7 @@ export default {
         : newUrl.replace(/\/\//g, '/').replace(/\/$/, '')
     },
     fetchGroup () {
-      api.group.getList().then((res) => {
+      return api.group.getList().then((res) => {
         if (res.data.success) {
           this.groups = [{ value: this.user.id, label: this.user.nickName }].concat(
             res.data.data.map(o => ({
@@ -227,6 +230,7 @@ export default {
             }))
           )
         }
+        return this.groups
       })
     },
     submit () {
@@ -249,6 +253,14 @@ export default {
           }
         })
       } else {
+        if (this.form.groupId === '') {
+          this.$Message.error({
+            content: this.$t('p.new.form.error.groupIsNull'),
+            duration: 5
+          })
+          return
+        }
+
         if (data.group === this.user.id) {
           data.group = ''
         }
