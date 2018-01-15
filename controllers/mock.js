@@ -243,8 +243,8 @@ module.exports = class MockController {
     }
 
     if (/^http(s)?/.test(api.mode)) { // 代理模式
-      const url = nodeURL.parse(api.mode, true)
-      const params = util.params(api.url, mockURL)
+      const url = nodeURL.parse(api.mode.replace(/{/g, ':').replace(/}/g, ''), true)
+      const params = util.params(api.url.replace(/{/g, ':').replace(/}/g, ''), mockURL)
       const pathname = pathToRegexp.compile(url.pathname)(params)
       try {
         apiData = await axios({
