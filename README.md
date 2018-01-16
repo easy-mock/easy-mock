@@ -78,7 +78,7 @@ configuration.
 > to get more information because Easy Mock uses node-config as its
 > configuration module.
 
-```json
+```js
 {
   "port": 7300,
   "host": "0.0.0.0",
