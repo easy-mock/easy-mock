@@ -3,6 +3,7 @@
 <p align="center">
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D8.9.1-green.svg?style=flat" alt="Node.js Version"></a>
   <a href="https://www.mongodb.com"><img src="https://img.shields.io/badge/mongo-%3E%3D3.4.1-green.svg?style=flat" alt="MongoDB Version"></a>
+  <a href="https://redis.io"><img src="https://img.shields.io/badge/redis-%3E%3D4.0-green.svg?style=flat" alt="Redis Version"></a>
   <a href="https://circleci.com/gh/easy-mock/easy-mock/tree/dev"><img src="https://img.shields.io/circleci/project/easy-mock/easy-mock/dev.svg" alt="Build Status"></a>
   <a href="https://codecov.io/github/easy-mock/easy-mock?branch=dev"><img src="https://img.shields.io/codecov/c/github/easy-mock/easy-mock/dev.svg" alt="Coverage Status"></a>
   <a href="http://standardjs.com"><img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg" alt="js-standard-style"></a>
@@ -53,7 +54,7 @@ Easy Mock 是一个可视化，并且能快速生成**模拟数据**的持久化
 
 ## 快速开始
 
-> 在开始之前，假设你已经成功安装了 [Node.js](https://nodejs.org)（**v8.9** 以上）和 [MongoDB](https://www.mongodb.com)（**v3.4** 以上）。
+> 在开始之前，假设你已经成功安装了 [Node.js](https://nodejs.org)（>= **v8.9**）& [MongoDB](https://www.mongodb.com)（>= **v3.4**）& [Redis](https://redis.io)（>= **v4.0**）。
 
 ### 安装
 
@@ -70,15 +71,42 @@ $ cd easy-mock && npm install
 
 ```js
 {
-  "db": "mongodb://localhost/{数据库名}",
-  "unsplashClientId": "可空。背景图配置，见下面说明。",
+  "port": 7300,
+  "host": "0.0.0.0",
+  "pageSize": 30,
+  "proxy": false,
+  "db": "mongodb://localhost/easy-mock",
+  "unsplashClientId": "",
+  "redis": {
+    "port": 6379,
+    "host": "localhost"
+  },
+  "blackList": {
+    "projects": [], // projectId，例："5a4495e16ef711102113e500"
+    "ips": [] // ip，例："127.0.0.1"
+  },
+  "rateLimit": { // https://github.com/koajs/ratelimit
+    "max": 1000,
+    "duration": 1000
+  },
   "jwt": {
+    "expire": "14 days",
     "secret": "shared-secret"
   },
+  "upload": {
+    "types": [".jpg", ".jpeg", ".png", ".gif", ".json", ".yml", ".yaml"],
+    "size": 5242880,
+    "dir": "../public/upload",
+    "expire": {
+      "types": [".json", ".yml", ".yaml"],
+      "day": -1
+    }
+  },
   "fe": {
-    "publicPath": "/dist/",
-    "APIPrefix": "http://127.0.0.1:7300/api",
-    "storageNamespace": "cookies & localStorage 的命名空间。"
+    "copyright": "",
+    "storageNamespace": "easy-mock_",
+    "timeout": 25000,
+    "publicPath": "/dist/"
   }
 }
 ```
@@ -139,12 +167,6 @@ $ [sudo] npm install pm2 -g
 $ NODE_ENV=production pm2 start app.js
 ```
 
-### 正确配置 APIPrefix
-
-当在服务器上部署时，我们应该将 `APIPrefix` 配置成服务器的地址。
-
-例如服务地址为 http://example.com 时，`APIPrefix` 应配置为 http://example.com/api。
-
 ## 版本发布
 
 [Release](https://github.com/easy-mock/easy-mock/releases) 中记录了每个版本的详细更改。
@@ -180,6 +202,7 @@ Easy Mock 目前由[大搜车无线架构团队](http://f2e.souche.com/blog/)进
 * [GeekPark | 极客公园](http://geekpark.net/)
 * [Enation Soft Co., Ltd | 易族智汇（北京）科技有限公司](http://www.javamall.com.cn/)
 * [Harmony Cloud | 杭州谐云科技有限公司](http://harmonycloud.cn/)
+* [China Literature | 阅文集团](http://ir.yuewen.com/cn/)
 
 ## Core Contributors
 
@@ -198,6 +221,11 @@ Easy Mock 目前由[大搜车无线架构团队](http://f2e.souche.com/blog/)进
   <td>
     <a href="https://github.com/ostoc">
       <img src="https://avatars2.githubusercontent.com/u/3025708?v=4&s=100"><br><span>ostoc</span>
+    </a>
+  </td>
+  <td>
+    <a href="https://github.com/xinyu198736">
+      <img src="https://avatars3.githubusercontent.com/u/897401?v=4&s=100"><br><span>xinyu198736</span>
     </a>
   </td>
 </tr>

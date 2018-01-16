@@ -3,6 +3,7 @@
 <p align="center">
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D8.9.1-green.svg?style=flat" alt="Node.js Version"></a>
   <a href="https://www.mongodb.com"><img src="https://img.shields.io/badge/mongo-%3E%3D3.4.1-green.svg?style=flat" alt="MongoDB Version"></a>
+  <a href="https://redis.io"><img src="https://img.shields.io/badge/redis-%3E%3D4.0-green.svg?style=flat" alt="Redis Version"></a>
   <a href="https://circleci.com/gh/easy-mock/easy-mock/tree/dev"><img src="https://img.shields.io/circleci/project/easy-mock/easy-mock/dev.svg" alt="Build Status"></a>
   <a href="https://codecov.io/github/easy-mock/easy-mock?branch=dev"><img src="https://img.shields.io/codecov/c/github/easy-mock/easy-mock/dev.svg" alt="Coverage Status"></a>
   <a href="http://standardjs.com"><img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg" alt="js-standard-style"></a>
@@ -58,8 +59,7 @@ visualization view.
 ## Quick Start
 
 > Before starting, we assume that you're already have installed
-> [Node.js](https://nodejs.org) (>= v8.9) and [MongoDB](https://www.mongodb.com)
-> (>= v3.4).
+> [Node.js](https://nodejs.org) (>= v8.9) & [MongoDB](https://www.mongodb.com) (>= v3.4) & [Redis](https://redis.io)（>= **v4.0**）.
 
 ### Installation
 
@@ -80,15 +80,42 @@ configuration.
 
 ```json
 {
-  "db": "mongodb://localhost/{DATABASE-NAME}",
-  "unsplashClientId": "Background, see section below. (optional)",
+  "port": 7300,
+  "host": "0.0.0.0",
+  "pageSize": 30,
+  "proxy": false,
+  "db": "mongodb://localhost/easy-mock",
+  "unsplashClientId": "",
+  "redis": {
+    "port": 6379,
+    "host": "localhost"
+  },
+  "blackList": {
+    "projects": [], // projectId, e.g."5a4495e16ef711102113e500"
+    "ips": [] // ip, e.g. "127.0.0.1"
+  },
+  "rateLimit": { // https://github.com/koajs/ratelimit
+    "max": 1000,
+    "duration": 1000
+  },
   "jwt": {
+    "expire": "14 days",
     "secret": "shared-secret"
   },
+  "upload": {
+    "types": [".jpg", ".jpeg", ".png", ".gif", ".json", ".yml", ".yaml"],
+    "size": 5242880,
+    "dir": "../public/upload",
+    "expire": {
+      "types": [".json", ".yml", ".yaml"],
+      "day": -1
+    }
+  },
   "fe": {
-    "publicPath": "/dist/",
-    "APIPrefix": "http://127.0.0.1:7300/api",
-    "storageNamespace": "cookies & localStorage namespace"
+    "copyright": "",
+    "storageNamespace": "easy-mock_",
+    "timeout": 25000,
+    "publicPath": "/dist/"
   }
 }
 ```
@@ -153,14 +180,6 @@ $ [sudo] npm install pm2 -g
 $ NODE_ENV=production pm2 start app.js
 ```
 
-### Configure APIPrefix Correctly
-
-If you deploy Easy Mock by yourself, you should replace `APIPrefix` to your own
-server uri. eg:
-
-Assume your server location is http://example.com, the `APIPrefix` should be
-http://example.com/api.
-
 ## Releases
 
 Refer to [Release](https://github.com/easy-mock/easy-mock/releases) and you'll
@@ -208,6 +227,7 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
 * [GeekPark | 极客公园](http://geekpark.net/)
 * [Enation Soft Co., Ltd | 易族智汇（北京）科技有限公司](http://www.javamall.com.cn/)
 * [Harmony Cloud | 杭州谐云科技有限公司](http://harmonycloud.cn/)
+* [China Literature | 阅文集团](http://ir.yuewen.com/cn/)
 
 ## Core Contributors
 
@@ -226,6 +246,11 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
   <td>
     <a href="https://github.com/ostoc">
       <img src="https://avatars2.githubusercontent.com/u/3025708?v=4&s=100"><br><span>ostoc</span>
+    </a>
+  </td>
+  <td>
+    <a href="https://github.com/xinyu198736">
+      <img src="https://avatars3.githubusercontent.com/u/897401?v=4&s=100"><br><span>xinyu198736</span>
     </a>
   </td>
 </tr>
