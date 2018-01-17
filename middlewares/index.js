@@ -50,7 +50,7 @@ module.exports = class Middleware {
   }
 
   static mockFilter (ctx, next) {
-    const pathNode = pathToRegexp('/mock/:projectId(.{24})/:projectURL?/:mockURL*').exec(ctx.path)
+    const pathNode = pathToRegexp('/mock/:projectId(.{24})/:mockURL*').exec(ctx.path)
 
     if (!pathNode) ctx.throw(404)
     if (blackProjects.indexOf(pathNode[1]) !== -1) {
@@ -60,8 +60,7 @@ module.exports = class Middleware {
 
     ctx.pathNode = {
       projectId: pathNode[1],
-      projectURL: '/' + (pathNode[2] || ''),
-      mockURL: '/' + (pathNode[3] || '')
+      mockURL: '/' + (pathNode[2] || '')
     }
 
     return next()

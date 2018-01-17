@@ -207,7 +207,7 @@ module.exports = class MockController {
     const { query, body } = ctx.request
     const method = ctx.method.toLowerCase()
     const jsonpCallback = query.jsonp_param_name && (query[query.jsonp_param_name] || 'callback')
-    let { projectId, projectURL, mockURL } = ctx.pathNode
+    let { projectId, mockURL } = ctx.pathNode
     const redisKey = 'project:' + projectId
     let apiData, apis, api
 
@@ -220,9 +220,8 @@ module.exports = class MockController {
       if (apis[0]) await redis.set(redisKey, JSON.stringify(apis), 'EX', 60 * 30)
     }
 
-    if (apis[0] && apis[0].project.url === '/') {
-      mockURL = projectURL
-      projectURL = '/'
+    if (apis[0] && apis[0].project.url !== '/') {
+      mockURL = mockURL.replace(apis[0].project.url, '') || '/'
     }
 
     api = apis.filter((item) => {
@@ -231,7 +230,6 @@ module.exports = class MockController {
     })[0]
 
     if (!api) ctx.throw(404)
-    if (api.project.url !== projectURL) ctx.throw(404)
 
     Mock.Handler.function = function (options) {
       const mockUrl = api.url.replace(/{/g, ':').replace(/}/g, '') // /api/{user}/{id} => /api/:user/:id
