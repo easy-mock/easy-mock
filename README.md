@@ -228,6 +228,7 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
 * [Enation Soft Co., Ltd | 易族智汇（北京）科技有限公司](http://www.javamall.com.cn/)
 * [Harmony Cloud | 杭州谐云科技有限公司](http://harmonycloud.cn/)
 * [China Literature | 阅文集团](http://ir.yuewen.com/cn/)
+* [huodongxing | 活动行](http://www.huodongxing.com)
 
 ## Core Contributors
 

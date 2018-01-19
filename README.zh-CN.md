@@ -203,6 +203,7 @@ Easy Mock 目前由[大搜车无线架构团队](http://f2e.souche.com/blog/)进
 * [Enation Soft Co., Ltd | 易族智汇（北京）科技有限公司](http://www.javamall.com.cn/)
 * [Harmony Cloud | 杭州谐云科技有限公司](http://harmonycloud.cn/)
 * [China Literature | 阅文集团](http://ir.yuewen.com/cn/)
+* [huodongxing | 活动行](http://www.huodongxing.com)
 
 ## Core Contributors
 
