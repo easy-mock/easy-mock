@@ -415,6 +415,21 @@ describe('test/controllers/project.test.js', () => {
 
       expect(res.body.success).toBe(true)
     })
+
+    test('同步失败', async () => {
+      let res = await request('/api/project', 'get')
+      let apiRes = await request('/api/mock').query({ project_id: res.body.data[1]._id })
+      let api = apiRes.body.data.mocks.filter(api => api.url === '/v2/user/logout')[0]
+      await request('/api/mock/update', 'post').send({
+        id: api._id,
+        url: '/v2/user/logout',
+        mode: '{a:1}',
+        method: 'get',
+        description: '同步失败'
+      })
+      res = await request('/api/project/sync/swagger', 'post').send({ id: res.body.data[1]._id })
+      expect(res.body.message).toBe('/v2/user/logout 接口中存在语法错误，请检查是否为标准 JSON 格式（例：被忽略的双引号）。')
+    })
   })
 
   describe('delete', () => {

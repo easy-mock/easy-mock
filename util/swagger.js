@@ -59,7 +59,13 @@ async function createMock (projectId, swaggerDocs) {
 
       // util.flatten({ cat: 'meow', dog: [{name: 'spot'}] }) => { 'cat': 'meow', 'dog[0]____name': 'spot' }
       let newKeys = Object.keys(util.flatten(JSON.parse(mode)))
-      let oldKeys = Object.keys(util.flatten(JSON.parse(api.mode)))
+      let oldKeys
+
+      try {
+        oldKeys = Object.keys(util.flatten(JSON.parse(api.mode)))
+      } catch (error) {
+        throw new Error(`${api.url} 接口中存在语法错误，请检查是否为标准 JSON 格式（例：被忽略的双引号）。`)
+      }
 
       api.method = method
       api.url = fullAPIPath

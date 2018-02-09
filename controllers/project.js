@@ -388,7 +388,13 @@ module.exports = class ProjectController {
       return
     }
 
-    await SwaggerUtil.create(project)
+    try {
+      await SwaggerUtil.create(project)
+    } catch (error) {
+      ctx.body = ctx.util.refail(error.message)
+      return
+    }
+
     await redis.del('project:' + id)
     ctx.body = ctx.util.resuccess()
   }
