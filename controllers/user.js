@@ -127,6 +127,7 @@ exports.logout = function * () {
 exports.register = function * () {
   const name = this.checkBody('name').notEmpty().len(4, 20).value
   const password = this.checkBody('password').notEmpty().len(6, 20).value
+  const email = ''
 
   if (this.errors) {
     this.body = this.util.refail(null, 10001, this.errors)
@@ -144,7 +145,8 @@ exports.register = function * () {
 
   yield userProxy.newAndSave(
     name,
-    npassword
+    npassword,
+    email
   )
 
   user = yield userProxy.getByName(name)

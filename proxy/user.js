@@ -7,14 +7,14 @@ const m = require('../models')
 
 const UserModel = m.User
 
-exports.newAndSave = function (name, password, nickName, headImg) {
+exports.newAndSave = function (name, password, email, nickName, headImg) {
   const user = new UserModel()
   const len = config.get('gravatar').length
 
   user.name = name
   user.password = password
   user.email = email || ''
-  user.nick_name = nickName || _.now()
+  user.nick_name = nickName || name
   user.head_img = headImg || config.get('gravatar')[_.random(0, len - 1)]
 
   return user.save()
