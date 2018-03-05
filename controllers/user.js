@@ -73,9 +73,6 @@ exports.update = function * () {
   user.head_img = headImg || user.head_img
   user.password = password ? yield util.bhash(password) : user.password
 
-  console.log(user)
-
-
   yield userProxy.update(user)
 
   this.body = this.util.resuccess()
