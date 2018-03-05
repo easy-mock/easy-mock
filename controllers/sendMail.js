@@ -30,7 +30,7 @@ var mailOptions = {
 }
 
 // send mail with defined transport object
-let sendMail = async function (obj, callback) {
+let sendMail = function (obj, callback) {
   let { to, subject, html } = obj || {}
   mailOptions.to = to || mailOptions.to
   mailOptions.subject = subject || mailOptions.subject
