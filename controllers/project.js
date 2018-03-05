@@ -351,7 +351,8 @@ exports.sendMail = function * () {
   // 获取project
   const project = yield projectExistCheck(id, uid)
   let _users = [project.user, ...project.members]
-  let _mails = [] // 邮件列表
+  // 邮件列表
+  let _mails = []
   for (let i = 0; i < _users.length; i++) {
     if (_users[i]._id.toString() !== uid) {
       const _user = yield userProxy.getById(_users[i]._id)
@@ -362,16 +363,15 @@ exports.sendMail = function * () {
       if (/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(_user.email)) {
         // 发送邮件
         sendMail({
-          to: _user.email, // list of receivers
-          subject: '邮件标题', // Subject line
-          //text: 'Hello world ?', // plaintext body
-          html: '<h1>邮件内容</h1>' // html body
+          to: _user.email,
+          subject: '邮件标题',
+          html: '<h1>邮件内容</h1>'
         }, (obj, msg) => {
           if (msg === 'success') {
             _mails.splice(_mails.findIndex(item => item.email === obj.to), 1)
             // this.state.emailList = _mails
             console.log(_mails, _mails.length)
-            this.log.error(_mails) // 打印日志文件
+            this.log.error(_mails)
           }
         })
       }
