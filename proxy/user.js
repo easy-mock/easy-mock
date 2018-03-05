@@ -13,6 +13,7 @@ exports.newAndSave = function (name, password, nickName, headImg) {
 
   user.name = name
   user.password = password
+  user.email = email || ''
   user.nick_name = nickName || _.now()
   user.head_img = headImg || config.get('gravatar')[_.random(0, len - 1)]
 
@@ -25,6 +26,7 @@ exports.update = function (user) {
   }, {
     $set: {
       nick_name: user.nick_name,
+      email: user.email,
       head_img: user.head_img,
       password: user.password
     }

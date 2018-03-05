@@ -120,6 +120,7 @@ export default {
       form: {
         language: '语言',
         nickName: '昵称',
+        email: '邮箱',
         password: '密码',
         passwordCheck: '确认密码',
         update: '更新资料',

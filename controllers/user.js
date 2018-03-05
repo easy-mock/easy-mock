@@ -52,7 +52,12 @@ exports.list = function * () {
 
 exports.update = function * () {
   const password = this.checkBody('password').empty().len(6, 20).value
+  // console.log(this.checkBody('nick_name').empty().len(2, 20))
   const nickName = this.checkBody('nick_name').empty().len(2, 20).value
+  let email = this.checkBody('email').empty().value
+  // const email = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(_email)?_email:this.errors = {_email: 'email input error'}
+  // _email = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(_email)?{value:_email}:false
+  // const email = _email.value
   const headImg = this.checkBody('head_img').empty().value
 
   if (this.errors) {
@@ -64,8 +69,12 @@ exports.update = function * () {
 
   // 修改资料
   user.nick_name = nickName || user.nick_name
+  user.email = email || user.email
   user.head_img = headImg || user.head_img
   user.password = password ? yield util.bhash(password) : user.password
+
+  console.log(user)
+
 
   yield userProxy.update(user)
 

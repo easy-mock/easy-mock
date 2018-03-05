@@ -1,11 +1,11 @@
 {
-  "port": 7300,
+  "port": 8000,
   "pageSize": 30,
   "routerPrefix": {
     "mock": "/mock",
     "api": "/api"
   },
-  "db": "",
+  "db": "mongodb://localhost/easyMock",
   "unsplashClientId": "",
   "gravatar": [
     "//img.souche.com/20161230/png/58f22ad636a0f33bad8762688f78d425.png",
@@ -68,6 +68,6 @@
     "timeout": 25000,
     "publicPath": "/dist/",
     "mockPrefix": "/mock/",
-    "APIPrefix": "http://127.0.0.1:7300/api"
+    "APIPrefix": "http://127.0.0.1:8000/api"
   }
 }
