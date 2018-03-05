@@ -5,11 +5,13 @@ const config = require('config')
 
 const p = require('../proxy')
 const swagger = require('../util/swagger')
+const sendMail = require('./sendMail')
 const ft = require('../models/fields_table')
 
 const projectProxy = p.Project
 const mockProxy = p.Mock
 const userProjectProxy = p.UserProject
+const userProxy = p.User
 
 function projectExistCheck (id, uid) {
   return projectProxy.findOne({ _id: id }).then((project) => {
@@ -334,6 +336,49 @@ exports.updateWorkbench = function * () {
   yield userProjectProxy.updateWorkbench(doc)
 
   this.body = this.util.resuccess()
+}
+
+// 发送邮件 通知
+exports.sendMail = function * () {
+  const uid = this.state.user.id // 用户id
+  const id = this.checkQuery('id').notEmpty().value // 项目 id checkQuery 获取 get 参数
+
+  if (this.errors) {
+    this.body = this.util.refail(null, 10001, this.errors)
+    return
+  }
+
+  // 获取project
+  const project = yield projectExistCheck(id, uid)
+  let _users = [project.user, ...project.members]
+  let _mails = [] // 邮件列表
+  for (let i = 0; i < _users.length; i++) {
+    if (_users[i]._id.toString() !== uid) {
+      const _user = yield userProxy.getById(_users[i]._id)
+      _mails.push({
+        name: _user.name,
+        email: _user.email
+      })
+      if (/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(_user.email)) {
+        // 发送邮件
+        sendMail({
+          to: _user.email, // list of receivers
+          subject: '邮件标题', // Subject line
+          //text: 'Hello world ?', // plaintext body
+          html: '<h1>邮件内容</h1>' // html body
+        }, (obj, msg) => {
+          if (msg === 'success') {
+            _mails.splice(_mails.findIndex(item => item.email === obj.to), 1)
+            // this.state.emailList = _mails
+            console.log(_mails, _mails.length)
+            this.log.error(_mails) // 打印日志文件
+          }
+        })
+      }
+    }
+  }
+
+  this.body = this.util.resuccess(_mails)
 }
 
 exports.delete = function * () {

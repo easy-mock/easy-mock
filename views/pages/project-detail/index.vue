@@ -57,6 +57,7 @@
               <Icon type="loop"></Icon> {{$t('p.detail.syncSwagger.action')}}
             </li>
             <li @click="download"><Icon type="code-download"></Icon> {{$tc('p.detail.download', 1)}}</li>
+            <li @click="sendMail(project._id)">{{$tc('p.detail.sendMail')}}</li>
           </ul>
         </div>
         <div class="em-proj-detail__members" v-if="project.members.length">
@@ -266,6 +267,18 @@ export default {
       } else {
         api.mock.export(this.project._id)
       }
+    },
+    sendMail (Id) {
+      api.project.sendMail({
+        params: { // get 参数
+          id: Id
+        }
+      }).then((res) => {
+        if (res.data.success) {
+          console.log('发送成功 . . ')
+        }
+        return res
+      })
     },
     updateBySwagger () {
       if (!this.project.swagger_url) {

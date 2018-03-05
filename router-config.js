@@ -40,6 +40,7 @@ exports.api = router({ prefix: routerPrefix.api })
   .post('/project/create', project.create)
   .post('/project/update', project.update)
   .post('/project/delete', project.delete)
+  .get('/project/sendMail', project.sendMail) // 定义路由
   .post('/project/update_swagger', project.updateSwagger)
   .post('/project/update_workbench', project.updateWorkbench)
 

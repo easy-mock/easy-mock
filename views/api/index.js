@@ -142,6 +142,7 @@ const u = {
 
 const project = {
   getList: config => createAPI('/project', 'get', config),
+  sendMail: config => createAPI('/project/sendMail', 'get', config), // 发送邮件
   copy: config => createAPI('/project/copy', 'post', config),
   create: config => createAPI('/project/create', 'post', config),
   update: config => createAPI('/project/update', 'post', config),

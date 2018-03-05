@@ -158,6 +158,7 @@ export default {
       nav: ['接口列表', '设置'],
       workbench: '工作台',
       download: '打包下载 | 下载',
+      sendMail: '发送邮件',
       member: '项目成员',
       keyboards: [
         { category: '导航' },
