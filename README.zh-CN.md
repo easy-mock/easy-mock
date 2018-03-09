@@ -204,6 +204,7 @@ Easy Mock 目前由[大搜车无线架构团队](http://f2e.souche.com/blog/)进
 * [Harmony Cloud | 杭州谐云科技有限公司](http://harmonycloud.cn/)
 * [China Literature | 阅文集团](http://ir.yuewen.com/cn/)
 * [huodongxing | 活动行](http://www.huodongxing.com)
+* [kinhom | 金海马商业集团](http://www.kinhom.com/)
 
 ## Core Contributors
 

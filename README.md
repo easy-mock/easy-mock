@@ -229,6 +229,7 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
 * [Harmony Cloud | 杭州谐云科技有限公司](http://harmonycloud.cn/)
 * [China Literature | 阅文集团](http://ir.yuewen.com/cn/)
 * [huodongxing | 活动行](http://www.huodongxing.com)
+* [kinhom | 金海马商业集团](http://www.kinhom.com/)
 
 ## Core Contributors
 
