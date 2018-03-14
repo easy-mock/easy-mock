@@ -205,6 +205,7 @@ Easy Mock 目前由[大搜车无线架构团队](http://f2e.souche.com/blog/)进
 * [China Literature | 阅文集团](http://ir.yuewen.com/cn/)
 * [huodongxing | 活动行](http://www.huodongxing.com)
 * [kinhom | 金海马商业集团](http://www.kinhom.com/)
+* [yuntongxun | 北京容联易通信息技术有限公司](http://www.yuntongxun.com/)
 
 ## Core Contributors
 
