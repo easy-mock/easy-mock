@@ -3,7 +3,6 @@
 const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
-
 const schema = new Schema({
   nick_name: String,
   head_img: String,

@@ -2,81 +2,77 @@
 
 const _ = require('lodash')
 
-const m = require('../models')
-const mock = require('./mock')
-const userProject = require('./user_project')
-const userGroup = require('./user_group')
+const MockProxy = require('./mock')
+const { Project } = require('../models')
+const UserGroupProxy = require('./user_group')
+const UserProjectProxy = require('./user_project')
 
-const ProjectModel = m.Project
+module.exports = class ProjectProxy {
+  static findByIds (ids) {
+    return Project.find({ _id: { $in: ids } }).populate('user members group')
+  }
 
-exports.newAndSave = function (docs) {
-  return ProjectModel.insertMany(docs)
-    .then(data => Promise.all(data.map((item) => {
-      const projectId = item.id
-      const userIds = _.uniq([item.user].concat(item.members))
-      // 区分 个人项目 or 团队项目
-      // 获取团队下所有的用户，创建关联表
-      return item.user
-        ? userIds.map(id => ({ user: id, project: projectId }))
-        : userGroup.find({ group: item.group }).then(data => data.map(o => ({
-          user: o.user.id,
-          project: projectId
-        })))
-    }))
-      .then(docs => userProject.newAndSave(_.flattenDeep(docs)))
-      .then(() => data))
-}
+  static async getById (uid, projectId) {
+    const project = await Project.findById(projectId).populate('user members group')
+    const data = await UserProjectProxy.findOne({ project: projectId, user: uid })
+    if (project) project.extend = data
+    return project
+  }
 
-exports.getById = function (projectId) {
-  return ProjectModel.findById(projectId).populate('user members group')
-    .then(project => userProject
-      .findOne({ project: project.id })
-      .then(data => {
-        project.extend = data
-        return project
-      })
-    )
-}
-
-exports.findByIds = function (ids) {
-  return ProjectModel.find({ _id: { $in: ids } })
-    .populate('user members group')
-}
-
-exports.find = function (sessionUId, query, opt) {
-  return ProjectModel.find(query, {}, opt).populate('user members group')
-    .then(projects => userProject.find({
-      project: { $in: projects.map(item => item.id) },
-      user: sessionUId
+  static async newAndSave (docs) {
+    const projects = await Project.insertMany(docs)
+    const userProjectDocs = projects.map((project) => {
+      const projectId = project.id
+      const userId = project.user
+      if (userId) {
+        return project.members.concat(userId).map(id => ({ user: id, project: projectId }))
+      } else {
+        return UserGroupProxy
+          .find({ group: project.group })
+          .then(docs => docs.map(doc => ({ user: doc.user.id, project: projectId })))
+      }
     })
-      .then(data => projects.map((project) => {
-        project.extend = data.filter(item =>
-          item.project.toString() === project.id
-        )[0]
-        return project
-      })))
-}
+    const result = await Promise.all(userProjectDocs)
+    await UserProjectProxy.newAndSave(_.flattenDeep(result))
 
-exports.findOne = function (query, opt) {
-  return ProjectModel.findOne(query, {}, opt).populate('user members group')
-}
+    return projects
+  }
 
-exports.updateById = function (project) {
-  return ProjectModel.update({
-    _id: project.id
-  }, {
-    $set: {
-      url: project.url,
-      name: project.name,
-      members: project.members,
-      description: project.description,
-      swagger_url: project.swagger_url
-    }
-  })
-}
+  static findOne (query, opt) {
+    return Project.findOne(query, {}, opt).populate('user members group')
+  }
 
-exports.delById = function (projectId) {
-  return mock.del({ project: projectId })
-    .then(() => userProject.delByProjectId(projectId))
-    .then(() => ProjectModel.remove({ _id: projectId }))
+  static async find (uid, query, opt) {
+    const projects = await Project.find(query, {}, opt).populate('user members group')
+    const userProjectDocs = await UserProjectProxy.find({
+      project: { $in: projects.map(item => item.id) },
+      user: uid
+    })
+    return projects.map(project => {
+      project.extend = userProjectDocs.filter(item =>
+        item.project.toString() === project.id
+      )[0]
+      return project
+    })
+  }
+
+  static updateById (project) {
+    return Project.update({
+      _id: project.id
+    }, {
+      $set: {
+        url: project.url,
+        name: project.name,
+        members: project.members,
+        description: project.description,
+        swagger_url: project.swagger_url
+      }
+    })
+  }
+
+  static async delById (projectId) {
+    await MockProxy.del({ project: projectId })
+    await UserProjectProxy.delByProjectId(projectId)
+    await Project.remove({ _id: projectId })
+  }
 }

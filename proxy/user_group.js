@@ -1,33 +1,39 @@
 'use strict'
 
-const m = require('../models')
-const userProjectProxy = require('./user_project')
+const UserProjectProxy = require('./user_project')
+const { Project, UserGroup } = require('../models')
 
-const ProjectModel = m.Project
-const UserGroupModel = m.UserGroup
+module.exports = class UserGroupProxy {
+  static async newAndSave (doc) {
+    let userGroup = await UserGroup.findOne(doc)
 
-exports.newAndSave = function (doc) {
-  const UserGroup = new UserGroupModel(doc)
-  return UserGroupModel
-    .findOne(doc)
-    .then(data => (data || UserGroup.save()))
-    .then(() => ProjectModel.find({ group: doc.group }))
-    // 获取团队下所有项目，建立关联表
-    .then((projects) => {
-      const data = projects.length > 0
-        ? userProjectProxy.newAndSave(projects.map(o => ({
-          user: doc.user,
-          project: o.id
-        })))
-        : []
-      return data
+    /* istanbul ignore else */
+    if (!userGroup) {
+      userGroup = new UserGroup(doc)
+      await userGroup.save()
+    }
+
+    const projects = await Project.find({ group: doc.group })
+
+    /* istanbul ignore else */
+    if (projects.length === 0) return []
+
+    const userProjectDocs = projects.map(project => {
+      return { user: doc.user, project: project.id }
     })
-}
 
-exports.find = function (query) {
-  return UserGroupModel.find(query, {}).populate('user group')
-}
+    return UserProjectProxy.newAndSave(userProjectDocs)
+  }
 
-exports.del = function (query) {
-  return UserGroupModel.remove(query)
+  static find (query) {
+    return UserGroup.find(query, {}).populate('user group')
+  }
+
+  static findOne (query) {
+    return UserGroup.findOne(query)
+  }
+
+  static del (query) {
+    return UserGroup.remove(query)
+  }
 }

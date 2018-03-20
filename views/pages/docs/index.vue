@@ -144,7 +144,7 @@ export default {
         } else {
           this.nav[this.nav.length - 1].children.push({
             id: node.id,
-            title: node.innerText.split('# ')[1]
+            title: node.innerText
           })
         }
       }

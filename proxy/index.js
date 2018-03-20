@@ -1,9 +1,11 @@
 'use strict'
 
-exports.User = require('./user')
-exports.Mock = require('./mock')
-exports.Group = require('./group')
-exports.Project = require('./project')
-exports.MockCount = require('./mock_count')
-exports.UserGroup = require('./user_group')
-exports.UserProject = require('./user_project')
+module.exports = {
+  UserProxy: require('./user'),
+  MockProxy: require('./mock'),
+  GroupProxy: require('./group'),
+  ProjectProxy: require('./project'),
+  MockCountProxy: require('./mock_count'),
+  UserGroupProxy: require('./user_group'),
+  UserProjectProxy: require('./user_project')
+}

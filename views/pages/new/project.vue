@@ -48,7 +48,25 @@
               {{$tc('p.new.form.swagger', 0)}}
               <span>({{$tc('p.new.form.swagger', 1)}})</span>
             </template>
-            <i-input v-model="form.projectSwagger" placeholder="http://example.com/swagger.json"></i-input>
+            <i-select v-model="swaggerType" class="em-new__swagger-type">
+              <Option value="URL">URL</Option>
+              <Option value="Upload">Upload</Option>
+            </i-select>
+            <i-input v-if="swaggerType === 'URL'" v-model="form.projectSwagger" placeholder="http://example.com/swagger.json"></i-input>
+            <Upload
+              type="drag"
+              :headers="uploadHeaders"
+              :show-upload-list="false"
+              :format="['json','yml']"
+              :action="uploadAPI"
+              :on-success="handleSwaggerUploadSuccess"
+              :on-format-error="handleSwaggerUploadError"
+              v-if="swaggerType === 'Upload'">
+              <div style="padding: 20px 0">
+                <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                <p>JSON / YML</p>
+              </div>
+            </Upload>
             <p class="em-new__form-description">
             {{$tc('p.new.form.swagger', 2)}} <router-link to="/docs#swagger"><Icon type="help-circled"></Icon></router-link>
             </p>
@@ -103,6 +121,8 @@ export default {
   name: 'newProject',
   data () {
     return {
+      uploadAPI: '/api/upload',
+      swaggerType: 'URL',
       remoteLoading: false,
       users: [],
       groups: [],
@@ -150,8 +170,11 @@ export default {
         this.form.groupId = proj.user._id
       }
     } else {
-      this.fetchGroup()
-      this.form.groupId = this.user.id
+      this.fetchGroup().then(groups => {
+        if (groups.length < 2) {
+          this.form.groupId = this.user.id
+        }
+      })
     }
   },
   computed: {
@@ -167,9 +190,30 @@ export default {
       } else {
         return this.form.groupId !== this.user.id
       }
+    },
+    uploadHeaders () {
+      return {
+        Authorization: 'Bearer ' + this.user.token
+      }
     }
   },
   methods: {
+    handleSwaggerUploadSuccess (response) {
+      const data = response.data
+      this.form.projectSwagger = data.path
+      this.swaggerType = 'URL'
+      if (data.expire && data.expire !== -1) {
+        this.$Message.success({
+          content: this.$tc('p.new.uploadSuccess', 2, {date: data.expire}),
+          duration: 5
+        })
+      } else {
+        this.$Message.success(this.$tc('p.new.uploadSuccess', 1))
+      }
+    },
+    handleSwaggerUploadError () {
+      this.$Message.error(this.$t('p.new.formatError'))
+    },
     convertUrl (url) {
       const newUrl = '/' + url
       return newUrl === '/'
@@ -177,7 +221,7 @@ export default {
         : newUrl.replace(/\/\//g, '/').replace(/\/$/, '')
     },
     fetchGroup () {
-      api.group.getList().then((res) => {
+      return api.group.getList().then((res) => {
         if (res.data.success) {
           this.groups = [{ value: this.user.id, label: this.user.nickName }].concat(
             res.data.data.map(o => ({
@@ -186,6 +230,7 @@ export default {
             }))
           )
         }
+        return this.groups
       })
     },
     submit () {
@@ -208,6 +253,14 @@ export default {
           }
         })
       } else {
+        if (this.form.groupId === '') {
+          this.$Message.error({
+            content: this.$t('p.new.form.error.groupIsNull'),
+            duration: 5
+          })
+          return
+        }
+
         if (data.group === this.user.id) {
           data.group = ''
         }

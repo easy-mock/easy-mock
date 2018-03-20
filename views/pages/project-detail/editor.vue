@@ -99,6 +99,13 @@ export default {
     this.codeEditor.clearSelection()
     this.codeEditor.getSession().setUseWorker(false)
     this.codeEditor.on('change', this.onChange)
+    this.codeEditor.commands.addCommand({
+      name: 'save',
+      bindKey: {win: 'Ctrl-S', mac: 'Command-S'},
+      exec: () => {
+        this.submit()
+      }
+    })
   },
   watch: {
     'value.show': function (show) {

@@ -5,20 +5,22 @@ const config = require('config')
 
 mongoose.Promise = global.Promise
 mongoose.connect(config.get('db'), {
-  server: {
-    poolSize: 20
-  }
+  useMongoClient: true,
+  poolSize: 20
 }, (err) => {
+  /* istanbul ignore if */
   if (err) {
     console.error('connect to %s error: ', config.get('db'), err.message)
     process.exit(1)
   }
 })
 
-exports.User = require('./user')
-exports.Mock = require('./mock')
-exports.Group = require('./group')
-exports.Project = require('./project')
-exports.MockCount = require('./mock_count')
-exports.UserGroup = require('./user_group')
-exports.UserProject = require('./user_project')
+module.exports = {
+  User: require('./user'),
+  Mock: require('./mock'),
+  Group: require('./group'),
+  Project: require('./project'),
+  MockCount: require('./mock_count'),
+  UserGroup: require('./user_group'),
+  UserProject: require('./user_project')
+}

@@ -1,147 +1,116 @@
 'use strict'
 
-require('should')
-
-const support = require('../support')
+const app = require('../../app')
+const spt = require('../support')
 
 describe('test/controllers/user.test.js', () => {
-  after(() => support.cleanCollections())
+  let request, user
 
-  function register () {
-    return support.r('post', '/u/register', '', {
-      name: 'hhhh',
-      nick_name: 'cc',
-      password: '123456',
-      head_img: 'example.com/head.jpg'
-    })
-  }
+  afterAll(() => spt.cleanCollections())
+  beforeAll(async () => {
+    user = await spt.createUser('test2', '123456')
+    request = spt.createRequest(app.listen(), user.token)
+  })
 
-  function login () {
-    return support.r('post', '/u/login', '', {
-      name: 'hhhh',
-      password: '123456'
-    })
-  }
+  describe('register', () => {
+    test('参数验证', async () => {
+      const res = await request('/api/u/register', 'post')
 
-  describe('#register', () => {
-    it('无参', (done) => {
-      support.r('post', '/u/register').then((data) => {
-        data.message.should.be.eql('params error')
-        done()
-      })
+      expect(res.body.message).toBe('params error')
     })
 
-    it('注册用户', (done) => {
-      register().then((data) => {
-        data.success.should.be.ok()
-        return register()
-      }).then((data) => {
-        data.success.should.not.be.ok()
-        done()
-      })
+    test('注册用户', async () => {
+      await request('/api/u/register', 'post')
+        .send({ name: 'test1', password: '123456' })
+        .expect(200, {
+          code: 200,
+          message: 'success',
+          success: true,
+          data: null
+        })
+    })
+
+    test('重复注册', async () => {
+      const res = await request('/api/u/register', 'post')
+        .send({ name: 'test1', password: '123456' })
+
+      expect(res.body.message).toBe('用户名已被使用')
     })
   })
 
-  describe('#login', () => {
-    it('无参', (done) => {
-      support.r('post', '/u/login').then((data) => {
-        data.message.should.be.eql('params error')
-        done()
-      })
+  describe('login', () => {
+    test('参数验证', async () => {
+      const res = await request('/api/u/login', 'post')
+
+      expect(res.body.message).toBe('params error')
     })
 
-    it('用户不存在', (done) => {
-      support.r('post', '/u/login', '', {
-        name: 'hhhh2',
-        password: '123456'
-      }).then((data) => {
-        data.message.should.be.eql('用户不存在')
-        done()
-      })
+    test('登录', async () => {
+      const res = await request('/api/u/login', 'post')
+        .send({ name: 'test2', password: '123456' })
+
+      expect(res.body.data.name).toBe('test2')
     })
 
-    it('密码错误', (done) => {
-      support.r('post', '/u/login', '', {
-        name: 'hhhh',
-        password: '1234567'
-      }).then((data) => {
-        data.message.should.be.eql('请检查密码是否正确')
-        done()
-      })
+    test('用户名错误', async () => {
+      const res = await request('/api/u/login', 'post')
+        .send({ name: 'te2st', password: '123456' })
+
+      expect(res.body.message).toBe('用户不存在')
     })
 
-    it('登录', (done) => {
-      login().then((data) => {
-        data.success.should.be.ok()
-        data.data.should.not.have.enumerable('password')
-        done()
-      })
+    test('密码错误', async () => {
+      const res = await request('/api/u/login', 'post')
+        .send({ name: 'test2', password: '1234567' })
+
+      expect(res.body.message).toBe('用户名或密码错误')
     })
   })
 
-  describe('#update', () => {
-    it('参数异常', (done) => {
-      login()
-        .then(data => support.r('post', '/u/update', data.data.token, {
-          password: '111'
-        }))
-        .then((data) => {
-          data.message.should.be.eql('params error')
-          done()
-        })
+  describe('update', () => {
+    test('参数验证', async () => {
+      const res = await request('/api/u/update', 'post')
+        .send({ nick_name: 'u' })
+
+      expect(res.body.message).toBe('params error')
     })
 
-    it('修改资料', (done) => {
-      login().then(data => support.r('post', '/u/update', data.data.token, {
-        nick_name: 'qqqq'
-      })).then((data) => {
-        data.success.should.be.ok()
-        return login()
-      }).then((data) => {
-        data.data.nick_name.should.eql('qqqq')
-        done()
-      })
+    test('信息更新', async () => {
+      await request('/api/u/update', 'post')
+        .send({
+          nick_name: 'test2',
+          head_img: 'http://example.com/l.png',
+          password: '1234567'
+        })
+
+      const u = await spt.login('test2', '1234567')
+
+      expect(u.nick_name).toBe('test2')
+      expect(u.head_img).toBe('http://example.com/l.png')
     })
   })
 
-  describe('#list', () => {
-    it('参数异常', (done) => {
-      login()
-        .then(data => support.r('get', '/u?page_index=index', data.data.token))
-        .then((data) => {
-          data.message.should.be.eql('params error')
-          done()
-        })
+  describe('list', () => {
+    test('参数验证', async () => {
+      const res = await request('/api/u')
+        .query({ page_size: -1 })
+
+      expect(res.body.message).toBe('params error')
     })
 
-    it('搜索', (done) => {
-      login()
-        .then(data => support.r('get', '/u?keywords=hhhh', data.data.token))
-        .then((data) => {
-          data.success.should.be.ok()
-          done()
-        })
+    test('分页查询', async () => {
+      const res = await request('/api/u')
+
+      expect(res.body.data).toHaveLength(1) // ['test1']
     })
 
-    it('查询用户列表', (done) => {
-      login()
-        .then(data => support.r('get', '/u', data.data.token))
-        .then((data) => {
-          data.success.should.be.ok()
-          data.data.should.have.length(0)
-          done()
-        })
-    })
-  })
+    test('关键词查询', async () => {
+      const res = await request('/api/u')
+        .query({ keywords: 'te' })
 
-  describe('#logout', () => {
-    it('登出', (done) => {
-      login()
-        .then(data => support.r('post', '/u/logout', data.data.token))
-        .then((data) => {
-          data.success.should.be.ok()
-          done()
-        })
+      const data = res.body.data
+      expect(data).toHaveLength(1)
+      expect(data[0].name).toBe('test1')
     })
   })
 })

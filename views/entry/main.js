@@ -4,7 +4,6 @@ import config from 'config'
 import VueI18n from 'vue-i18n'
 import VueLocalStorage from 'vue-ls'
 import { sync } from 'vuex-router-sync'
-import vClickOutside from 'v-click-outside'
 import zhLocaleIView from 'iview/dist/locale/zh-CN'
 import enLocaleIView from 'iview/dist/locale/en-US'
 
@@ -25,6 +24,7 @@ import KeyboardShort from '../components/keyboard-short'
 import AnimatedInteger from '../components/animated-integer'
 
 if (typeof window !== 'undefined') {
+  Vue.use(require('v-click-outside'))
   Vue.use(require('vue-shortkey'), {
     prevent: ['input', 'textarea']
   })
@@ -55,7 +55,7 @@ Vue.use(iView, {
     return ''
   }
 })
-Vue.use(vClickOutside)
+
 Vue.component(Add.name, Add)
 Vue.component(Spots.name, Spots)
 Vue.component(Header.name, Header)
