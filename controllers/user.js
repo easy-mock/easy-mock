@@ -101,7 +101,7 @@ module.exports = class UserController {
   static async update (ctx) {
     const password = ctx.checkBody('password').empty().len(6, 20).value
     const nickName = ctx.checkBody('nick_name').empty().len(2, 20).value
-    const email = this.checkBody('email').empty().value
+    const email = ctx.checkBody('email').empty().value
     const headImg = ctx.checkBody('head_img').empty().isUrl(null, { allow_underscores: true, allow_protocol_relative_urls: true }).value
 
     if (ctx.errors) {
