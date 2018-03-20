@@ -23,6 +23,11 @@
                 <Form-item :label="$t('p.profile.form.nickName')">
                   <i-input v-model="form.nickName"></i-input>
                 </Form-item>
+                <!-- <p>{{form.email}}</p> -->
+                <Form-item :label="$t('p.profile.form.email')">
+                  <i-input type="email" v-model="form.email" readonly v-if="readonly"></i-input>
+                  <i-input type="email" v-model="form.email" v-else></i-input>
+                </Form-item>
                 <Form-item :label="$t('p.profile.form.password')">
                   <i-input type="password" v-model="form.password"></i-input>
                 </Form-item>
@@ -80,6 +85,7 @@ export default {
     }
 
     return {
+      readonly: true,
       visible: false,
       language: this.$ls.get('locale') || 'zh-CN',
       languageList: languageMap.list,
@@ -87,6 +93,7 @@ export default {
       form: {
         headImg: this.$store.state.user.headImg,
         nickName: this.$store.state.user.nickName,
+        email: this.$store.state.user.email,
         password: '',
         passwordCheck: ''
       },
@@ -117,6 +124,7 @@ export default {
     update () {
       const data = {
         nick_name: this.form.nickName,
+        email: this.form.email,
         head_img: this.form.headImg
       }
 
@@ -142,6 +150,11 @@ export default {
         }
       })
     }
+  },
+  created () {
+    setTimeout(() => {
+      this.readonly = false
+    }, 300)
   }
 }
 </script>

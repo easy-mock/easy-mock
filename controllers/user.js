@@ -101,6 +101,7 @@ module.exports = class UserController {
   static async update (ctx) {
     const password = ctx.checkBody('password').empty().len(6, 20).value
     const nickName = ctx.checkBody('nick_name').empty().len(2, 20).value
+    const email = ctx.checkBody('email').empty().value
     const headImg = ctx.checkBody('head_img').empty().isUrl(null, { allow_underscores: true, allow_protocol_relative_urls: true }).value
 
     if (ctx.errors) {
@@ -111,6 +112,7 @@ module.exports = class UserController {
     const user = await UserProxy.getById(ctx.state.user.id)
 
     user.nick_name = nickName || /* istanbul ignore next */ user.nick_name
+    user.email = email || /* istanbul ignore next */ user.email
     user.head_img = headImg || /* istanbul ignore next */ user.head_img
     user.password = password ? util.bhash(password) : /* istanbul ignore next */ user.password
 

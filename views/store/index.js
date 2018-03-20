@@ -36,6 +36,7 @@ export function createStore () {
           id: '',
           name: '',
           nickName: '',
+          email: '',
           headImg: '',
           token: ''
         },
