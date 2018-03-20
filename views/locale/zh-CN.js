@@ -106,8 +106,13 @@ export default {
           create: '创建成功',
           update: '更新成功',
           delete: '{name} 已删除'
+        },
+        error: {
+          groupIsNull: '请选择项目归属'
         }
-      }
+      },
+      formatError: '文件仅支持 JSON/YML 格式',
+      uploadSuccess: '上传成功 | 上传成功，该文件将在 {date} 失效'
     },
     profile: {
       header: {

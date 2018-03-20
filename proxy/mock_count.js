@@ -3,24 +3,19 @@
 const _ = require('lodash')
 const moment = require('moment')
 
-const m = require('../models')
+const { MockCount } = require('../models')
 
-const MockCountModel = m.MockCount
+module.exports = class MockCountProxy {
+  static newAndSave (mockIds) {
+    const group = _.groupBy(mockIds)
+    const date = moment().format('YYYY-MM-DD')
 
-exports.newAndSave = function (mockId) {
-  const mockCount = new MockCountModel()
-  return MockCountModel.findOne({
-    mock: mockId,
-    create_at: {
-      '$gte': moment().format('YYYY-MM-DD')
-    }
-  }).then((data) => {
-    if (_.isEmpty(data)) {
-      mockCount.mock = mockId
-      mockCount.count = 1
-      return mockCount.save()
-    }
-    data.count += 1
-    return data.save()
-  })
+    Object.keys(group).forEach(async mockId => {
+      await MockCount.update(
+        {mock: mockId, create_at: date},
+        {$inc: { count: group[mockId].length }},
+        {upsert: true}
+      )
+    })
+  }
 }

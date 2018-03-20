@@ -2,145 +2,165 @@
 
 const _ = require('lodash')
 const config = require('config')
+const jwt = require('jsonwebtoken')
 
-const p = require('../proxy')
 const util = require('../util')
-const mock = require('../util/mock')
+const mockUtil = require('../util/mock')
 const ft = require('../models/fields_table')
+const { UserProxy, ProjectProxy, MockProxy } = require('../proxy')
 
-const userProxy = p.User
+const jwtSecret = config.get('jwt.secret')
+const jwtExpire = config.get('jwt.expire')
 
-exports.list = function * () {
-  const pageSize = this.checkQuery('page_size').empty().toInt().gt(0)
-    .default(config.get('pageSize')).value
+module.exports = class UserController {
+  /**
+   * 用户注册
+   * @param Object ctx
+   */
 
-  const pageIndex = this.checkQuery('page_index').empty().toInt().gt(0)
-    .default(1).value
+  static async register (ctx) {
+    const name = ctx.checkBody('name').notEmpty().len(4, 20).value
+    const password = ctx.checkBody('password').notEmpty().len(6, 20).value
 
-  const keywords = this.checkQuery('keywords').value
-
-  if (this.errors) {
-    this.body = this.util.refail(null, 10001, this.errors)
-    return
-  }
-
-  const opt = {
-    skip: (pageIndex - 1) * pageSize,
-    limit: pageSize,
-    sort: '-create_at'
-  }
-
-  const where = {
-    _id: {
-      $ne: this.state.user.id
+    if (ctx.errors) {
+      ctx.body = ctx.util.refail(null, 10001, ctx.errors)
+      return
     }
+
+    let user = await UserProxy.getByName(name)
+
+    if (user) {
+      ctx.body = ctx.util.refail('用户名已被使用')
+      return
+    }
+
+    const newPassword = util.bhash(password)
+
+    user = await UserProxy.newAndSave(name, newPassword)
+
+    await ProjectProxy
+      .newAndSave({
+        user: user.id,
+        name: '演示项目',
+        url: '/example',
+        description: '已创建多种 Mock 类型，只需点击预览便可查看效果。亦可编辑，也可删除。'
+      })
+      .then(projects => {
+        const projectId = projects[0].id
+        const apis = mockUtil.examples.map(item => ({
+          project: projectId,
+          description: item.desc,
+          method: item.method,
+          url: item.url,
+          mode: item.mode
+        }))
+        MockProxy.newAndSave(apis)
+      })
+
+    ctx.body = ctx.util.resuccess()
   }
 
-  if (keywords) {
-    const keyExp = new RegExp(keywords)
-    where.$or = [{
-      name: keyExp
-    }, {
-      nick_name: keyExp
-    }]
+  /**
+   * 用户登录
+   * @param Object ctx
+   */
+
+  static async login (ctx) {
+    const name = ctx.checkBody('name').notEmpty().value
+    const password = ctx.checkBody('password').notEmpty().value
+
+    if (ctx.errors) {
+      ctx.body = ctx.util.refail(null, 10001, ctx.errors)
+      return
+    }
+
+    const user = await UserProxy.getByName(name)
+
+    if (!user) {
+      ctx.body = ctx.util.refail('用户不存在')
+      return
+    }
+
+    const verifyPassword = util.bcompare(password, user.password)
+
+    if (!verifyPassword) {
+      ctx.body = ctx.util.refail('用户名或密码错误')
+      return
+    }
+
+    user.token = jwt.sign({ id: user.id }, jwtSecret, { expiresIn: jwtExpire })
+
+    ctx.body = ctx.util.resuccess(_.pick(user, ft.user))
   }
 
-  let users = yield userProxy.find(where, opt)
-  users = users.map(user => _.pick(user, ft.user))
-  this.body = this.util.resuccess(users)
-}
+  /**
+   * 更新用户信息
+   * @param Object ctx
+   */
 
-exports.update = function * () {
-  const password = this.checkBody('password').empty().len(6, 20).value
-  const nickName = this.checkBody('nick_name').empty().len(2, 20).value
-  const headImg = this.checkBody('head_img').empty().value
+  static async update (ctx) {
+    const password = ctx.checkBody('password').empty().len(6, 20).value
+    const nickName = ctx.checkBody('nick_name').empty().len(2, 20).value
+    const headImg = ctx.checkBody('head_img').empty().isUrl(null, { allow_underscores: true, allow_protocol_relative_urls: true }).value
 
-  if (this.errors) {
-    this.body = this.util.refail(null, 10001, this.errors)
-    return
+    if (ctx.errors) {
+      ctx.body = ctx.util.refail(null, 10001, ctx.errors)
+      return
+    }
+
+    const user = await UserProxy.getById(ctx.state.user.id)
+
+    user.nick_name = nickName || /* istanbul ignore next */ user.nick_name
+    user.head_img = headImg || /* istanbul ignore next */ user.head_img
+    user.password = password ? util.bhash(password) : /* istanbul ignore next */ user.password
+
+    await UserProxy.update(user)
+
+    ctx.body = ctx.util.resuccess()
   }
 
-  const user = yield userProxy.getById(this.state.user.id)
+  /**
+   * 获取用户列表
+   * @param Object ctx
+   */
 
-  // 修改资料
-  user.nick_name = nickName || user.nick_name
-  user.head_img = headImg || user.head_img
-  user.password = password ? yield util.bhash(password) : user.password
+  static async list (ctx) {
+    const pageSize = ctx.checkQuery('page_size')
+      .empty().toInt().gt(0).default(config.get('pageSize')).value
+    const pageIndex = ctx.checkQuery('page_index')
+      .empty().toInt().gt(0).default(1).value
+    const keywords = ctx.query.keywords
 
-  yield userProxy.update(user)
+    if (ctx.errors) {
+      ctx.body = ctx.util.refail(null, 10001, ctx.errors)
+      return
+    }
 
-  this.body = this.util.resuccess()
-}
+    const opt = {
+      skip: (pageIndex - 1) * pageSize,
+      limit: pageSize,
+      sort: '-create_at'
+    }
 
-exports.login = function * () {
-  const name = this.checkBody('name').notEmpty().len(4, 20).value
-  const password = this.checkBody('password').notEmpty().len(6, 20).value
+    const where = {
+      _id: {
+        $ne: ctx.state.user.id
+      }
+    }
 
-  if (this.errors) {
-    this.body = this.util.refail(null, 10001, this.errors)
-    return
+    if (keywords) {
+      const keyExp = new RegExp(keywords)
+      where.$or = [{
+        name: keyExp
+      }, {
+        nick_name: keyExp
+      }]
+    }
+
+    const users = await UserProxy.find(where, opt)
+
+    ctx.body = ctx.util.resuccess(
+      users.map(user => _.pick(user, ft.user))
+    )
   }
-
-  // 判断用户是否已存在
-  const user = yield userProxy.getByName(name)
-
-  if (_.isEmpty(user)) {
-    this.body = this.util.refail('用户不存在')
-    return
-  }
-
-  // 验证密码
-  const verifyPassword = yield util.bcompare(password, user.password)
-
-  if (!verifyPassword) {
-    this.body = this.util.refail('请检查密码是否正确')
-    return
-  }
-
-  let token = yield this.Token.list({
-    id: user.id
-  })
-
-  if (_.isEmpty(token)) {
-    token = [yield this.Token.create({ id: user.id })]
-  }
-
-  user.token = token[0].jwt
-
-  this.body = this.util.resuccess(_.pick(user, ft.user))
-}
-
-exports.logout = function * () {
-  yield this.Token.destroy()
-  this.body = this.util.resuccess()
-}
-
-exports.register = function * () {
-  const name = this.checkBody('name').notEmpty().len(4, 20).value
-  const password = this.checkBody('password').notEmpty().len(6, 20).value
-
-  if (this.errors) {
-    this.body = this.util.refail(null, 10001, this.errors)
-    return
-  }
-
-  let user = yield userProxy.getByName(name)
-
-  if (!_.isEmpty(user)) {
-    this.body = this.util.refail('注册失败，该用户已存在')
-    return
-  }
-
-  const npassword = yield util.bhash(password)
-
-  yield userProxy.newAndSave(
-    name,
-    npassword
-  )
-
-  user = yield userProxy.getByName(name)
-
-  yield mock.createExample(user.id)
-
-  this.body = this.util.resuccess()
 }

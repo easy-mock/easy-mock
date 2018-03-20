@@ -14,7 +14,6 @@ module.exports = {
       }
     }),
     require('precss'),
-    require('postcss-css-reset'),
     require('postcss-utils'),
     require('postcss-cssnext')({
       browsers: ['ie > 8', 'last 2 versions']

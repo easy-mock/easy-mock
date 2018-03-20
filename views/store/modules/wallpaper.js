@@ -13,8 +13,9 @@ export default {
       let url
       let copyright
       return api.util.wallpaper().then((res) => {
-        const data = res.data.data[0]
-        if (res.data.type === 'bing') {
+        const body = res.data
+        const data = body.data.data[0]
+        if (body.data.type === 'bing') {
           url = /\.com/.test(data.url) ? data.url : 'https://cn.bing.com' + data.url
           copyright = {
             name: 'Bing',

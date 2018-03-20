@@ -106,8 +106,13 @@ export default {
           create: 'Create Success',
           update: 'Update Success',
           delete: '{name} is deleted'
+        },
+        error: {
+          groupIsNull: 'Please select the project belongs to'
         }
-      }
+      },
+      formatError: 'File only supports JSON/YML format',
+      uploadSuccess: 'Upload Success | Upload Success, The file will expire at {date}'
     },
     profile: {
       header: {

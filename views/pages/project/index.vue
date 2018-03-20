@@ -91,7 +91,6 @@
 </style>
 
 <script>
-import config from 'config'
 import Clipboard from 'clipboard'
 import debounce from 'lodash/debounce'
 import * as api from '../../api'
@@ -177,7 +176,7 @@ export default {
     clip (project) {
       const clipboard = new Clipboard('.copy-url', {
         text () {
-          return location.origin + config.mockPrefix + project._id + project.url
+          return location.origin + '/mock/' + project._id + project.url
         }
       })
       this.cliped = true

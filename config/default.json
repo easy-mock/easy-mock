@@ -1,73 +1,39 @@
 {
   "port": 7300,
+  "host": "0.0.0.0",
   "pageSize": 30,
-  "routerPrefix": {
-    "mock": "/mock",
-    "api": "/api"
-  },
-  "db": "",
+  "proxy": false,
+  "db": "mongodb://localhost/easy-mock",
   "unsplashClientId": "",
-  "gravatar": [
-    "//img.souche.com/20161230/png/58f22ad636a0f33bad8762688f78d425.png",
-    "//img.souche.com/20161230/png/6cdcda90c2f86ba1f45393cf5b26e324.png",
-    "//img.souche.com/20161230/png/f9d10bb683d940dd14dc1b1344e89568.png",
-    "//img.souche.com/20161230/png/8bb4f0fd45ed6ae26533eadd85f0f7ea.png",
-    "//img.souche.com/20161230/png/0795744371fd5869af6cab796bdacb95.png",
-    "//img.souche.com/20161230/png/bc836261fbb654dda6b653e428014279.png",
-    "//img.souche.com/20161230/png/fd9f8aecab317e177655049a49b64d02.png"
-  ],
+  "redis": {
+    "port": 6379,
+    "host": "localhost"
+  },
+  "blackList": {
+    "projects": [],
+    "ips": []
+  },
+  "rateLimit": {
+    "max": 1000,
+    "duration": 1000
+  },
   "jwt": {
-    "key": "user",
     "expire": "14 days",
-    "collection": "tokens",
     "secret": "shared-secret"
   },
-  "publicAPIs": [
-    "/api/proxy",
-    "/api/u/login",
-    "/api/u/register",
-    "/api/mock/by_projects",
-    "/api/mock/export",
-    "/api/wallpaper"
-  ],
-  "mockExample": {
-    "common": {
-      "success": true,
-      "data": [{
-        "user": {
-          "name": "演示用"
-        }
-      }]
-    },
-    "getFunction": "{ success :true, data: { default: \"hah\", _req: function({ _req }) { return _req }, name: function({ _req }) { return _req.query.name || this.default }}}",
-    "postFunction": "{ data: { img: function({ _req, Mock }) { return _req.body.fileName + '_' + Mock.mock('@image') }}}",
-    "random": {
-      "success": true,
-      "data": {
-        "projects|3-10": [{
-          "name": "演示用",
-          "url": "@url",
-          "email": "@email",
-          "address": "@county(true)",
-          "string|1-10": "★",
-          "number|1-100": 100,
-          "boolean|1-2": true,
-          "object|2": {
-            "310000": "上海市",
-            "320000": "江苏省",
-            "330000": "浙江省"
-          }
-        }]
-      }
+  "upload": {
+    "types": [".jpg", ".jpeg", ".png", ".gif", ".json", ".yml", ".yaml"],
+    "size": 5242880,
+    "dir": "../public/upload",
+    "expire": {
+      "types": [".json", ".yml", ".yaml"],
+      "day": -1
     }
   },
   "fe": {
-    "uploadAPI": "",
     "copyright": "",
     "storageNamespace": "easy-mock_",
     "timeout": 25000,
-    "publicPath": "/dist/",
-    "mockPrefix": "/mock/",
-    "APIPrefix": "http://127.0.0.1:7300/api"
+    "publicPath": "/dist/"
   }
 }

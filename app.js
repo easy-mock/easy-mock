@@ -1,80 +1,73 @@
 'use strict'
 
-const _ = require('lodash')
-const koa = require('koa')
+const Koa = require('koa')
 const path = require('path')
-const cors = require('koa-cors')
 const config = require('config')
-const error = require('koa-error')
+const koaJwt = require('koa-jwt')
+const cors = require('@koa/cors')
+const koaBody = require('koa-body')
+const onerror = require('koa-onerror')
 const favicon = require('koa-favicon')
 const validate = require('koa-validate')
-const jwtMongo = require('koa-jwt-mongo')
-const bodyParser = require('koa-bodyparser')
 const pathToRegexp = require('path-to-regexp')
 const staticCache = require('koa-static-cache')
-const koaBunyanLogger = require('koa-bunyan-logger')
 
-const logger = require('./util/log')
+const util = require('./util')
+const logger = require('./util/logger')
 const middleware = require('./middlewares')
 const routerConfig = require('./router-config')
 
-const app = module.exports = koa()
-const resolve = file => path.resolve(__dirname, file)
-const isProd = process.env.NODE_ENV === 'production'
+const app = module.exports = new Koa()
+const uploadConf = config.get('upload')
+const jwtSecret = config.get('jwt.secret')
 
-const serve = (pf, filePath, cache) => staticCache(resolve(filePath), {
-  prefix: pf,
-  gzip: true,
-  maxAge: cache && isProd ? 60 * 60 * 24 * 30 : 0
-})
-
+util.init()
+onerror(app)
 validate(app)
 
-const requestLogger = isProd
-  ? koaBunyanLogger.requestLogger()
-  : function * (next) {
-    yield next
-  }
-
 app
+  .use(middleware.ipFilter)
   .use(favicon(path.join(__dirname, '/public/images/icon.png')))
   .use(serve('/dist', './dist'))
   .use(serve('/public', './public'))
-  .use(koaBunyanLogger(logger))
-  .use(koaBunyanLogger.requestIdContext())
-  .use(requestLogger)
-  .use(cors({
-    methods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
-    credentials: true,
-    maxAge: 2592000
-  }))
-  .use(error())
-  .use(bodyParser())
-  .use(middleware.common)
-  .use(middleware.error)
-  .use(jwtMongo({
-    uri: config.get('db'),
-    jwtExp: config.get('jwt.expire'),
-    collection: config.get('jwt.collection'),
-    jwtOptions: {
-      secret: config.get('jwt.secret'),
-      key: config.get('jwt.key')
-    },
-    jwtUnless () {
-      const path = this.path
-      const prefix = `/${path.split('/')[1]}`
-      return !(new RegExp(config.get('routerPrefix.api'))).test(prefix)
-        ? true : _.some(config.get('publicAPIs').map(
-          o => pathToRegexp(o).test(this.path)
-        ), Boolean)
+  .use(serve('/upload', path.resolve(__dirname, 'config', uploadConf.dir)))
+  .use(logger)
+  .use(middleware.util)
+  .use(cors({ credentials: true, maxAge: 2592000 }))
+  .use(koaJwt({ secret: jwtSecret }).unless((ctx) => {
+    if (/^\/api/.test(ctx.path)) {
+      return pathToRegexp([
+        '/api/u/login',
+        '/api/u/register',
+        '/api/mock/by_projects',
+        '/api/mock/export',
+        '/api/wallpaper'
+      ]).test(ctx.path)
     }
+    return true
   }))
+  .use(koaBody({ multipart: true }))
   .use(routerConfig.mock.routes())
   .use(routerConfig.mock.allowedMethods())
   .use(routerConfig.api.routes())
   .use(routerConfig.api.allowedMethods())
-  .use(middleware.view(app))
 
+app.proxy = config.get('proxy')
+
+/* istanbul ignore if */
 if (!module.parent) {
-  app.listen(config.get('port'))
+  const port = config.get('port')
+  const host = config.get('host')
+  app.use(require('./middlewares/view').render(app))
+  app.listen(port, host)
+  console.log(`server started at http://${host}:${port}`)
+}
+
+function serve (prefix, filePath) {
+  return staticCache(path.resolve(__dirname, filePath), {
+    prefix: prefix,
+    gzip: true,
+    dynamic: true,
+    maxAge: 60 * 60 * 24 * 30
+  })
 }

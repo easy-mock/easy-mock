@@ -1,183 +1,162 @@
 'use strict'
 
-require('should')
-
-const support = require('../support')
-const projectProxy = require('../../proxy').Project
-
-const _r = support.r
+const app = require('../../app')
+const spt = require('../support')
 
 describe('test/controllers/group.test.js', () => {
-  let token
-  let token2
-  let group
+  let request, user, soucheUser
 
-  before((done) => {
-    support.createUser().then((data) => {
-      token = data.token
-      return support.createUser({
-        name: 'vvvvv'
-      })
-    }).then((data) => {
-      token2 = data.token
-      done()
+  afterAll(() => spt.cleanCollections())
+  beforeAll(async () => {
+    user = await spt.createUser()
+    request = spt.createRequest(app.listen(), user.token)
+    soucheUser = await spt.createUser('souche', '123456')
+  })
+
+  describe('create', () => {
+    test('参数验证', async () => {
+      const res = await request('/api/group/create', 'post')
+
+      expect(res.body.message).toBe('params error')
+    })
+
+    test('创建团队', async () => {
+      const res = await request('/api/group/create', 'post')
+        .send({ name: 'dasouche' })
+
+      expect(res.body.success).toBe(true)
+    })
+
+    test('重复创建', async () => {
+      const res = await request('/api/group/create', 'post')
+        .send({ name: 'dasouche' })
+
+      expect(res.body.message).toBe('团队 dasouche 已存在')
     })
   })
 
-  after(() => support.cleanCollections())
+  describe('join', () => {
+    test('参数验证', async () => {
+      const res = await request('/api/group/join', 'post')
 
-  describe('#create', () => {
-    it('无参', (done) => {
-      _r('post', '/group/create', token).then((data) => {
-        data.message.should.be.eql('params error')
-        done()
-      })
+      expect(res.body.message).toBe('params error')
     })
 
-    it('创建', (done) => {
-      _r('post', '/group/create', token, {
-        name: '分组1'
-      }).then((data) => {
-        data.success.should.be.ok()
-        done()
-      })
-    })
+    test('加入团队', async () => {
+      await request('/api/group/create', 'post', soucheUser.token).send({ name: 'souche' })
 
-    it('重名', (done) => {
-      _r('post', '/group/create', token, {
-        name: '分组1'
-      }).then((data) => {
-        data.message.should.containEql('相同')
-        done()
-      })
-    })
-  })
+      const groupId = await request('/api/group')
+        .query({ keywords: 'souche' })
+        .then(res => res.body.data[0]._id)
 
-  describe('#list', () => {
-    it('获取列表', (done) => {
-      _r('get', '/group', token).then((data) => {
-        group = data.data[0]
-        data.success.should.be.ok()
-        data.data.should.have.length(1)
-        data.data[0].name.should.eql('分组1')
-        done()
-      })
-    })
-
-    it('搜索', (done) => {
-      _r('get', `/group?keywords=${encodeURIComponent('分组1')}`, token).then((data) => {
-        data.success.should.be.ok()
-        data.data.should.have.length(1)
-        return _r('get', '/group?keywords=1', token)
-      }).then((data) => {
-        data.success.should.be.ok()
-        data.data.should.be.empty()
-        done()
-      })
-    })
-  })
-
-  describe('#update', () => {
-    it('无参', (done) => {
-      _r('post', '/group/update', token).then((data) => {
-        data.message.should.be.eql('params error')
-        done()
-      })
-    })
-
-    it('无权限', (done) => {
-      _r('post', '/group/update', token2, {
-        id: group._id,
-        name: '分组2'
-      }).then((data) => {
-        data.message.should.be.containEql('无权限')
-        done()
-      })
-    })
-
-    it('更新', (done) => {
-      _r('post', '/group/update', token, {
-        id: group._id,
-        name: '分组2'
-      }).then((data) => {
-        data.success.should.be.ok()
-        done()
-      })
-    })
-
-    it('重名', (done) => {
-      _r('post', '/group/update', token, {
-        id: group._id,
-        name: '分组2'
-      }).then((data) => {
-        data.success.should.not.be.ok()
-        data.message.should.containEql('相同')
-        done()
-      })
-    })
-  })
-
-  describe('#join', () => {
-    it('无参', (done) => {
-      _r('post', '/group/join', token).then((data) => {
-        data.message.should.be.eql('params error')
-        done()
-      })
-    })
-
-    it('加入', (done) => {
-      // 创建团队项目
-      const createProject = support.cp(token)
-      createProject({ group: group._id })
-        .then(() => _r('post', '/group/join', token2, {
-          id: group._id
-        }))
-        .then((data) => {
-          data.success.should.be.ok()
-          done()
+      await request('/api/project/create', 'post', soucheUser.token)
+        .send({
+          group: groupId,
+          name: 'user',
+          url: '/user'
         })
+
+      let res = await request('/api/group/join', 'post').send({ id: groupId })
+      expect(res.body.success).toBe(true)
+
+      res = await request('/api/project').query({ group: groupId })
+      res = await request('/api/project/update_workbench', 'post')
+        .send({ id: res.body.data[0].extend._id, status: true })
+
+      expect(res.body.success).toBe(true)
     })
   })
 
-  describe('#delete', () => {
-    it('无参', (done) => {
-      _r('post', '/group/delete', token).then((data) => {
-        data.message.should.be.eql('params error')
-        done()
-      })
+  describe('list', () => {
+    test('我加入的团队', async () => {
+      const res = await request('/api/group')
+
+      const data = res.body.data
+      expect(data).toHaveLength(2)
+      expect(data[0].name).toBe('dasouche')
+      expect(data[1].name).toBe('souche')
     })
 
-    it('退出团队', (done) => {
-      _r('post', '/group/delete', token2, {
-        id: group._id
-      }).then((data) => {
-        data.success.should.be.ok()
-        done()
-      })
+    test('搜索团队', async () => {
+      let res = await request('/api/group').query({ keywords: 'dasouched' })
+
+      expect(res.body.data).toHaveLength(0)
+
+      res = await request('/api/group').query({ keywords: 'dasouche' })
+
+      expect(res.body.data).toHaveLength(1)
+    })
+  })
+
+  describe('update', () => {
+    test('参数验证', async () => {
+      const res = await request('/api/group/update', 'post')
+
+      expect(res.body.message).toBe('params error')
     })
 
-    it('存在项目，禁止删除', (done) => {
-      _r('post', '/group/delete', token, { id: group._id })
-        .then((data) => {
-          data.success.should.not.be.ok()
-          data.message.should.containEql('删除团队下所有的项目')
-          done()
-        })
+    test('更新我加入团队的信息', async () => {
+      let res = await request('/api/group')
+
+      res = await request('/api/group/update', 'post')
+        .send({ id: res.body.data[1]._id, name: 'souche2' })
+
+      expect(res.body.message).toBe('非团队创建者无法更新团队信息')
     })
 
-    it('删除', (done) => {
-      projectProxy
-        .findOne({
-          group: group._id
-        })
-        .then(project => projectProxy.delById(project.id))
-        .then(() => _r('post', '/group/delete', token, {
-          id: group._id
-        }))
-        .then((data) => {
-          data.success.should.be.ok()
-          done()
-        })
+    test('团队重名', async () => {
+      let res = await request('/api/group')
+
+      res = await request('/api/group/update', 'post')
+        .send({ id: res.body.data[0]._id, name: 'souche' })
+
+      expect(res.body.message).toBe('团队 souche 已存在')
+    })
+
+    test('更新我创建团队的信息', async () => {
+      let res = await request('/api/group')
+
+      res = await request('/api/group/update', 'post')
+        .send({ id: res.body.data[0]._id, name: 'souche2' })
+
+      expect(res.body.success).toBe(true)
+    })
+  })
+
+  describe('delete', () => {
+    test('参数验证', async () => {
+      const res = await request('/api/group/delete', 'post')
+
+      expect(res.body.message).toBe('params error')
+    })
+
+    test('离开团队', async () => {
+      let res = await request('/api/group')
+
+      res = await request('/api/group/delete', 'post')
+        .send({ id: res.body.data[1]._id })
+
+      expect(res.body.success).toBe(true)
+    })
+
+    test('解散团队', async () => {
+      let res = await request('/api/group')
+      res = await request('/api/group/delete', 'post')
+        .send({ id: res.body.data[0]._id })
+
+      expect(res.body.success).toBe(true)
+    })
+
+    test('解散团队前请先删除该团队下所有的项目', async () => {
+      let res = await request('/api/group', 'get', soucheUser.token)
+
+      await request('/api/project/create', 'post', soucheUser.token)
+        .send({ group: res.body.data[0]._id, name: 'example', url: '/example' })
+
+      res = await request('/api/group/delete', 'post', soucheUser.token)
+        .send({ id: res.body.data[0]._id })
+
+      expect(res.body.message).toBe('解散团队前请先删除该团队下所有的项目')
     })
   })
 })

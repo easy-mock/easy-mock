@@ -2,130 +2,141 @@
 
 const _ = require('lodash')
 
-const p = require('../proxy')
-const m = require('../models')
+const { Project } = require('../models')
 const ft = require('../models/fields_table')
+const { GroupProxy, UserGroupProxy, UserProjectProxy } = require('../proxy')
 
-const groupProxy = p.Group
-const userGroupProxy = p.UserGroup
-const userProjectProxy = p.UserProject
-const Project = m.Project
+module.exports = class GroupController {
+  /**
+   * 创建团队
+   * @param Object ctx
+   */
 
-exports.list = function * () {
-  const uid = this.state.user.id
-  const keywords = this.checkQuery('keywords').value
-  let groups
+  static async create (ctx) {
+    const name = ctx.checkBody('name').notEmpty().len(3, 16).value
+    const uid = ctx.state.user.id
 
-  if (keywords) {
-    groups = yield groupProxy.find({ name: keywords })
-    groups = groups.map(o => _.pick(o, ft.group))
-  } else {
-    groups = yield userGroupProxy.find({ user: uid })
-    groups = groups.map(o => _.pick(o.group, ft.group))
-  }
-
-  this.body = this.util.resuccess(groups)
-}
-
-exports.create = function * () {
-  const name = this.checkBody('name').notEmpty().len(3, 16).value
-  const uid = this.state.user.id
-
-  if (this.errors) {
-    this.body = this.util.refail(null, 10001, this.errors)
-    return
-  }
-
-  const doc = yield groupProxy.findByName(name)
-
-  if (doc) {
-    this.body = this.util.refail('创建失败，已存在相同团队名')
-    return
-  }
-
-  yield groupProxy.newAndSave({
-    user: uid,
-    name
-  })
-
-  this.body = this.util.resuccess()
-}
-
-exports.update = function * () {
-  const uid = this.state.user.id
-  const id = this.checkBody('id').notEmpty().value
-  const name = this.checkBody('name').notEmpty().len(3, 16).value
-
-  if (this.errors) {
-    this.body = this.util.refail(null, 10001, this.errors)
-    return
-  }
-
-  let doc = yield groupProxy.findOne({
-    _id: id,
-    user: uid
-  })
-
-  if (!doc) {
-    this.body = this.util.refail('更新失败，无权限')
-    return
-  }
-
-  doc = yield groupProxy.findByName(name)
-
-  if (doc) {
-    this.body = this.util.refail('更新失败，已存在相同团队名')
-    return
-  }
-
-  yield groupProxy.updateById(id, { name })
-
-  this.body = this.util.resuccess()
-}
-
-exports.join = function * () {
-  const uid = this.state.user.id
-  const id = this.checkBody('id').notEmpty('团队不存在').value
-
-  if (this.errors) {
-    this.body = this.util.refail(null, 10001, this.errors)
-    return
-  }
-
-  yield userGroupProxy.newAndSave({ user: uid, group: id })
-
-  this.body = this.util.resuccess()
-}
-
-exports.delete = function * () {
-  const uid = this.state.user.id
-  const id = this.checkBody('id').notEmpty().value
-
-  if (this.errors) {
-    this.body = this.util.refail(null, 10001, this.errors)
-    return
-  }
-
-  // 是否创建者删除
-  const group = yield groupProxy.findOne({
-    _id: id,
-    user: uid
-  })
-
-  const projects = yield Project.find({ group: id })
-  const projectIds = projects.map(o => o.id)
-
-  if (group) {
-    if (projects.length > 0) {
-      this.body = this.util.refail('删除失败，请先删除团队下所有的项目')
+    if (ctx.errors) {
+      ctx.body = ctx.util.refail(null, 10001, ctx.errors)
       return
     }
-    yield groupProxy.del({ _id: id })
-    yield userGroupProxy.del({ group: id })
-  } else {
-    yield userGroupProxy.del({ user: uid, group: id })
-    yield userProjectProxy.del({ user: uid, project: { $in: projectIds } })
+
+    const doc = await GroupProxy.findByName(name)
+
+    if (doc) {
+      ctx.body = ctx.util.refail(`团队 ${name} 已存在`)
+      return
+    }
+
+    await GroupProxy.newAndSave({ user: uid, name })
+
+    ctx.body = ctx.util.resuccess()
   }
 
-  this.body = this.util.resuccess()
+  /**
+   * 获取团队列表
+   * @param Object ctx
+   */
+
+  static async list (ctx) {
+    const uid = ctx.state.user.id
+    const keywords = ctx.query.keywords
+    let groups
+
+    if (keywords) {
+      groups = await GroupProxy.find({ name: keywords })
+      groups = groups.map(o => _.pick(o, ft.group))
+    } else {
+      groups = await UserGroupProxy.find({ user: uid })
+      groups = groups.map(o => _.pick(o.group, ft.group))
+    }
+
+    ctx.body = ctx.util.resuccess(groups)
+  }
+
+  /**
+   * 加入团队
+   * @param Object ctx
+   */
+
+  static async join (ctx) {
+    const uid = ctx.state.user.id
+    const id = ctx.checkBody('id').notEmpty().value
+
+    if (ctx.errors) {
+      ctx.body = ctx.util.refail(null, 10001, ctx.errors)
+      return
+    }
+
+    await UserGroupProxy.newAndSave({ user: uid, group: id })
+
+    ctx.body = ctx.util.resuccess()
+  }
+
+  /**
+   * 删除团队
+   * @param Object ctx
+   */
+
+  static async delete (ctx) {
+    const uid = ctx.state.user.id
+    const id = ctx.checkBody('id').notEmpty().value
+
+    if (ctx.errors) {
+      ctx.body = ctx.util.refail(null, 10001, ctx.errors)
+      return
+    }
+
+    const group = await GroupProxy.findOne({ _id: id, user: uid })
+    const projects = await Project.find({ group: id })
+    const projectIds = projects.map(project => project.id)
+
+    if (group) { // 团队创建者删除团队
+      if (projects.length > 0) {
+        ctx.body = ctx.util.refail('解散团队前请先删除该团队下所有的项目')
+        return
+      }
+      await GroupProxy.del({ _id: id })
+      await UserGroupProxy.del({ group: id })
+    } else { // 团队成员离开团队
+      await UserGroupProxy.del({ user: uid, group: id })
+      await UserProjectProxy.del({ user: uid, project: { $in: projectIds } })
+    }
+
+    ctx.body = ctx.util.resuccess()
+  }
+
+  /**
+   * 团队信息更新
+   * @param Object ctx
+   */
+
+  static async update (ctx) {
+    const uid = ctx.state.user.id
+    const id = ctx.checkBody('id').notEmpty().value
+    const name = ctx.checkBody('name').notEmpty().len(3, 16).value
+
+    if (ctx.errors) {
+      ctx.body = ctx.util.refail(null, 10001, ctx.errors)
+      return
+    }
+
+    let group = await GroupProxy.findOne({ _id: id, user: uid })
+
+    if (!group) {
+      ctx.body = ctx.util.refail('非团队创建者无法更新团队信息')
+      return
+    }
+
+    group = await GroupProxy.findByName(name)
+
+    if (group) {
+      ctx.body = ctx.util.refail(`团队 ${name} 已存在`)
+      return
+    }
+
+    await GroupProxy.updateById(id, { name })
+
+    ctx.body = ctx.util.resuccess()
+  }
 }

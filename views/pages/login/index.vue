@@ -167,7 +167,7 @@
 
 <script>
 import config from 'config'
-import cookie from 'react-cookie'
+import Cookies from 'universal-cookie'
 import * as api from '../../api'
 let resizeTimer
 
@@ -229,6 +229,7 @@ export default {
       })
     },
     login () {
+      const cookies = new Cookies()
       api.u.login({
         messageUnless: ['用户不存在'],
         data: {
@@ -241,7 +242,7 @@ export default {
           this.$store.commit('user/SET_VALUE', body.data)
           this.$ls.set('user', body.data)
           this.$ls.set('last-user', this.userName)
-          cookie.save(
+          cookies.set(
             config.storageNamespace + 'token',
             body.data.token,
             {
