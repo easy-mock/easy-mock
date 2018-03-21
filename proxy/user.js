@@ -14,12 +14,13 @@ const gravatar = [
 ]
 
 module.exports = class UserProxy {
-  static newAndSave (name, password, nickName, headImg) {
+  static newAndSave (name, password, email, nickName, headImg) {
     const user = new User()
     const len = gravatar.length
 
     user.name = name
     user.password = password
+    user.email = email || ''
     user.nick_name = nickName || _.now()
     user.head_img = headImg || gravatar[_.random(0, len - 1)]
 
@@ -32,6 +33,7 @@ module.exports = class UserProxy {
     }, {
       $set: {
         nick_name: user.nick_name,
+        email: user.email,
         head_img: user.head_img,
         password: user.password
       }

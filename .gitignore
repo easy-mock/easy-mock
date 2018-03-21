@@ -20,10 +20,12 @@ node_modules
 coverage
 logs
 *.log
+*.bat
 desktop.ini
 npm-debug.log
 yarn-debug.log*
 yarn-error.log*
+package-lock.json
 dist
 config
 views/config.json
