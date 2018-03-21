@@ -56,6 +56,8 @@ exports.api = apiRouter
   .post('/project/create', project.create)
   .post('/project/update', project.update)
   .post('/project/delete', project.delete)
+  .get('/project/sendMail', project.sendMail) // 定义路由
+  // .post('/project/update_swagger', project.updateSwagger)
   .post('/project/sync/swagger', project.syncSwagger)
   .post('/project/update_workbench', project.updateWorkbench)
 

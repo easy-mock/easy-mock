@@ -3,10 +3,11 @@
 const _ = require('lodash')
 const config = require('config')
 
+const sendMail = require('./sendMail')
 const util = require('../util')
 const ft = require('../models/fields_table')
 const SwaggerUtil = require('../util/swagger')
-const { MockProxy, ProjectProxy, UserProjectProxy, UserGroupProxy } = require('../proxy')
+const { MockProxy, ProjectProxy, UserProxy, UserProjectProxy, UserGroupProxy } = require('../proxy')
 
 const redis = util.getRedis()
 const defPageSize = config.get('pageSize')
@@ -360,6 +361,52 @@ module.exports = class ProjectController {
     await ProjectProxy.updateById(project)
     await redis.del('project:' + id)
     ctx.body = ctx.util.resuccess()
+  }
+
+  /**
+   * 发送邮件 通知
+   * @param Object ctx
+   */
+  static async sendMail (ctx) {
+    const uid = ctx.state.user.id // 用户id
+    const id = ctx.checkQuery('id').notEmpty().value // 项目 id checkQuery 获取 get 参数
+
+    if (ctx.errors) {
+      ctx.body = ctx.util.refail(null, 10001, ctx.errors)
+      return
+    }
+
+    // 获取project
+    const project = await ProjectProxy.findOne({ _id: id })
+    let _users = [project.user, ...project.members]
+    // 邮件列表
+    let _mails = []
+    for (let i = 0; i < _users.length; i++) {
+      if (_users[i]._id.toString() !== uid) {
+        const _user = await UserProxy.getById(_users[i]._id)
+        _mails.push({
+          name: _user.name,
+          email: _user.email
+        })
+        if (/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(_user.email)) {
+          // 发送邮件
+          sendMail({
+            to: _user.email,
+            subject: '邮件标题',
+            html: '<h1>邮件内容</h1>'
+          }, (obj, msg) => {
+            if (msg === 'success') {
+              _mails.splice(_mails.findIndex(item => item.email === obj.to), 1)
+              // ctx.state.emailList = _mails
+              console.log(_mails, _mails.length)
+              ctx.log.error(_mails)
+            }
+          })
+        }
+      }
+    }
+
+    ctx.body = ctx.util.resuccess(_mails)
   }
 
   /**
