@@ -231,6 +231,7 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
 * [huodongxing | 活动行](http://www.huodongxing.com)
 * [kinhom | 金海马商业集团](http://www.kinhom.com/)
 * [yuntongxun | 北京容联易通信息技术有限公司](http://www.yuntongxun.com/)
+* [YHD | 1号店](http://www.yhd.com/)
 
 ## Core Contributors
 
