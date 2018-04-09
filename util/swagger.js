@@ -33,12 +33,21 @@ async function createMock (projectId, swaggerDocs) {
 
       for (let code in operation.responses) {
         const response = operation.responses[code]
-        response.example = response.example ? Mock.mock(JSON.parse(response.example)) : ''
+	      try {
+          response.example = response.example ? Mock.mock(JSON.parse(response.example)) : ''
+        } catch(err) { 
+          console.log("Cannot parse example:", response.example)
+        }
       }
       responseModel = JSON.stringify(operation.responses)
       parameters = JSON.stringify(
         _.map(operation.parameters, parameter => {
-          parameter.example = parameter.example ? Mock.mock(JSON.parse(parameter.example)) : ''
+          try {
+            parameter.example = parameter.example ? Mock.mock(JSON.parse(parameter.example)) : ''
+          } catch(err) { 
+             console.log("Cannot parse example:", parameter.example)
+             parameter.example = ""
+          }
           return parameter
         })
       )
