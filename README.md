@@ -88,7 +88,8 @@ configuration.
   "unsplashClientId": "",
   "redis": {
     "port": 6379,
-    "host": "localhost"
+    "host": "localhost",
+    "password": ""
   },
   "blackList": {
     "projects": [], // projectId, e.g."5a4495e16ef711102113e500"
