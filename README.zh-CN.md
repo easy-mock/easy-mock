@@ -78,8 +78,11 @@ $ cd easy-mock && npm install
   "db": "mongodb://localhost/easy-mock",
   "unsplashClientId": "",
   "redis": {
+    "keyPrefix": "[Easy Mock]",
     "port": 6379,
-    "host": "localhost"
+    "host": "localhost",
+    "password": "",
+    "db": 0
   },
   "blackList": {
     "projects": [], // projectId，例："5a4495e16ef711102113e500"

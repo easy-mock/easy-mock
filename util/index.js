@@ -10,10 +10,7 @@ const bcrypt = require('bcryptjs')
 const pathToRegexp = require('path-to-regexp')
 const { MockCountProxy } = require('../proxy')
 
-const redisConf = config.get('redis')
-const redis = new Redis(redisConf.port, redisConf.host, {
-  keyPrefix: '[Easy Mock]'
-})
+const redis = new Redis(config.get('redis'))
 
 module.exports = class BaseUtil {
   /**

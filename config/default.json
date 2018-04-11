@@ -6,8 +6,11 @@
   "db": "mongodb://localhost/easy-mock",
   "unsplashClientId": "",
   "redis": {
+    "keyPrefix": "[Easy Mock]",
     "port": 6379,
-    "host": "localhost"
+    "host": "localhost",
+    "password": "",
+    "db": 0
   },
   "blackList": {
     "projects": [],
