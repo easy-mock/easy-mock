@@ -1,0 +1,7 @@
+{
+    "db": "mongodb://db/easy-mock",
+    "redis": {
+        "host": "redis"
+    }
+}
+  

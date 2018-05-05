@@ -1,0 +1,37 @@
+version: "3"
+services:
+  app:
+    image: easy-mock
+    ports: 
+      - "8300:7300"
+    networks: 
+      - backend
+    deploy:
+      replicas: 1
+  redis:
+    image: redis:3.2.11-alpine
+    ports:
+      - "6379"
+    networks:
+      - backend
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 2
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+  db:
+    image: mongo:3.6.3-jessie
+    volumes:
+      - db-data:/data/db
+    ports:
+      - "27017"
+    networks:
+      - backend
+
+networks: 
+  backend:
+
+volumes:
+  db-data:
