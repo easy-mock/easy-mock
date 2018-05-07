@@ -232,6 +232,7 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
 * [kinhom | 金海马商业集团](http://www.kinhom.com/)
 * [yuntongxun | 北京容联易通信息技术有限公司](http://www.yuntongxun.com/)
 * [YHD | 1号店](http://www.yhd.com/)
+* [51NB | 51信用卡](https://web.u51.com/u51-pc)
 
 ## Core Contributors
 
