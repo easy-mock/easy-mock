@@ -31,4 +31,15 @@ describe('test/util/index.test.js', () => {
     jest.runOnlyPendingTimers()
     expect(rimraf.mock.calls.length).toBe(2)
   })
+
+  test('bhash & bcompare', async () => {
+    const passwd = 'random password'
+    const hashed = await util.bhash(passwd)
+
+    let verified = await util.bcompare(passwd + passwd, hashed)
+    expect(verified).toBe(false)
+
+    verified = await util.bcompare(passwd, hashed)
+    expect(verified).toBe(true)
+  })
 })

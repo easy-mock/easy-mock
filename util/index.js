@@ -2,6 +2,7 @@
 
 const _ = require('lodash')
 const path = require('path')
+const util = require('util')
 const config = require('config')
 const rimraf = require('rimraf')
 const Redis = require('ioredis')
@@ -36,7 +37,7 @@ module.exports = class BaseUtil {
    */
 
   static bhash (str) {
-    return bcrypt.hashSync(str, 8)
+    return util.promisify(bcrypt.hash)(str, 8)
   }
 
   /**
@@ -46,7 +47,7 @@ module.exports = class BaseUtil {
    */
 
   static bcompare (str, hash) {
-    return bcrypt.compareSync(str, hash)
+    return util.promisify(bcrypt.compare)(str, hash)
   }
 
   /**

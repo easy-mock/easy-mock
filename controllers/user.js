@@ -58,7 +58,7 @@ module.exports = class UserController {
       return
     }
 
-    const newPassword = util.bhash(password)
+    const newPassword = await util.bhash(password)
 
     await createUser(name, newPassword)
 
@@ -98,7 +98,7 @@ module.exports = class UserController {
         ctx.body = ctx.util.refail('用户不存在')
         return
       }
-      verifyPassword = util.bcompare(password, user.password)
+      verifyPassword = await util.bcompare(password, user.password)
     }
 
     if (!verifyPassword) {
@@ -130,7 +130,9 @@ module.exports = class UserController {
 
     user.nick_name = nickName || /* istanbul ignore next */ user.nick_name
     user.head_img = headImg || /* istanbul ignore next */ user.head_img
-    user.password = password ? util.bhash(password) : /* istanbul ignore next */ user.password
+    if (password) {
+      user.password = await util.bhash(password)
+    }
 
     await UserProxy.update(user)
 
