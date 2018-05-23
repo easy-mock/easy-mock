@@ -211,6 +211,8 @@ Easy Mock 目前由[大搜车无线架构团队](http://f2e.souche.com/blog/)进
 * [yuntongxun | 北京容联易通信息技术有限公司](http://www.yuntongxun.com/)
 * [YHD | 1号店](http://www.yhd.com/)
 * [51NB | 51信用卡](https://web.u51.com/u51-pc)
+* [Yunlai inc | 云来网络](http://www.yunlai.cn/)
+* [wozaijia | 我在家家居](http://www.wozaijia.com/)
 
 ## Core Contributors
 
