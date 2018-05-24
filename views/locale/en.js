@@ -67,7 +67,8 @@ export default {
       description: 'Mock more efficiently | ',
       form: {
         button: 'Let\'go | Login',
-        placeholder: 'Username, will register if user doesn\'t exsit | Password'
+        placeholder: 'Username, will register if user doesn\'t exsit | LDAP Username',
+        password: 'Password'
       },
       about: 'What is Easy Mock? | A vitrual API mock up tool, and generate mock up data.',
       feature: [

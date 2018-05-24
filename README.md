@@ -114,6 +114,15 @@ configuration.
       "day": -1
     }
   },
+  "ldap": {
+    "server": "", // Set server to enable LDAP login. e.g. "ldap://localhost:389" or "ldaps://localhost:389"（use SSL）
+    "bindDN": "", // Username，e.g. "cn=admin,dc=example,dc=com"
+    "password": "",
+    "filter": {
+      "base": "", // Base where we can search for users，e.g. "dc=example,dc=com"
+      "attributeName": "" // e.g. "mail" or "email" etc.
+    }
+  },
   "fe": {
     "copyright": "",
     "storageNamespace": "easy-mock_",

@@ -23,10 +23,10 @@
                 <Form-item :label="$t('p.profile.form.nickName')">
                   <i-input v-model="form.nickName"></i-input>
                 </Form-item>
-                <Form-item :label="$t('p.profile.form.password')">
+                <Form-item :label="$t('p.profile.form.password')" v-show="!ldap">
                   <i-input type="password" v-model="form.password"></i-input>
                 </Form-item>
-                <Form-item :label="$t('p.profile.form.passwordCheck')" prop="passwordCheck">
+                <Form-item :label="$t('p.profile.form.passwordCheck')" prop="passwordCheck" v-show="!ldap">
                   <i-input type="password" v-model="form.passwordCheck"></i-input>
                 </Form-item>
                 <Form-item>
@@ -65,6 +65,7 @@
 </style>
 
 <script>
+import config from 'config'
 import * as api from '../../api'
 import languageMap from '../../locale/map'
 
@@ -80,6 +81,7 @@ export default {
     }
 
     return {
+      ldap: config.ldap,
       visible: false,
       language: this.$ls.get('locale') || 'zh-CN',
       languageList: languageMap.list,

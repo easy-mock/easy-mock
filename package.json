@@ -47,6 +47,7 @@
     "koa-router": "^7.3.0",
     "koa-static-cache": "^5.1.1",
     "koa-validate": "^1.0.7",
+    "ldapjs": "^1.0.2",
     "lodash": "^4.17.4",
     "lru-cache": "^4.1.1",
     "mkdirp": "^0.5.1",

@@ -5,12 +5,36 @@ const config = require('config')
 const jwt = require('jsonwebtoken')
 
 const util = require('../util')
+const ldapUtil = require('../util/ldap')
 const mockUtil = require('../util/mock')
 const ft = require('../models/fields_table')
 const { UserProxy, ProjectProxy, MockProxy } = require('../proxy')
 
 const jwtSecret = config.get('jwt.secret')
 const jwtExpire = config.get('jwt.expire')
+
+async function createUser (name, password) {
+  const user = await UserProxy.newAndSave(name, password)
+  await ProjectProxy
+    .newAndSave({
+      user: user.id,
+      name: '演示项目',
+      url: '/example',
+      description: '已创建多种 Mock 类型，只需点击预览便可查看效果。亦可编辑，也可删除。'
+    })
+    .then(projects => {
+      const projectId = projects[0].id
+      const apis = mockUtil.examples.map(item => ({
+        project: projectId,
+        description: item.desc,
+        method: item.method,
+        url: item.url,
+        mode: item.mode
+      }))
+      MockProxy.newAndSave(apis)
+    })
+  return user
+}
 
 module.exports = class UserController {
   /**
@@ -36,26 +60,7 @@ module.exports = class UserController {
 
     const newPassword = util.bhash(password)
 
-    user = await UserProxy.newAndSave(name, newPassword)
-
-    await ProjectProxy
-      .newAndSave({
-        user: user.id,
-        name: '演示项目',
-        url: '/example',
-        description: '已创建多种 Mock 类型，只需点击预览便可查看效果。亦可编辑，也可删除。'
-      })
-      .then(projects => {
-        const projectId = projects[0].id
-        const apis = mockUtil.examples.map(item => ({
-          project: projectId,
-          description: item.desc,
-          method: item.method,
-          url: item.url,
-          mode: item.mode
-        }))
-        MockProxy.newAndSave(apis)
-      })
+    await createUser(name, newPassword)
 
     ctx.body = ctx.util.resuccess()
   }
@@ -66,6 +71,7 @@ module.exports = class UserController {
    */
 
   static async login (ctx) {
+    let verifyPassword
     const name = ctx.checkBody('name').notEmpty().value
     const password = ctx.checkBody('password').notEmpty().value
 
@@ -74,14 +80,26 @@ module.exports = class UserController {
       return
     }
 
-    const user = await UserProxy.getByName(name)
+    let user = await UserProxy.getByName(name)
 
-    if (!user) {
-      ctx.body = ctx.util.refail('用户不存在')
-      return
+    /* istanbul ignore if */
+    if (ldapUtil.enable) {
+      try {
+        verifyPassword = await ldapUtil.authenticate(name, password)
+      } catch (error) {
+        ctx.body = ctx.util.refail(error.message)
+        return
+      }
+      if (verifyPassword && !user) {
+        user = await createUser(name, util.bhash(password))
+      }
+    } else {
+      if (!user) {
+        ctx.body = ctx.util.refail('用户不存在')
+        return
+      }
+      verifyPassword = util.bcompare(password, user.password)
     }
-
-    const verifyPassword = util.bcompare(password, user.password)
 
     if (!verifyPassword) {
       ctx.body = ctx.util.refail('用户名或密码错误')

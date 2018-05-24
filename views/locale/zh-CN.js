@@ -67,7 +67,8 @@ export default {
       description: '伪造数据，我们更高效 | 但，不仅于此',
       form: {
         button: '开始吧 | 登录',
-        placeholder: '用户名，没有会自动注册哦 | 密码'
+        placeholder: '用户名，没有会自动注册哦 | LDAP 用户名',
+        password: '密码'
       },
       about: 'Easy Mock 是什么？| 是一个可视化，并且能快速生成模拟数据的服务。',
       feature: [

@@ -12,10 +12,15 @@
         <transition name="fadeLeft">
           <div v-show="isLogin" v-click-outside="onClickOutside">
             <i-input size="large"
+              v-if="ldap"
+              :placeholder="$tc('p.login.form.placeholder', 2)"
+              ref="user" v-model="userName" @on-enter="login"></i-input>
+            <i-input size="large"
+              v-if="!ldap"
               :placeholder="$tc('p.login.form.placeholder', 1)"
               ref="user" v-model="userName" @on-enter="login"></i-input>
             <i-input size="large"
-              :placeholder="$tc('p.login.form.placeholder', 2)"
+              :placeholder="$t('p.login.form.password')"
               type="password" v-model="password" @on-enter="login"></i-input>
           </div>
         </transition>
@@ -175,6 +180,7 @@ export default {
   name: 'index',
   data () {
     return {
+      ldap: config.ldap,
       isLogin: false,
       page: 0,
       userName: this.$ls.get('last-user'),

@@ -33,6 +33,15 @@
       "day": -1
     }
   },
+  "ldap": {
+    "server": "",
+    "bindDN": "",
+    "password": "",
+    "filter": {
+      "base": "",
+      "attributeName": ""
+    }
+  },
   "fe": {
     "copyright": "",
     "storageNamespace": "easy-mock_",

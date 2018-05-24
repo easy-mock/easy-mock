@@ -105,6 +105,15 @@ $ cd easy-mock && npm install
       "day": -1
     }
   },
+  "ldap": {
+    "server": "", // 设置 server 代表启用 LDAP 登录。例："ldap://localhost:389" 或 "ldaps://localhost:389"（使用 SSL）
+    "bindDN": "", // 用户名，例："cn=admin,dc=example,dc=com"
+    "password": "",
+    "filter": {
+      "base": "", // 查询用户的路径，例："dc=example,dc=com"
+      "attributeName": "" // 查询字段，例："mail"
+    }
+  },
   "fe": {
     "copyright": "",
     "storageNamespace": "easy-mock_",

@@ -14,6 +14,7 @@ const resolve = dir => path.resolve(__dirname, dir)
 
 config.fe.host = config.host
 config.fe.port = config.port
+config.fe.ldap = !!config.ldap.server
 fs.writeFileSync(resolve('../views/config.json'), JSON.stringify(config.fe))
 
 module.exports = {
