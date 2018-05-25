@@ -18,6 +18,10 @@ export default {
     SET_REQUEST_PARAMS (state, payload) {
       state.keywords = payload.keywords || state.keywords
       state.pageIndex = payload.pageIndex || state.pageIndex
+    },
+    SET_EDITOR_DATA (state, payload) {
+      state.editorData.mock = payload.mock
+      state.editorData.baseUrl = payload.baseUrl
     }
   },
   actions: {

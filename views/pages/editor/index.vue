@@ -1,50 +1,52 @@
 <template>
-  <transition name="fade">
-    <div class="em-editor" v-show="value.show">
-      <div class="em-editor__editor">
-        <div ref="codeEditor"></div>
-      </div>
-      <div class="panel-info">
-        <em-spots :size="10"></em-spots>
-        <div class="wrapper">
-          <h2>{{isEdit ? $t('p.detail.editor.title[0]') : $t('p.detail.editor.title[1]')}}</h2>
-          <div class="em-editor__form">
-            <Form label-position="top">
-              <Form-item label="Method">
-                <i-select v-model="temp.method">
-                  <Option v-for="item in methods" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </i-select>
-              </Form-item>
-              <Form-item label="URL">
-                <i-input v-model="temp.url">
-                  <span slot="prepend">/</span>
-                </i-input>
-              </Form-item>
-              <Form-item :label="$t('p.detail.columns[0]')">
-                <i-input v-model="temp.description"></i-input>
-              </Form-item>
-              <Form-item :label="$t('p.detail.editor.autoClose')" v-if="isEdit">
-                <i-switch v-model="autoClose"></i-switch>
-              </Form-item>
-              <Form-item>
-                <Button type="primary" long @click="submit">{{isEdit ? $t('p.detail.editor.action[0]') : $t('p.detail.editor.action[1]')}}</Button>
-              </Form-item>
-            </Form>
-          </div>
-          <div class="em-editor__control">
-            <div class="em-proj-detail__switcher">
-              <ul>
-                <li @click="format">{{$t('p.detail.editor.control[0]')}}</li>
-                <li @click="preview" v-if="isEdit">{{$t('p.detail.editor.control[1]')}}</li>
-                <li @click="close">{{$t('p.detail.editor.control[2]')}}</li>
-              </ul>
-            </div>
+  <div class="em-editor">
+    <div class="em-editor__editor">
+      <div ref="codeEditor"></div>
+    </div>
+    <div class="panel-info">
+      <em-spots :size="10"></em-spots>
+      <div class="wrapper">
+        <h2>{{isEdit ? $t('p.detail.editor.title[0]') : $t('p.detail.editor.title[1]')}}</h2>
+        <div class="em-editor__form">
+          <Form label-position="top">
+            <Form-item label="Method">
+              <i-select v-model="temp.method">
+                <Option v-for="item in methods" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </i-select>
+            </Form-item>
+            <Form-item label="URL">
+              <i-input v-model="temp.url">
+                <span slot="prepend">/</span>
+              </i-input>
+            </Form-item>
+            <Form-item :label="$t('p.detail.columns[0]')">
+              <i-input v-model="temp.description"></i-input>
+            </Form-item>
+            <Form-item :label="$t('p.detail.editor.autoClose')" v-if="isEdit">
+              <i-switch v-model="autoClose"></i-switch>
+            </Form-item>
+            <Form-item>
+              <Button type="primary" long @click="submit">{{isEdit ? $t('p.detail.editor.action[0]') : $t('p.detail.editor.action[1]')}}</Button>
+            </Form-item>
+          </Form>
+        </div>
+        <div class="em-editor__control">
+          <div class="em-proj-detail__switcher">
+            <ul>
+              <li @click="format">{{$t('p.detail.editor.control[0]')}}</li>
+              <li @click="preview" v-if="isEdit">{{$t('p.detail.editor.control[1]')}}</li>
+              <li @click="close">{{$t('p.detail.editor.control[2]')}}</li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
-  </transition>
+  </div>
 </template>
+
+<style>
+@import './index.css';
+</style>
 
 <script>
 import * as api from '../../api'
@@ -61,9 +63,7 @@ if (typeof window !== 'undefined') {
 }
 
 export default {
-  props: {
-    value: {}
-  },
+  name: 'editor',
   data () {
     return {
       codeEditor: null,
@@ -77,16 +77,34 @@ export default {
       ],
       temp: {
         url: '',
-        mode: '',
-        method: '',
+        mode: '{"data": {}}',
+        method: 'get',
         description: ''
       }
     }
   },
   computed: {
+    mockData () {
+      return this.$store.state.mock.editorData.mock
+    },
+    baseUrl () {
+      return this.$store.state.mock.editorData.baseUrl
+    },
+    projectId () {
+      return this.$route.params.projectId
+    },
     isEdit () {
-      return !!this.value._id
+      return !!this.$route.params.id && this.mockData
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    if (from.matched.length === 0) { // 防止编辑页刷新导致的显示异常（直接进入项目主页）
+      return next({
+        path: `/project/${to.params.projectId}`,
+        replace: true
+      })
+    }
+    next()
   },
   mounted () {
     this.codeEditor = ace.edit(this.$refs.codeEditor)
@@ -106,28 +124,17 @@ export default {
         this.submit()
       }
     })
-  },
-  watch: {
-    'value.show': function (show) {
-      document.body.style.overflow = show ? 'hidden' : 'auto'
-      if (show) {
-        if (this.isEdit) {
-          this.autoClose = true
-          this.temp.url = this.value.url.slice(1) // remove /
-          this.temp.mode = this.value.mode
-          this.temp.method = this.value.method
-          this.temp.description = this.value.description
-          this.codeEditor.setValue(this.temp.mode)
-        } else {
-          this.temp.url = ''
-          this.temp.mode = '{"data": {}}'
-          this.temp.method = 'get'
-          this.temp.description = ''
-          this.codeEditor.setValue(this.temp.mode)
-        }
-        this.format()
-      }
+
+    if (this.isEdit) {
+      this.autoClose = true
+      this.temp.url = this.mockData.url.slice(1) // remove /
+      this.temp.mode = this.mockData.mode
+      this.temp.method = this.mockData.method
+      this.temp.description = this.mockData.description
     }
+
+    this.codeEditor.setValue(this.temp.mode)
+    this.format()
   },
   methods: {
     convertUrl (url) {
@@ -147,8 +154,8 @@ export default {
       this.temp.mode = this.codeEditor.getValue()
     },
     close () {
-      this.value.show = false
-      this.$emit('input', this.value)
+      this.$store.commit('mock/SET_EDITOR_DATA', {mock: null, baseUrl: ''})
+      this.$router.replace(`/project/${this.projectId}`)
     },
     submit () {
       const mockUrl = this.convertUrl(this.temp.url)
@@ -172,24 +179,22 @@ export default {
         api.mock.update({
           data: {
             ...this.temp,
-            id: this.value._id,
+            id: this.mockData._id,
             url: mockUrl
           }
         }).then((res) => {
           if (res.data.success) {
             this.$Message.success(this.$t('p.detail.editor.submit.updateSuccess'))
-            this.value.url = mockUrl
-            this.value.mode = this.temp.mode
-            this.value.method = this.temp.method
-            this.value.description = this.temp.description
             if (this.autoClose) this.close()
           }
         })
       } else {
-        this.$store.dispatch('mock/CREATE', {
-          route: this.$route,
-          ...this.temp,
-          url: mockUrl
+        api.mock.create({
+          data: {
+            ...this.temp,
+            url: mockUrl,
+            project_id: this.projectId
+          }
         }).then((res) => {
           if (res.data.success) {
             this.$Message.success(this.$t('p.detail.create.success'))
@@ -199,7 +204,7 @@ export default {
       }
     },
     preview () {
-      window.open(this.$parent.baseUrl + this.value.url + '#!method=' + this.value.method)
+      window.open(this.baseUrl + this.mockData.url + '#!method=' + this.mockData.method)
     }
   }
 }

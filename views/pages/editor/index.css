@@ -1,0 +1,72 @@
+@import '../../styles/base/var.css';
+
+@c editor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+  display: flex;
+  overflow: hidden;
+
+  & > div {
+    height: 100%;
+    flex: 1;
+  }
+
+  .em-editor__editor {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    & > div {
+      height: 100%;
+    }
+  }
+
+  & > div:last-child {
+    flex: 0 0 350px;
+  }
+
+  .panel-info {
+    background: var(--color-primary);
+    padding: 20px 20px;
+    overflow: auto;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 0 3px #000;
+
+    h2 {
+      color: #fff;
+      font-size: 13px;
+      text-align: center;
+      padding: 6px;
+      background: rgba(0,0,0,.5);
+      border-radius: 30px;
+      margin-bottom: 20px;
+    }
+
+    .wrapper {
+      width: 100%;
+    }
+  }
+
+  @d form {
+    padding: 20px 20px 1px;
+    background: #fff;
+    box-shadow: 0 2px 3px #777;
+    border-radius: 4px;
+    margin-bottom: 20px;
+  }
+
+  @d control {
+    .em-proj-detail__switcher {
+      box-shadow: 0 2px 3px #111;
+
+      li {
+        padding: 10px 0;
+      }
+    }
+  }
+}

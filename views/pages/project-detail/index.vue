@@ -7,7 +7,6 @@
       :nav="nav"
       v-model="pageName">
     </em-header>
-    <editor v-model="editor"></editor>
     <div v-shortkey="['tab']" @shortkey="handleKeyTab()"></div>
     <em-keyboard-short v-model="keyboards"></em-keyboard-short>
     <Back-top>
@@ -88,7 +87,6 @@ import Clipboard from 'clipboard'
 import debounce from 'lodash/debounce'
 
 import * as api from '../../api'
-import Editor from './editor'
 import Project from '../new/project'
 import MockExpand from './mock-expand'
 
@@ -103,9 +101,6 @@ export default {
         { title: this.$t('p.detail.nav[0]'), icon: 'android-list' },
         { title: this.$t('p.detail.nav[1]'), icon: 'gear-a' }
       ],
-      editor: {
-        show: false
-      },
       keyboards: [
         {
           category: this.$t('p.detail.keyboards[0].category'),
@@ -323,13 +318,16 @@ export default {
       })
     },
     openEditor (mock) {
-      this.editor = mock || {}
-      this.$set(this.editor, 'show', true)
+      if (mock) {
+        this.$store.commit('mock/SET_EDITOR_DATA', {mock, baseUrl: this.baseUrl})
+        this.$router.push(`/editor/${this.project._id}/${mock._id}`)
+      } else {
+        this.$router.push(`/editor/${this.project._id}`)
+      }
     }
   },
   components: {
-    Project,
-    Editor
+    Project
   }
 }
 </script>

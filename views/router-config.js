@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import docs from 'pages/docs'
 import login from 'pages/login'
 import group from 'pages/group'
+import editor from 'pages/editor'
 import project from 'pages/project'
 import profile from 'pages/profile'
 import createProject from 'pages/new'
@@ -33,7 +34,9 @@ export function createRouter () {
           { path: 'dashboard', component: dashboard },
           { path: 'profile', component: profile },
           { path: 'new', component: createProject },
-          { path: 'project/:id', component: detail }
+          { path: 'project/:id', component: detail },
+          { path: 'editor/:projectId', component: editor },
+          { path: 'editor/:projectId/:id', component: editor }
         ]
       }
     ]
