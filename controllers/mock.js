@@ -250,7 +250,8 @@ module.exports = class MockController {
           url: url.protocol + '//' + url.host + pathname,
           params: _.assign({}, url.query, query),
           data: body,
-          timeout: 3000
+          timeout: 3000,
+          headers: ctx.headers
         }).then(res => res.data)
       } catch (error) {
         ctx.body = ctx.util.refail(error.message || '接口请求失败')
