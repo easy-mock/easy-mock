@@ -13,7 +13,7 @@
         <Tab-pane
           :label="$tc('p.group.modal.tab.create', 0)"
           name="create" :disabled="tabName === 'rename'">
-          <Form :label-width="64">
+          <Form :label-width="64" @submit.native.prevent>
             <Form-item :label="$tc('p.group.modal.tab.create', 1)">
               <i-input
                 v-model="groupName"
@@ -26,7 +26,7 @@
         <Tab-pane
           :label="$tc('p.group.modal.tab.join', 0)"
           name="join" :disabled="tabName === 'rename'">
-          <Form :label-width="64">
+          <Form :label-width="64" @submit.native.prevent>
             <Form-item :label="$tc('p.group.modal.tab.join', 1)">
               <i-input
                 v-model="groupName"
@@ -38,7 +38,7 @@
         <Tab-pane
           :label="$tc('p.group.modal.tab.edit', 0)"
           name="rename" :disabled="tabName !== 'rename'">
-          <Form :label-width="64">
+          <Form :label-width="64" @submit.native.prevent>
             <Form-item :label="$tc('p.group.modal.tab.edit', 1)">
               <i-input
                 v-model="groupName"
