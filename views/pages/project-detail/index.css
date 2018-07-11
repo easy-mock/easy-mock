@@ -175,6 +175,7 @@
   padding: 10px;
   color: #fff;
   border-radius: 4px;
+  overflow: scroll;
 
   p, pre {
     margin: 0;
