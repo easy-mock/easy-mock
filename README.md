@@ -4,7 +4,7 @@
   <a href="https://nodejs.org"><img src="https://img.shields.io/badge/node-%3E%3D8.9.1-green.svg?style=flat" alt="Node.js Version"></a>
   <a href="https://www.mongodb.com"><img src="https://img.shields.io/badge/mongo-%3E%3D3.4.1-green.svg?style=flat" alt="MongoDB Version"></a>
   <a href="https://redis.io"><img src="https://img.shields.io/badge/redis-%3E%3D4.0-green.svg?style=flat" alt="Redis Version"></a>
-  <a href="https://circleci.com/gh/easy-mock/easy-mock/tree/dev"><img src="https://img.shields.io/circleci/project/easy-mock/easy-mock/dev.svg" alt="Build Status"></a>
+  <a href="https://circleci.com/gh/easy-mock/easy-mock/tree/dev"><img src="https://circleci.com/gh/easy-mock/easy-mock/tree/dev.svg?style=svg" alt="Build Status"></a>
   <a href="https://codecov.io/github/easy-mock/easy-mock?branch=dev"><img src="https://img.shields.io/codecov/c/github/easy-mock/easy-mock/dev.svg" alt="Coverage Status"></a>
   <a href="http://standardjs.com"><img src="https://img.shields.io/badge/code%20style-standard-brightgreen.svg" alt="js-standard-style"></a>
   <a href="https://opensource.org/licenses/GPL-3.0"><img src="https://img.shields.io/badge/license-GPL--3.0-blue.svg" alt="License"></a>
@@ -247,6 +247,19 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
 * [51NB | 51信用卡](https://web.u51.com/u51-pc)
 * [Yunlai inc | 云来网络](http://www.yunlai.cn/)
 * [wozaijia | 我在家家居](http://www.wozaijia.com/)
+* [FOR U TRUCKING | 福佑卡车](https://www.fuyoukache.com/)
+* [GUANLAN NETWORKS(HANGZHOU) CO.,LTD | 丁香园](http://www.dxy.cn/)
+* [Bindo Labs Limited](https://bindopos.com/en/)
+* [Value Simplex | 熵简科技](http://valuesimplex.com)
+* [Shanghai Mingyun | 上海明运](http://www.mingluck.com/)
+* [Feidai | 深圳飞贷金融科技](https://www.feidai.com/)
+* [cibfintech | 兴业数字金融](http://www.cibfintech.com)
+* [广州三人行壹佰教育](http://www.100.com)
+* [bangdao-tech | 邦道科技](https://www.bangdao-tech.com/)
+* [CGB | 广发银行](www.cgbchina.com.cn)
+* [Budiot | 萌发物联&玖竹科技](https://www.budiot.cn)
+* [ZTE | 中兴通讯股份有限公司](https://www.zte.com.cn)
+* [Envision Digital | 远景智能](https://developer.envisioncn.com/devportal/index.html#/main)
 
 ## Core Contributors
 
