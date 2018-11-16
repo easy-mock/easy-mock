@@ -370,6 +370,7 @@ module.exports = class ProjectController {
   static async syncSwagger (ctx) {
     const uid = ctx.state.user.id
     const id = ctx.checkBody('id').notEmpty().value
+    let errorURLs = []
 
     if (ctx.errors) {
       ctx.body = ctx.util.refail(null, 10001, ctx.errors)
@@ -389,14 +390,16 @@ module.exports = class ProjectController {
     }
 
     try {
-      await SwaggerUtil.create(project)
+      errorURLs = await SwaggerUtil.create(project)
     } catch (error) {
       ctx.body = ctx.util.refail(error.message)
       return
     }
 
     await redis.del('project:' + id)
-    ctx.body = ctx.util.resuccess()
+    ctx.body = ctx.util.resuccess({
+      syncErrorURLs: errorURLs
+    })
   }
 
   /**

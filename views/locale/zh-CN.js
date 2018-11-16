@@ -175,7 +175,12 @@ export default {
         action: '同步 Swagger',
         warning: '请先在设置页配置 Swagger 接口地址',
         confirm: '该操作将同步最新 Swagger 接口，是否继续？',
-        success: '同步成功'
+        success: '同步成功',
+        syncResult: '同步结果',
+        syncFailed: {
+          title: '部分接口同步失败',
+          desc: '接口中存在语法错误，请检查是否为标准 JSON 格式（例：被忽略的双引号、定义方法等）。'
+        }
       },
       remove: {
         confirm: ['该操作无法撤消，是否继续删除选中行? ', '该操作无法撤消，是否继续删除?'],

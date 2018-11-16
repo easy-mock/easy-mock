@@ -175,7 +175,12 @@ export default {
         action: 'Sync Swagger',
         warning: 'Please set up Swagger API address in settings page',
         confirm: 'This will sync Swagger API, do you want contiune?',
-        success: 'Sync Success'
+        success: 'Sync Success',
+        syncResult: '同步结果',
+        syncFailed: {
+          title: '部分接口同步失败',
+          desc: '接口中存在语法错误，请检查是否为标准 JSON 格式（例：被忽略的双引号、定义方法等）。'
+        }
       },
       remove: {
         confirm: ['This action <strong>CANNOT<strong> be undone. Are you sure want to delete selected row?', 'This action <strong>CANNOT<strong> be undone. Do you want contiune?'],

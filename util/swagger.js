@@ -19,6 +19,7 @@ async function createMock (projectId, swaggerDocs) {
   const newAPIs = []
   const oldAPIs = []
   const promises = []
+  const errorURLs = []
 
   for (let url in paths) {
     const fullAPIPath = path.posix.join(basePath, url)
@@ -63,8 +64,12 @@ async function createMock (projectId, swaggerDocs) {
 
       try {
         oldKeys = Object.keys(util.flatten(JSON.parse(api.mode)))
+        newKeys = newKeys.filter(key => !/\[[1-9]\d*\]/.test(key))
+        oldKeys = oldKeys.filter(key => !/\[[1-9]\d*\]/.test(key)) // [ 'data[0].item', 'data[1].item', 'data[2].item' ] => [ 'data[0]____item' ]
+          .map(o => o.replace(/\|[^_\[]*(__)?/g, '$1')) // 'data|1-10.item' => 'data____item' 'data|1-10[0].item' => 'data[0]____item'
+        api.mode = _.xor(newKeys, oldKeys).length > 0 ? /* istanbul ignore next */ mode : api.mode
       } catch (error) {
-        throw new Error(`${api.url} 接口中存在语法错误，请检查是否为标准 JSON 格式（例：被忽略的双引号）。`)
+        errorURLs.push(`${api.method.toUpperCase()}-${api.url}`)
       }
 
       api.method = method
@@ -72,10 +77,6 @@ async function createMock (projectId, swaggerDocs) {
       api.description = desc
       api.parameters = parameters
       api.response_model = responseModel
-      newKeys = newKeys.filter(key => !/\[[1-9]\d*\]/.test(key))
-      oldKeys = oldKeys.filter(key => !/\[[1-9]\d*\]/.test(key)) // [ 'data[0].item', 'data[1].item', 'data[2].item' ] => [ 'data[0]____item' ]
-        .map(o => o.replace(/\|[^_\[]*(__)?/g, '$1')) // 'data|1-10.item' => 'data____item' 'data|1-10[0].item' => 'data[0]____item'
-      api.mode = _.xor(newKeys, oldKeys).length > 0 ? /* istanbul ignore next */ mode : api.mode
 
       oldAPIs.push(api)
     }
@@ -87,7 +88,7 @@ async function createMock (projectId, swaggerDocs) {
   /* istanbul ignore else */
   if (oldAPIs.length > 0) promises.push(MockProxy.updateMany(oldAPIs))
 
-  return Promise.all(promises)
+  return Promise.all(promises).then(() => errorURLs)
 }
 
 module.exports = class SwaggerUtil {

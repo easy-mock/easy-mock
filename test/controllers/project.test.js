@@ -428,7 +428,9 @@ describe('test/controllers/project.test.js', () => {
         description: '同步失败'
       })
       res = await request('/api/project/sync/swagger', 'post').send({ id: res.body.data[1]._id })
-      expect(res.body.message).toBe('/v2/user/logout 接口中存在语法错误，请检查是否为标准 JSON 格式（例：被忽略的双引号）。')
+      const syncErrorURLs = res.body.data.syncErrorURLs
+      expect(syncErrorURLs).toHaveLength(1)
+      expect(syncErrorURLs[0]).toBe('GET-/v2/user/logout')
     })
   })
 
