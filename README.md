@@ -260,6 +260,9 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
 * [Budiot | 萌发物联&玖竹科技](https://www.budiot.cn)
 * [ZTE | 中兴通讯股份有限公司](https://www.zte.com.cn)
 * [Envision Digital | 远景智能](https://developer.envisioncn.com/devportal/index.html#/main)
+* [Jianshu | 简书](https://www.jianshu.com)
+* [HYPERS | 宏路数据](https://www.hypers.com/)
+* [yunlong tech | 成都云隆科技有限公司](http://www.yunlongtech.com/)
 
 ## Core Contributors
 
