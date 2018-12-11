@@ -265,6 +265,8 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
 * [yunlong tech | 成都云隆科技有限公司](http://www.yunlongtech.com/)
 * [taojiujiu tech | 涛舅舅网络科技有限公司](http://www.tao-jiujiu.com/)
 * [shunfeng tongcheng tech | 北京顺丰同城科技有限公司](http://www.sf-yoohoo.com)
+* [bread finance | 面包财经](https://www.mbcaijing.com)
+* [Jimi | 机蜜](https://www.jimistore.com)
 
 ## Core Contributors
 
