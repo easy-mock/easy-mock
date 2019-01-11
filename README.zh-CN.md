@@ -232,7 +232,7 @@ Easy Mock 目前由[大搜车无线架构团队](http://f2e.souche.com/blog/)进
 * [广州三人行壹佰教育](http://www.100.com)
 * [bangdao-tech | 邦道科技](https://www.bangdao-tech.com/)
 * [CGB | 广发银行](www.cgbchina.com.cn)
-* [Budiot | 萌发物联&玖竹科技](https://www.budiot.cn)
+* [Budiot | 萌发物联&玖竹科技](https://www.budiot.com.cn)
 * [ZTE | 中兴通讯股份有限公司](https://www.zte.com.cn)
 * [Envision Digital | 远景智能](https://developer.envisioncn.com/devportal/index.html#/main)
 * [Jianshu | 简书](https://www.jianshu.com)
@@ -242,6 +242,12 @@ Easy Mock 目前由[大搜车无线架构团队](http://f2e.souche.com/blog/)进
 * [shunfeng tongcheng tech | 北京顺丰同城科技有限公司](http://www.sf-yoohoo.com)
 * [bread finance | 面包财经](https://www.mbcaijing.com)
 * [Jimi | 机蜜](https://www.jimistore.com)
+* [zhongan | 众安科技信息技术服务有限公司](https://www.zhongan.io)
+* [verystar | 上海费芮网络科技有限公司](https://www.verystar.net)
+* [lanren | 懒人听书](https://www.lrts.me)
+* [IBPS | 广州流辰信息技术有限公司](http://www.bpmhome.cn)
+* [StarZP | 星众派](http://www.xzpql.com/)
+* [Shijiazhuang banknote printing corporation | 石家庄印钞有限公司](http://sjzyc.cbpm.cn)
 
 ## Core Contributors
 
