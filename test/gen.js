@@ -12,7 +12,7 @@ const config = {
   upload: {
     dir: '../public/upload/test',
     expire: {
-      types: ['.json'],
+      types: ['.json', '.yml', '.yaml'],
       day: 1
     }
   }

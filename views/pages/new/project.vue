@@ -57,7 +57,7 @@
               type="drag"
               :headers="uploadHeaders"
               :show-upload-list="false"
-              :format="['json','yml']"
+              :format="['json','yml', 'yaml']"
               :action="uploadAPI"
               :on-success="handleSwaggerUploadSuccess"
               :on-format-error="handleSwaggerUploadError"

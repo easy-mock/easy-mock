@@ -51,28 +51,33 @@ server.listen(1389)
 
 describe('test/util/ldap.test.js', () => {
   test('connection', async () => {
+    let ldapClient
     try {
-      await ldapUtil.authenticate('demo@example.com', '123456')
+      ldapClient = await ldapUtil.createClient()
+      await ldapUtil.authenticate(ldapClient, 'demo@example.com', '123456')
     } catch (error) {
       expect(error.message).toEqual('LDAP connection is not yet bound')
+    } finally {
+      ldapUtil.closeClient(ldapClient)
     }
   })
 
   test('authenticate', (done) => {
     setTimeout(async () => {
-      const user = await ldapUtil.authenticate('demo@example.com', '123456')
+      let ldapClient = await ldapUtil.createClient()
+      const user = await ldapUtil.authenticate(ldapClient, 'demo@example.com', '123456')
       expect(user).toBeTruthy()
       try {
-        await ldapUtil.authenticate('demo@example.com', '1234567')
+        await ldapUtil.authenticate(ldapClient, 'demo@example.com', '1234567')
       } catch (error) {
         expect(error.message).toEqual('用户名或密码错误')
       }
-
       try {
-        await ldapUtil.authenticate('demo2@example.com', '123456')
+        await ldapUtil.authenticate(ldapClient, 'demo2@example.com', '123456')
       } catch (error) {
         expect(error.message).toEqual('用户名或密码错误')
       }
+      ldapUtil.closeClient(ldapClient)
       done()
     }, 1000)
   })
