@@ -57,14 +57,14 @@
               type="drag"
               :headers="uploadHeaders"
               :show-upload-list="false"
-              :format="['json','yml']"
+              :format="['json','yml', 'yaml']"
               :action="uploadAPI"
               :on-success="handleSwaggerUploadSuccess"
               :on-format-error="handleSwaggerUploadError"
               v-if="swaggerType === 'Upload'">
               <div style="padding: 20px 0">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                <p>JSON / YML</p>
+                <p>JSON / YAML</p>
               </div>
             </Upload>
             <p class="em-new__form-description">

@@ -84,11 +84,14 @@ module.exports = class UserController {
 
     /* istanbul ignore if */
     if (ldapUtil.enable) {
+      let ldapClient = await ldapUtil.createClient()
       try {
-        verifyPassword = await ldapUtil.authenticate(name, password)
+        verifyPassword = await ldapUtil.authenticate(name, password, ldapClient)
       } catch (error) {
         ctx.body = ctx.util.refail(error.message)
         return
+      } finally {
+        ldapUtil.closeClient(ldapClient)
       }
       if (verifyPassword && !user) {
         user = await createUser(name, util.bhash(password))
