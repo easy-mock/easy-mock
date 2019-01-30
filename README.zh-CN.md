@@ -54,7 +54,7 @@ Easy Mock 是一个可视化，并且能快速生成**模拟数据**的持久化
 
 ## 快速开始
 
-> 在开始之前，假设你已经成功安装了 [Node.js](https://nodejs.org)（>= **v8.9**）& [MongoDB](https://www.mongodb.com)（>= **v3.4**）& [Redis](https://redis.io)（>= **v4.0**）。
+> 在开始之前，假设你已经成功安装了 [Node.js](https://nodejs.org)（**v8.x, ~~不支持 v10.x~~**）& [MongoDB](https://www.mongodb.com)（**>= v3.4**）& [Redis](https://redis.io)（**>= v4.0**）。
 
 ### 安装
 

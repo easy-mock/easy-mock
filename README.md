@@ -59,7 +59,7 @@ visualization view.
 ## Quick Start
 
 > Before starting, we assume that you're already have installed
-> [Node.js](https://nodejs.org) (>= v8.9) & [MongoDB](https://www.mongodb.com) (>= v3.4) & [Redis](https://redis.io)（>= **v4.0**）.
+> [Node.js](https://nodejs.org) (**v8.x, ~~v10.x is not supported~~**) & [MongoDB](https://www.mongodb.com) (**>= v3.4**) & [Redis](https://redis.io)（**>= v4.0**）.
 
 ### Installation
 
