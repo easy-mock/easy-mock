@@ -206,6 +206,9 @@ export default {
           error: ['接口数据不能为空。', '请检查数据定义是否符合要求。'],
           updateSuccess: '更新成功'
         }
+      },
+      table: {
+        search: '搜索表格...'
       }
     }
   },

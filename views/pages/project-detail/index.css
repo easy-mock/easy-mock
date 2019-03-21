@@ -11,6 +11,20 @@
     width: 100%;
     text-align: center;
   }
+  
+  .tag-tooltip {
+    width: 100%;
+    .ivu-tooltip-rel {
+      width: 100%;
+      .ivu-tag {
+        width: 100%;
+        text-overflow: ellipsis;
+        .ivu-tag-text {
+          white-space: nowrap;
+        }
+      }
+    }
+  }
 
   @d info {
     margin: 20px 0;

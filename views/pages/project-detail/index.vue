@@ -67,6 +67,12 @@
             </Col>
           </Row>
         </div>
+        <Input
+          v-model="searchContent"
+          icon="search"
+          :placeholder="$t('p.detail.table.search')"
+          style="width: 200px; margin-bottom: 5px"
+        />
         <Table
           border
           :columns="columns"
@@ -97,6 +103,7 @@ export default {
       pageName: this.$t('p.detail.nav[0]'),
       selection: [],
       keywords: '',
+      searchContent: '',
       nav: [
         { title: this.$t('p.detail.nav[0]'), icon: 'android-list' },
         { title: this.$t('p.detail.nav[1]'), icon: 'gear-a' }
@@ -135,7 +142,7 @@ export default {
         { type: 'selection', width: 60, align: 'center' },
         {
           title: 'Method',
-          width: 110,
+          width: 105,
           key: 'method',
           filters: [
             { label: 'get', value: 'get' },
@@ -160,7 +167,35 @@ export default {
             </tag>
           }
         },
-        { title: 'URL', width: 420, ellipsis: true, sortable: true, key: 'url' },
+        {
+          title: 'Tags',
+          width: 120,
+          key: 'tags',
+          filters: [],
+          filterMethod (value, row) {
+            return row.tags.indexOf(value) > -1
+          },
+          render: (h, params) => {
+            const { tags } = params.row
+            const tagArray = tags.map(tag => (
+              h('tooltip', {
+                class: ['tag-tooltip'],
+                props: {
+                  placement: 'top',
+                  content: tag
+                }
+              }, [
+                h('tag', {
+                  props: {
+                    color: 'default'
+                  }
+                }, tag)
+              ])
+            ))
+            return h('div', tagArray)
+          }
+        },
+        { title: 'URL', width: 300, ellipsis: true, sortable: true, key: 'url' },
         { title: this.$t('p.detail.columns[0]'), ellipsis: true, key: 'description' },
         {
           title: this.$t('p.detail.columns[1]'),
@@ -206,11 +241,29 @@ export default {
     list () {
       const list = this.$store.state.mock.list
       const reg = this.keywords && new RegExp(this.keywords, 'i')
-      return reg
-        ? list.filter(item => (
+      if (list && list.length > 0) {
+        let filterArray = []
+        list.forEach((l) => {
+          filterArray = filterArray.concat(l.tags)
+        })
+        const filterSet = new Set(filterArray)
+        const filterArrayUniq = Array.from(filterSet, x => ({ label: x, value: x }))
+        this.columns[3].filters = filterArrayUniq
+      }
+      if (reg) {
+        return list.filter(item => (
           reg.test(item.name) || reg.test(item.url) || reg.test(item.method)
         ))
-        : list
+      }
+      if (this.searchContent) {
+        return list.filter(item => (
+          item.description.includes(this.searchContent) ||
+            item.url.includes(this.searchContent) ||
+            item.method.includes(this.searchContent) ||
+            item.tags.some(tag => tag.includes(this.searchContent))
+        ))
+      }
+      return list
     },
     page () {
       return {

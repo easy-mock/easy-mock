@@ -13,6 +13,7 @@ const schema = new Schema({
   mode: String,
   url: String,
   method: String,
+  tags: Array,
   parameters: String,
   response_model: String,
   create_at: {

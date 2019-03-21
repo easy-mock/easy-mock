@@ -27,6 +27,7 @@ async function createMock (projectId, swaggerDocs) {
       method = method.toLowerCase()
 
       const operation = paths[url][method]
+      const { tags } = operation
       const desc = operation.summary || /* istanbul ignore next */ operation.description
       const api = _.find(apis, { method, url: fullAPIPath })
       const mode = _.get(operation, 'responses["200"].example') || _.get(operation, 'responses["default"].example') || '{}'
@@ -53,6 +54,7 @@ async function createMock (projectId, swaggerDocs) {
           parameters,
           response_model: responseModel,
           description: desc,
+          tags,
           project: projectId
         })
         continue
@@ -77,6 +79,7 @@ async function createMock (projectId, swaggerDocs) {
       api.description = desc
       api.parameters = parameters
       api.response_model = responseModel
+      api.tags = tags
 
       oldAPIs.push(api)
     }
