@@ -45,7 +45,29 @@ async function createMock (projectId, swaggerDocs) {
       responseModel = JSON.stringify(operation.responses)
       parameters = JSON.stringify(
         _.map(operation.parameters, parameter => {
-          parameter.example = parameter.example ? Mock.mock(JSON.parse(parameter.example)) : ''
+          try {
+            parameter.example = parameter.example ? Mock.mock(JSON.parse(parameter.example)) : ''
+          } catch (error) {
+            // parameters 共有参数是引用类型。变一个，所有用到该参数接口都会同步
+            // 例如：
+            // 第一次 JSON.parse(parameter.example)
+            //     - '"@string"' => 'ywe@yd$#'
+            // 第二次 JSON.parse(parameter.example)
+            //     - 'ywe@yd$#' => error: Unexpected token V in JSON at position 0
+            // {
+            //   "paths": {
+            //     ...
+            //     "parameters": [{
+            //       "required": true,
+            //       "type": "string",
+            //       "name": "postfix",
+            //       "in": "path"
+            //     }]
+            //     ...
+            //   }
+            // }
+            parameter.example = parameter.example
+          }
           return parameter
         })
       )
