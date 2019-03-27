@@ -21,10 +21,16 @@ async function createMock (projectId, swaggerDocs) {
   const promises = []
   const errorURLs = []
 
+  const OPERATION_METHODS = [
+    'get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'
+  ]
+
   for (let url in paths) {
     const fullAPIPath = path.posix.join(basePath, url)
     for (let method in paths[url]) {
       method = method.toLowerCase()
+
+      if (OPERATION_METHODS.indexOf(method) < 0) continue
 
       const operation = paths[url][method]
       const desc = operation.summary || /* istanbul ignore next */ operation.description
