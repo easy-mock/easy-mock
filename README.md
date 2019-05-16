@@ -280,6 +280,18 @@ If you deployed Easy Mock in your own server, please [tell us](https://github.co
 * [IBPS | 广州流辰信息技术有限公司](http://www.bpmhome.cn)
 * [StarZP | 星众派](http://www.xzpql.com/)
 * [Shijiazhuang banknote printing corporation | 石家庄印钞有限公司](http://sjzyc.cbpm.cn)
+* [Changhong | 长虹](http://cn.changhong.com)
+* [bihukeji | 壁虎科技](http://www.91bihu.com)
+* [beibeibang | 贝贝帮](https://www.babybang123.com/)
+* [BiHu | 壁虎科技](http://www.91bihu.com/)
+* [lifebyte | lifebyte](https://www.lifebyte.com.au/)
+* [ECNU | 华东师范大学](https://www.ecnu.edu.cn)
+* [Elemvision | 中科视元科技（杭州）有限公司](http://www.elemvision.com)
+* [fenqile | 分期乐](https://m.fenqile.com/)
+* [efeet | 广州一丈网络科技有限公司](http://www.efeet.cn)
+* [Rocoinfo | 大诚若谷](http://www.rocoinfo.com)
+* [ankerjiedian | 街电](http://www.jiediankeji.com/)
+* [cloudbae | 云宝宝大数据产业发展有限责任公司](http://www.cloudbae.cn)
 
 ## Core Contributors
 
