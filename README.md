@@ -36,7 +36,7 @@
 > If you're unable to deploy an **Easy Mock** service by yourself, the
 > [online service](https://easy-mock.com) is recommended.
 
-Easy Mock is a persistent service that generates mock data quickly and provids
+Easy Mock is a persistent service that generates mock data quickly and provides
 visualization view.
 
 <p align="center">
