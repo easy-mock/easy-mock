@@ -26,7 +26,7 @@
   "dependencies": {
     "@koa/cors": "^2.2.1",
     "@tweenjs/tween.js": "^17.1.1",
-    "axios": "^0.17.1",
+    "axios": "^0.19.0",
     "bcryptjs": "^2.4.3",
     "brace": "^0.11.0",
     "clipboard": "^1.7.1",
