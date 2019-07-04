@@ -67,8 +67,7 @@
                   <img :src="item.user.head_img">
                   <img
                     :src="img.head_img"
-                    v-for="(img, i) in item.members"
-                    v-if="i < 5"
+                    v-for="(img, i) in item.members.slice(0, 5)"
                     :key="i">
                 </div>
                 <Button-group class="project-control">
