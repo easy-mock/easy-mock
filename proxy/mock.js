@@ -29,7 +29,8 @@ module.exports = class MockProxy {
         method: mock.method,
         parameters: mock.parameters,
         description: mock.description,
-        response_model: mock.response_model
+        response_model: mock.response_model,
+        tags: mock.tags
       }
     })
   }
