@@ -209,7 +209,7 @@ module.exports = class MockController {
     const jsonpCallback = query.jsonp_param_name && (query[query.jsonp_param_name] || 'callback')
     let { projectId, mockURL } = ctx.pathNode
     const redisKey = 'project:' + projectId
-    let apiData, apis, api
+    let apiData, apis, matchApis, api
 
     apis = await redis.get(redisKey)
 
@@ -224,10 +224,13 @@ module.exports = class MockController {
       mockURL = mockURL.replace(apis[0].project.url, '') || '/'
     }
 
-    api = apis.filter((item) => {
+    matchApis = apis.filter((item) => {
       const url = item.url.replace(/{/g, ':').replace(/}/g, '') // /api/{user}/{id} => /api/:user/:id
       return item.method === method && pathToRegexp(url).test(mockURL)
-    })[0]
+    });
+
+    // exact match
+    api = matchApis.find(({url}) => url === mockURL) || matchApis[0];
 
     if (!api) ctx.throw(404)
 
