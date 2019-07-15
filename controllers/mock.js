@@ -227,10 +227,10 @@ module.exports = class MockController {
     matchApis = apis.filter((item) => {
       const url = item.url.replace(/{/g, ':').replace(/}/g, '') // /api/{user}/{id} => /api/:user/:id
       return item.method === method && pathToRegexp(url).test(mockURL)
-    });
+    })
 
     // exact match
-    api = matchApis.find(({url}) => url === mockURL) || matchApis[0];
+    api = matchApis.find(({url}) => url === mockURL) || matchApis[0]
 
     if (!api) ctx.throw(404)
 
