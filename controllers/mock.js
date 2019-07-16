@@ -16,6 +16,9 @@ const { MockProxy, ProjectProxy, UserGroupProxy } = require('../proxy')
 const redis = util.getRedis()
 const defPageSize = config.get('pageSize')
 
+// /api/{user}/{id} => /api/:user/:id
+const replacePathParams = (url) => url.replace(/{/g, ':').replace(/}/g, '')
+
 async function checkByMockId (mockId, uid) {
   const api = await MockProxy.getById(mockId)
 
@@ -209,7 +212,7 @@ module.exports = class MockController {
     const jsonpCallback = query.jsonp_param_name && (query[query.jsonp_param_name] || 'callback')
     let { projectId, mockURL } = ctx.pathNode
     const redisKey = 'project:' + projectId
-    let apiData, apis, matchApis, api
+    let apiData, apis, api
 
     apis = await redis.get(redisKey)
 
@@ -224,18 +227,26 @@ module.exports = class MockController {
       mockURL = mockURL.replace(apis[0].project.url, '') || '/'
     }
 
-    matchApis = apis.filter((item) => {
-      const url = item.url.replace(/{/g, ':').replace(/}/g, '') // /api/{user}/{id} => /api/:user/:id
-      return item.method === method && pathToRegexp(url).test(mockURL)
-    })
-
-    // exact match
-    api = matchApis.find(({url}) => url === mockURL) || matchApis[0]
+    api = apis
+      .filter(item => {
+        const url = replacePathParams(item.url)
+        return item.method === method && pathToRegexp(url).test(mockURL)
+      })
+      // 按匹配度排序(包含路径参数越少匹配度越高)
+      .sort(function (a, b) {
+        const ap = pathToRegexp.parse(
+          replacePathParams(a.url)
+        )
+        const bp = pathToRegexp.parse(
+          replacePathParams(b.url)
+        )
+        return ap.length - bp.length
+      })[0]
 
     if (!api) ctx.throw(404)
 
     Mock.Handler.function = function (options) {
-      const mockUrl = api.url.replace(/{/g, ':').replace(/}/g, '') // /api/{user}/{id} => /api/:user/:id
+      const mockUrl = replacePathParams(api.url)
       options.Mock = Mock
       options._req = ctx.request
       options._req.params = util.params(mockUrl, mockURL)
@@ -244,8 +255,8 @@ module.exports = class MockController {
     }
 
     if (/^http(s)?/.test(api.mode)) { // 代理模式
-      const url = nodeURL.parse(api.mode.replace(/{/g, ':').replace(/}/g, ''), true)
-      const params = util.params(api.url.replace(/{/g, ':').replace(/}/g, ''), mockURL)
+      const url = nodeURL.parse(replacePathParams(api.mode), true)
+      const params = util.params(replacePathParams(api.url), mockURL)
       const pathname = pathToRegexp.compile(url.pathname)(params)
       try {
         apiData = await axios({
