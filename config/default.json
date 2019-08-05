@@ -39,7 +39,8 @@
     "password": "",
     "filter": {
       "base": "",
-      "attributeName": ""
+      "attributeName": "",
+      "timeLimit": 3
     }
   },
   "fe": {

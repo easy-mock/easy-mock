@@ -121,6 +121,7 @@ configuration.
     "filter": {
       "base": "", // Base where we can search for users，e.g. "dc=example,dc=com"
       "attributeName": "" // e.g. "mail" or "email" etc.
+      "timeLimit": 3 // the maximum amount of time the server should take in responding, in seconds. Defaults to 3. Lots of servers will ignore this.
     }
   },
   "fe": {

@@ -112,6 +112,7 @@ $ cd easy-mock && npm install
     "filter": {
       "base": "", // 查询用户的路径，例："dc=example,dc=com"
       "attributeName": "" // 查询字段，例："mail"
+      "timeLimit": 3 // 响应超时时间（秒）
     }
   },
   "fe": {
