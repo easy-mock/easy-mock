@@ -13,6 +13,8 @@ const util = require('../util')
 const ft = require('../models/fields_table')
 const { MockProxy, ProjectProxy, UserGroupProxy } = require('../proxy')
 
+const Promise = require('promise')
+
 const redis = util.getRedis()
 const defPageSize = config.get('pageSize')
 
@@ -43,6 +45,14 @@ async function checkByProjectId (projectId, uid) {
   }
 
   return '项目不存在'
+}
+
+async function delay (time) {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve()
+    }, time)
+  })
 }
 
 module.exports = class MockController {
@@ -287,6 +297,10 @@ module.exports = class MockController {
             /* istanbul ignore next */
             if (_res.headers.hasOwnProperty(i)) ctx.set(i, _res.headers[i])
           }
+        }
+        /* support  delay */
+        if (_res.delay) {
+          await delay(_res.delay)
         }
         /* istanbul ignore next */
         if (_res.status && parseInt(_res.status, 10) !== 200 && _res.data) apiData = _res.data
