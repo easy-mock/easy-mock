@@ -53,7 +53,7 @@
     "mkdirp": "^0.5.1",
     "mockjs": "1.0.1-beta3",
     "moment": "^2.20.1",
-    "mongoose": "^4.13.9",
+    "mongoose": "^5.7.5",
     "path-to-regexp": "^2.1.0",
     "pino-multi-stream": "^3.1.2",
     "restc": "^0.2.2",
