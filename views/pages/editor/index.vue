@@ -136,6 +136,9 @@ export default {
     this.$nextTick(() => {
       this.codeEditor.setValue(this.temp.mode)
       this.format()
+      if (this.isEdit) {
+        this.temp.method = this.mockData.method
+      }
     })
   },
   methods: {
