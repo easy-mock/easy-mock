@@ -272,6 +272,31 @@ module.exports = class MockController {
         return
       }
     } else {
+      /**
+       * 支持直接返回数组
+       */
+      // eslint-disable-next-line no-empty-character-class
+      const arrayModeRegx = /^{\s*"?(\s*__arr__\s*)\|([0-9]+)\s*"?\s*:\s*(.*)}/s
+
+      if (arrayModeRegx.test(api.mode)) {
+        const [, key, count] = arrayModeRegx.exec(api.mode)
+        api.mode = `[
+            function({
+              Mock
+            }) {
+              this.push(...Mock.mock({
+                  ${api.mode.slice(1, -1)}
+                })['${key}'])
+              this._res = {
+                headers: {
+                  'X-Total-Count': ${count}
+                }
+              };
+              return this.pop()
+            }
+          ]`
+      }
+
       const vm = new VM({
         timeout: 1000,
         sandbox: {
