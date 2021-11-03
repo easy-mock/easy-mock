@@ -328,7 +328,8 @@ module.exports = class MockController {
           }
         }
         /* istanbul ignore next */
-        if (_res.status && parseInt(_res.status, 10) !== 200 && _res.data) apiData = _res.data
+        if (_res.status && _res.data) apiData = _res.data
+        // if (_res.status && parseInt(_res.status, 10) !== 200 && _res.data) apiData = _res.data
         delete apiData['_res']
       }
     }
