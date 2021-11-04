@@ -121,6 +121,8 @@ async function createMock (projectId, swaggerDocs) {
 
 module.exports = class SwaggerUtil {
   static async create (project) {
+    // 不验证 tls 证书
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0'
     const docs = await swaggerParserMock(project.swagger_url)
     return createMock(project.id, docs)
   }
