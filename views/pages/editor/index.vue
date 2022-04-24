@@ -67,7 +67,7 @@ export default {
   data () {
     return {
       codeEditor: null,
-      autoClose: true,
+      autoClose: false,
       methods: [
         { label: 'get', value: 'get' },
         { label: 'post', value: 'post' },
@@ -126,7 +126,7 @@ export default {
     })
 
     if (this.isEdit) {
-      this.autoClose = true
+      this.autoClose = false
       this.temp.url = this.mockData.url.slice(1) // remove /
       this.temp.mode = this.mockData.mode
       this.temp.method = this.mockData.method
