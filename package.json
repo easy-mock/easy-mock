@@ -40,7 +40,7 @@
     "koa": "^2.4.1",
     "koa-body": "^2.5.0",
     "koa-favicon": "^2.0.0",
-    "koa-jwt": "^3.3.0",
+    "koa-jwt": "^4.0.4",
     "koa-onerror": "^4.0.0",
     "koa-pino-logger": "^2.1.1",
     "koa-ratelimit": "^4.0.0",
